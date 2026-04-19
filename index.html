@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca de juegos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 40px 20px;
+      background: #f4f7fb;
+      color: #1f2937;
+      text-align: center;
+    }
+    .contenedor {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h1 {
+      margin-bottom: 10px;
+    }
+    p {
+      margin-bottom: 30px;
+    }
+    .tarjetas {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+    .tarjeta {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      text-align: left;
+    }
+    .tarjeta h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+    }
+    .boton {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 16px;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+    }
+    .boton:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="contenedor">
+    <h1>Biblioteca de juegos de clase</h1>
+    <p>Aquí irán mis juegos y apps educativas.</p>
+
+    <div class="tarjetas">
+      <div class="tarjeta">
+        <h2>Próximamente</h2>
+        <p>Aquí aparecerá tu primer juego.</p>
+        <a class="boton" href="#">Muy pronto</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
