@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neri Tactical Math</title>
+  <style>
+    :root{
+      --bg1:#0b1220;
+      --bg2:#13233f;
+      --panel:#ffffff;
+      --panel-soft:#f8fbff;
+      --text:#12233d;
+      --muted:#64748b;
+      --primary:#2563eb;
+      --primary-2:#7c3aed;
+      --accent:#06b6d4;
+      --good:#16a34a;
+      --bad:#dc2626;
+      --warn:#f59e0b;
+      --field1:#166534;
+      --field2:#15803d;
+      --line:#d1fae5;
+      --shadow:0 18px 40px rgba(2, 12, 27, .22);
+      --radius:22px;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      min-height:100vh;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(124,58,237,.22), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(6,182,212,.14), transparent 32%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+    }
+
+    .app{
+      max-width:1280px;
+      margin:0 auto;
+      padding:24px 16px 32px;
+    }
+
+    .screen{
+      width:100%;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(10px);
+      border-radius:28px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      animation:fadeIn .35s ease;
+    }
+
+    .hidden{display:none !important;}
+
+    .card{
+      background:linear-gradient(180deg, #ffffff, #f7fbff);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:28px;
+      border:1px solid rgba(15,23,42,.06);
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:18px;
+      align-items:stretch;
+    }
+
+    .title{
+      margin:0 0 10px;
+      font-size:clamp(2rem, 4vw, 3.2rem);
+      line-height:1.04;
+      letter-spacing:-.03em;
+      font-weight:900;
+      color:#0f172a;
+    }
+
+    .subtitle{
+      margin:0 0 18px;
+      color:#334155;
+      line-height:1.5;
+      font-size:1.08rem;
+      max-width:62ch;
+    }
+
+    .pill-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin:14px 0 22px;
+    }
+
+    .pill{
+      padding:10px 14px;
+      border-radius:999px;
+      background:#eef2ff;
+      border:1px solid #dbe3ff;
+      color:#3730a3;
+      font-weight:800;
+      font-size:.94rem;
+    }
+
+    .mode-grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:14px;
+      margin-top:12px;
+    }
+
+    .mode-btn{
+      border:none;
+      border-radius:20px;
+      padding:18px 16px;
+      text-align:left;
+      cursor:pointer;
+      background:linear-gradient(180deg, #ffffff, #f8fafc);
+      border:2px solid #e2e8f0;
+      color:#0f172a;
+      box-shadow:0 10px 22px rgba(15,23,42,.06);
+      min-height:132px;
+      transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .mode-btn:hover{
+      transform:translateY(-2px);
+      border-color:#a5b4fc;
+      box-shadow:0 14px 24px rgba(79,70,229,.14);
+    }
+
+    .mode-btn h3{
+      margin:0 0 8px;
+      font-size:1.05rem;
+      font-weight:900;
+    }
+
+    .mode-btn p{
+      margin:0;
+      color:#475569;
+      line-height:1.4;
+      font-size:.94rem;
+    }
+
+    .info-grid{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:14px;
+      height:100%;
+    }
+
+    .mini{
+      background:linear-gradient(180deg, #eff6ff, #ffffff);
+      border-radius:20px;
+      padding:18px;
+      border:1px solid #dbeafe;
+      min-height:120px;
+    }
+
+    .mini .emoji{
+      font-size:1.7rem;
+      margin-bottom:8px;
+      display:block;
+    }
+
+    .mini h3{
+      margin:0 0 6px;
+      font-size:1rem;
+      color:#0f172a;
+    }
+
+    .mini p{
+      margin:0;
+      color:#475569;
+      line-height:1.35;
+      font-size:.95rem;
+    }
+
+    .topbar{
+      display:grid;
+      grid-template-columns:1.3fr repeat(4, auto);
+      gap:14px;
+      margin-bottom:16px;
+      align-items:stretch;
+    }
+
+    .panel{
+      background:linear-gradient(180deg, #ffffff, #f8fbff);
+      border-radius:20px;
+      border:1px solid rgba(16,33,58,.08);
+      box-shadow:var(--shadow);
+      padding:16px 18px;
+    }
+
+    .main-info .label, .stat .label{
+      font-size:.82rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--muted);
+      font-weight:800;
+      display:block;
+      margin-bottom:8px;
+    }
+
+    .main-info .value{
+      font-size:1.22rem;
+      font-weight:900;
+      color:#0f172a;
+      margin-bottom:6px;
+    }
+
+    .main-info .sub{
+      color:#475569;
+      line-height:1.4;
+      font-size:.95rem;
+    }
+
+    .stat{
+      text-align:center;
+      min-width:118px;
+    }
+
+    .stat .value{
+      font-size:1.48rem;
+      font-weight:900;
+      color:#0f172a;
+    }
+
+    .game-layout{
+      display:grid;
+      grid-template-columns:1fr 330px;
+      gap:16px;
+    }
+
+    .field-card{
+      background:linear-gradient(180deg, #0f3c25, #14532d);
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:var(--shadow);
+      padding:14px;
+    }
+
+    .field{
+      position:relative;
+      min-height:680px;
+      border-radius:18px;
+      overflow:hidden;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)),
+        repeating-linear-gradient(
+          90deg,
+          rgba(255,255,255,.03) 0 70px,
+          rgba(255,255,255,.00) 70px 140px
+        ),
+        linear-gradient(180deg, var(--field2), var(--field1));
+      border:2px solid rgba(209,250,229,.35);
+    }
+
+    .field::before{
+      content:"";
+      position:absolute;
+      inset:14px;
+      border:2px solid rgba(209,250,229,.45);
+      border-radius:12px;
+      pointer-events:none;
+    }
+
+    .field::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:14px;
+      bottom:14px;
+      width:2px;
+      transform:translateX(-50%);
+      background:rgba(209,250,229,.34);
+      pointer-events:none;
+    }
+
+    .mid-circle{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:110px;
+      height:110px;
+      transform:translate(-50%, -50%);
+      border:2px solid rgba(209,250,229,.34);
+      border-radius:50%;
+      pointer-events:none;
+    }
+
+    .area-box{
+      position:absolute;
+      left:50%;
+      width:42%;
+      height:92px;
+      transform:translateX(-50%);
+      border:2px solid rgba(209,250,229,.28);
+      pointer-events:none;
+    }
+
+    .area-top{ top:14px; border-bottom:none; border-radius:0 0 12px 12px; }
+    .area-bottom{ bottom:14px; border-top:none; border-radius:12px 12px 0 0; }
+
+    .player-node{
+      position:absolute;
+      width:76px;
+      transform:translate(-50%, -50%);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:6px;
+      z-index:2;
+    }
+
+    .jersey{
+      width:60px;
+      height:60px;
+      border-radius:18px 18px 16px 16px;
+      background:linear-gradient(180deg, #eff6ff, #dbeafe);
+      border:2px solid rgba(255,255,255,.85);
+      color:#0f172a;
+      font-weight:900;
+      font-size:1.05rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 10px 20px rgba(0,0,0,.18);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .jersey::before, .jersey::after{
+      content:"";
+      position:absolute;
+      top:8px;
+      width:14px;
+      height:14px;
+      background:rgba(37,99,235,.18);
+      border-radius:6px;
+    }
+
+    .jersey::before{ left:-2px; transform:rotate(28deg); }
+    .jersey::after{ right:-2px; transform:rotate(-28deg); }
+
+    .player-label{
+      color:#ecfeff;
+      font-size:.8rem;
+      font-weight:800;
+      text-shadow:0 2px 6px rgba(0,0,0,.28);
+      text-align:center;
+      line-height:1.1;
+    }
+
+    .input-number, .input-op{
+      border:none;
+      outline:none;
+      text-align:center;
+      font-weight:900;
+      color:#0f172a;
+      background:#ffffff;
+      border:2px solid #dbeafe;
+      box-shadow:0 8px 16px rgba(2,12,27,.12);
+    }
+
+    .input-number{
+      width:60px;
+      height:60px;
+      border-radius:18px 18px 16px 16px;
+      font-size:1.04rem;
+    }
+
+    .input-op{
+      width:48px;
+      height:48px;
+      border-radius:14px;
+      font-size:1.08rem;
+      text-transform:uppercase;
+    }
+
+    .input-number:focus, .input-op:focus{
+      border-color:#60a5fa;
+      box-shadow:0 0 0 4px rgba(96,165,250,.26);
+    }
+
+    .cell-correct{
+      border-color:#22c55e !important;
+      background:#ecfdf5 !important;
+    }
+
+    .cell-wrong{
+      border-color:#ef4444 !important;
+      background:#fef2f2 !important;
+    }
+
+    .line-connector{
+      position:absolute;
+      height:2px;
+      background:rgba(219,234,254,.75);
+      transform-origin:left center;
+      z-index:1;
+      pointer-events:none;
+    }
+
+    .op-node{
+      position:absolute;
+      transform:translate(-50%, -50%);
+      z-index:3;
+    }
+
+    .side{
+      display:grid;
+      gap:14px;
+      align-content:start;
+    }
+
+    .results-grid{
+      display:grid;
+      gap:12px;
+      margin-top:10px;
+    }
+
+    .result-row{
+      background:linear-gradient(180deg, #ffffff, #f8fafc);
+      border:1px solid #e2e8f0;
+      border-radius:16px;
+      padding:14px;
+    }
+
+    .result-row .k{
+      display:block;
+      font-size:.8rem;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+      color:#64748b;
+      font-weight:800;
+      margin-bottom:6px;
+    }
+
+    .result-row .v{
+      font-size:1.28rem;
+      font-weight:900;
+      color:#0f172a;
+    }
+
+    .feedback{
+      border-radius:20px;
+      padding:16px;
+      font-weight:700;
+      line-height:1.45;
+      min-height:112px;
+    }
+
+    .feedback.good{
+      background:linear-gradient(180deg, #ecfdf5, #f0fdf4);
+      border:1px solid #bbf7d0;
+      color:#166534;
+    }
+
+    .feedback.bad{
+      background:linear-gradient(180deg, #fef2f2, #fff5f5);
+      border:1px solid #fecaca;
+      color:#991b1b;
+    }
+
+    .feedback.neutral{
+      background:linear-gradient(180deg, #eff6ff, #f8fbff);
+      border:1px solid #dbeafe;
+      color:#1e3a8a;
+    }
+
+    .feedback h3{
+      margin:0 0 8px;
+      font-size:1.06rem;
+    }
+
+    .feedback p{
+      margin:0;
+      color:inherit;
+    }
+
+    .btn-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .btn{
+      border:none;
+      border-radius:18px;
+      padding:14px 18px;
+      font-size:1rem;
+      font-weight:900;
+      cursor:pointer;
+      transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    }
+
+    .btn:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.03);
+    }
+
+    .btn.primary{
+      color:#fff;
+      background:linear-gradient(135deg, var(--primary), var(--primary-2));
+      box-shadow:0 14px 28px rgba(79,70,229,.28);
+    }
+
+    .btn.secondary{
+      color:#0f172a;
+      background:linear-gradient(180deg, #ffffff, #f8fafc);
+      border:2px solid #e2e8f0;
+      box-shadow:0 10px 20px rgba(15,23,42,.06);
+    }
+
+    .legend{
+      color:#475569;
+      font-size:.95rem;
+      line-height:1.45;
+    }
+
+    .legend ul{
+      margin:10px 0 0;
+      padding-left:18px;
+    }
+
+    .final-wrap{
+      text-align:center;
+    }
+
+    .medal{
+      width:140px;
+      height:140px;
+      margin:0 auto 18px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      font-size:4rem;
+      background:linear-gradient(180deg, #fff7ed, #ffffff);
+      border:6px solid rgba(255,255,255,.85);
+      box-shadow:var(--shadow);
+    }
+
+    .final-title{
+      margin:0 0 10px;
+      font-size:clamp(2rem, 4vw, 2.8rem);
+      font-weight:900;
+      color:#0f172a;
+    }
+
+    .final-sub{
+      margin:0 auto 22px;
+      max-width:58ch;
+      color:#475569;
+      line-height:1.5;
+      font-size:1.06rem;
+    }
+
+    .results-final{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:14px;
+      margin:24px 0 26px;
+    }
+
+    .result-box{
+      background:linear-gradient(180deg, #ffffff, #f8fafc);
+      border-radius:20px;
+      padding:18px;
+      border:1px solid #e2e8f0;
+      box-shadow:0 10px 20px rgba(15,23,42,.06);
+    }
+
+    .result-box .k{
+      display:block;
+      color:#64748b;
+      font-size:.82rem;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+
+    .result-box .v{
+      font-size:1.45rem;
+      font-weight:900;
+      color:#0f172a;
+    }
+
+    .rank{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 18px;
+      border-radius:999px;
+      background:#eef2ff;
+      color:#3730a3;
+      font-weight:900;
+      margin-bottom:18px;
+    }
+
+    .footer-note{
+      margin-top:14px;
+      color:#64748b;
+      font-size:.94rem;
+    }
+
+    @keyframes fadeIn{
+      from{opacity:0; transform:translateY(8px)}
+      to{opacity:1; transform:translateY(0)}
+    }
+
+    @media (max-width: 1080px){
+      .hero{grid-template-columns:1fr}
+      .topbar{grid-template-columns:1fr 1fr}
+      .game-layout{grid-template-columns:1fr}
+      .results-final{grid-template-columns:repeat(2,1fr)}
+    }
+
+    @media (max-width: 760px){
+      .mode-grid,
+      .info-grid,
+      .results-final{
+        grid-template-columns:1fr;
+      }
+      .topbar{grid-template-columns:1fr}
+      .field{min-height:760px}
+      .app{padding:12px 8px 20px}
+      .screen{padding:8px}
+      .card{padding:18px}
+      .panel{padding:14px}
+      .jersey, .input-number{
+        width:54px;
+        height:54px;
+      }
+      .player-node{
+        width:68px;
+      }
+      .input-op{
+        width:44px;
+        height:44px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section id="startScreen" class="screen">
+      <div class="card hero">
+        <div>
+          <h1 class="title">Neri Tactical Math</h1>
+          <p class="subtitle">
+            Resuelve cadenas de operaciones dentro de alineaciones tácticas de fútbol. Completa dorsales, signos o una mezcla y haz que defensa, medio y ataque den el resultado correcto.
+          </p>
+
+          <div class="pill-row">
+            <span class="pill">⚽ Alineaciones reales</span>
+            <span class="pill">🧠 Lógica y cálculo</span>
+            <span class="pill">🎯 3 modos de juego</span>
+            <span class="pill">🔁 Retos generativos</span>
+          </div>
+
+          <div class="mode-grid">
+            <button class="mode-btn" data-mode="ops">
+              <h3>➕ Modo Operaciones</h3>
+              <p>Los dorsales ya están puestos. Completa solo los signos de operación.</p>
+            </button>
+
+            <button class="mode-btn" data-mode="numbers">
+              <h3>🔢 Modo Dorsales</h3>
+              <p>Las operaciones ya están puestas. Completa los dorsales que faltan.</p>
+            </button>
+
+            <button class="mode-btn" data-mode="mixed">
+              <h3>🔥 Modo Mixto</h3>
+              <p>Faltan operaciones y dorsales, pero el reto siempre se puede resolver.</p>
+            </button>
+          </div>
+        </div>
+
+        <div class="info-grid">
+          <div class="mini">
+            <span class="emoji">📐</span>
+            <h3>Alineaciones variadas</h3>
+            <p>Incluye 2-5-3, 3-4-3, 3-5-2, 4-4-2, 4-3-3, 4-5-1, 5-3-2, 5-2-3 y 5-4-1.</p>
+          </div>
+          <div class="mini">
+            <span class="emoji">🧩</span>
+            <h3>Tres líneas de cálculo</h3>
+            <p>Defensa, medio y ataque tienen sus propios resultados objetivo.</p>
+          </div>
+          <div class="mini">
+            <span class="emoji">✅</span>
+            <h3>Corrección inmediata</h3>
+            <p>Al enviar, el juego marca casillas correctas e incorrectas visualmente.</p>
+          </div>
+          <div class="mini">
+            <span class="emoji">🏅</span>
+            <h3>Puntuación con penalización</h3>
+            <p>Cada error resta puntos. Resuelve con el menor número de fallos posible.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen hidden">
+      <div class="topbar">
+        <div class="panel main-info">
+          <span class="label">Reto actual</span>
+          <div id="challengeTitle" class="value">Alineación 4-4-2</div>
+          <div id="challengeSub" class="sub">Completa las casillas vacías para que cada línea dé el resultado correcto.</div>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Modo</span>
+          <span id="modeValue" class="value">Operaciones</span>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Reto</span>
+          <span id="roundValue" class="value">1/6</span>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Puntuación</span>
+          <span id="scoreValue" class="value">1000</span>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Errores</span>
+          <span id="errorsValue" class="value">0</span>
+        </div>
+      </div>
+
+      <div class="game-layout">
+        <div class="field-card">
+          <div id="field" class="field">
+            <div class="mid-circle"></div>
+            <div class="area-box area-top"></div>
+            <div class="area-box area-bottom"></div>
+          </div>
+        </div>
+
+        <div class="side">
+          <div class="panel">
+            <strong>Objetivos de la alineación</strong>
+            <div class="results-grid">
+              <div class="result-row">
+                <span class="k">Defensa</span>
+                <span id="defTarget" class="v">0</span>
+              </div>
+              <div class="result-row">
+                <span class="k">Medio</span>
+                <span id="midTarget" class="v">0</span>
+              </div>
+              <div class="result-row">
+                <span class="k">Ataque</span>
+                <span id="attTarget" class="v">0</span>
+              </div>
+            </div>
+
+            <div class="btn-row">
+              <button id="checkBtn" class="btn primary">Enviar respuesta</button>
+              <button id="newPuzzleBtn" class="btn secondary">Nuevo reto</button>
+            </div>
+          </div>
+
+          <div id="feedbackBox" class="feedback neutral">
+            <h3>Preparado</h3>
+            <p>Completa las casillas vacías y pulsa “Enviar respuesta”.</p>
+          </div>
+
+          <div class="panel legend">
+            <strong>Cómo se juega</strong>
+            <ul>
+              <li>Cada línea se resuelve de izquierda a derecha.</li>
+              <li>Solo se usan operaciones que den resultados enteros.</li>
+              <li>En las casillas de operación puedes escribir: +, -, *, x, × o /.</li>
+              <li>Si fallas, el juego marca en rojo y resta puntuación.</li>
+            </ul>
+
+            <div class="btn-row">
+              <button id="menuBtn" class="btn secondary">Menú principal</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="endScreen" class="screen hidden">
+      <div class="card final-wrap">
+        <div id="medalBox" class="medal">🏅</div>
+        <h2 class="final-title">Partida terminada</h2>
+        <p id="finalMessage" class="final-sub">Buen trabajo.</p>
+        <div id="rankBadge" class="rank">🏆 Rango</div>
+
+        <div class="results-final">
+          <div class="result-box">
+            <span class="k">Puntuación final</span>
+            <span id="finalScore" class="v">0</span>
+          </div>
+          <div class="result-box">
+            <span class="k">Retos resueltos</span>
+            <span id="finalSolved" class="v">0</span>
+          </div>
+          <div class="result-box">
+            <span class="k">Errores totales</span>
+            <span id="finalErrors" class="v">0</span>
+          </div>
+          <div class="result-box">
+            <span class="k">Modo</span>
+            <span id="finalMode" class="v">-</span>
+          </div>
+        </div>
+
+        <div class="btn-row" style="justify-content:center">
+          <button id="restartBtn" class="btn primary">Jugar otra vez</button>
+          <button id="backToMenuBtn" class="btn secondary">Volver al menú principal</button>
+        </div>
+
+        <p class="footer-note">Cada nueva partida genera alineaciones, números y casillas distintas.</p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /**********************************************************************
+     * CONFIGURACIÓN
+     **********************************************************************/
+    const TOTAL_ROUNDS = 6;
+    const START_SCORE = 1000;
+    const ERROR_PENALTY = 30;
+
+    const FORMATIONS = [
+      [2,5,3],
+      [3,4,3],
+      [3,5,2],
+      [4,4,2],
+      [4,3,3],
+      [4,5,1],
+      [5,3,2],
+      [5,2,3],
+      [5,4,1]
+    ];
+
+    const MODE_NAMES = {
+      ops: "Operaciones",
+      numbers: "Dorsales",
+      mixed: "Mixto"
+    };
+
+    const OPS = ["+", "-", "*", "/"];
+
+    /**********************************************************************
+     * ESTADO
+     **********************************************************************/
+    const state = {
+      mode: "ops",
+      round: 1,
+      score: START_SCORE,
+      errors: 0,
+      solved: 0,
+      currentPuzzle: null,
+      inputMap: []
+    };
+
+    /**********************************************************************
+     * DOM
+     **********************************************************************/
+    const startScreen = document.getElementById("startScreen");
+    const gameScreen = document.getElementById("gameScreen");
+    const endScreen = document.getElementById("endScreen");
+
+    const field = document.getElementById("field");
+    const challengeTitle = document.getElementById("challengeTitle");
+    const challengeSub = document.getElementById("challengeSub");
+    const modeValue = document.getElementById("modeValue");
+    const roundValue = document.getElementById("roundValue");
+    const scoreValue = document.getElementById("scoreValue");
+    const errorsValue = document.getElementById("errorsValue");
+
+    const defTarget = document.getElementById("defTarget");
+    const midTarget = document.getElementById("midTarget");
+    const attTarget = document.getElementById("attTarget");
+
+    const checkBtn = document.getElementById("checkBtn");
+    const newPuzzleBtn = document.getElementById("newPuzzleBtn");
+    const menuBtn = document.getElementById("menuBtn");
+    const feedbackBox = document.getElementById("feedbackBox");
+
+    const finalMessage = document.getElementById("finalMessage");
+    const finalScore = document.getElementById("finalScore");
+    const finalSolved = document.getElementById("finalSolved");
+    const finalErrors = document.getElementById("finalErrors");
+    const finalMode = document.getElementById("finalMode");
+    const medalBox = document.getElementById("medalBox");
+    const rankBadge = document.getElementById("rankBadge");
+    const restartBtn = document.getElementById("restartBtn");
+    const backToMenuBtn = document.getElementById("backToMenuBtn");
+
+    /**********************************************************************
+     * UTILIDADES
+     **********************************************************************/
+    function randInt(min, max){
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function pick(arr){
+      return arr[randInt(0, arr.length - 1)];
+    }
+
+    function shuffle(arr){
+      const copy = [...arr];
+      for(let i = copy.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function showScreen(screen){
+      startScreen.classList.add("hidden");
+      gameScreen.classList.add("hidden");
+      endScreen.classList.add("hidden");
+      screen.classList.remove("hidden");
+    }
+
+    function setFeedback(type, title, text){
+      feedbackBox.className = `feedback ${type}`;
+      feedbackBox.innerHTML = `<h3>${title}</h3><p>${text}</p>`;
+    }
+
+    function normalizeOp(value){
+      const v = String(value).trim();
+      if(v === "x" || v === "X" || v === "×") return "*";
+      if(v === "÷") return "/";
+      return v;
+    }
+
+    function displayOp(op){
+      if(op === "*") return "×";
+      if(op === "/") return "÷";
+      return op;
+    }
+
+    function evaluateChain(nums, ops){
+      let result = nums[0];
+      for(let i = 0; i < ops.length; i++){
+        const op = ops[i];
+        const n = nums[i + 1];
+        if(op === "+") result += n;
+        else if(op === "-") result -= n;
+        else if(op === "*") result *= n;
+        else if(op === "/"){
+          if(n === 0 || result % n !== 0) return null;
+          result = result / n;
+        } else {
+          return null;
+        }
+      }
+      return result;
+    }
+
+    function buildLineNumbers(count){
+      const nums = [];
+      for(let i = 0; i < count; i++){
+        nums.push(randInt(2, 12));
+      }
+      return nums;
+    }
+
+    function buildLineOps(count){
+      return Array.from({length: count - 1}, () => pick(OPS));
+    }
+
+    function generateValidLine(count){
+      let attempts = 0;
+      while(attempts < 500){
+        attempts++;
+        const nums = buildLineNumbers(count);
+        const ops = buildLineOps(count);
+        const result = evaluateChain(nums, ops);
+        if(result !== null && Number.isInteger(result) && result >= -200 && result <= 300){
+          return { nums, ops, result };
+        }
+      }
+
+      // respaldo fácil y estable
+      const nums = Array.from({length: count}, () => randInt(2, 9));
+      const ops = Array.from({length: count - 1}, () => "+");
+      return {
+        nums,
+        ops,
+        result: nums.reduce((a,b) => a + b, 0)
+      };
+    }
+
+    function chooseHiddenNumbers(count, mode){
+      if(mode === "numbers"){
+        const amount = Math.max(1, Math.floor(count / 2));
+        return shuffle([...Array(count).keys()]).slice(0, amount);
+      }
+      if(mode === "mixed"){
+        return shuffle([...Array(count).keys()]).slice(0, 1);
+      }
+      return [];
+    }
+
+    function chooseHiddenOps(count, mode){
+      const opCount = count - 1;
+      if(opCount <= 0) return [];
+      if(mode === "ops"){
+        return [...Array(opCount).keys()];
+      }
+      if(mode === "mixed"){
+        return shuffle([...Array(opCount).keys()]).slice(0, Math.max(1, Math.floor(opCount / 2)));
+      }
+      return [];
+    }
+
+    function generatePuzzle(mode){
+      const formation = pick(FORMATIONS);
+      const lines = formation.map(count => generateValidLine(count));
+
+      const hiddenNumbers = lines.map(line => chooseHiddenNumbers(line.nums.length, mode));
+      const hiddenOps = lines.map(line => chooseHiddenOps(line.nums.length, mode));
+
+      return {
+        formation,
+        lines,
+        hiddenNumbers,
+        hiddenOps
+      };
+    }
+
+    function formationText(formation){
+      return formation.join("-");
+    }
+
+    function updateTopbar(){
+      const formation = state.currentPuzzle.formation;
+      challengeTitle.textContent = `Alineación ${formationText(formation)}`;
+      challengeSub.textContent = "Completa las casillas vacías para que defensa, medio y ataque den el resultado correcto.";
+      modeValue.textContent = MODE_NAMES[state.mode];
+      roundValue.textContent = `${state.round}/${TOTAL_ROUNDS}`;
+      scoreValue.textContent = state.score;
+      errorsValue.textContent = state.errors;
+
+      defTarget.textContent = state.currentPuzzle.lines[0].result;
+      midTarget.textContent = state.currentPuzzle.lines[1].result;
+      attTarget.textContent = state.currentPuzzle.lines[2].result;
+    }
+
+    /**********************************************************************
+     * POSICIONES EN EL CAMPO
+     **********************************************************************/
+    function lineY(index){
+      const ys = [76, 50, 24]; // defensa, medio, ataque en %
+      return ys[index];
+    }
+
+    function xPositions(count){
+      if(count === 1) return [50];
+      const positions = [];
+      const start = 14;
+      const end = 86;
+      const step = (end - start) / (count - 1);
+      for(let i = 0; i < count; i++){
+        positions.push(start + step * i);
+      }
+      return positions;
+    }
+
+    function clearField(){
+      const extra = field.querySelectorAll(".player-node, .line-connector, .op-node");
+      extra.forEach(el => el.remove());
+      state.inputMap = [];
+    }
+
+    function createConnector(x1, y1, x2, y2){
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const length = Math.sqrt(dx * dx + dy * dy);
+      const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+
+      const line = document.createElement("div");
+      line.className = "line-connector";
+      line.style.left = `${x1}px`;
+      line.style.top = `${y1}px`;
+      line.style.width = `${length}px`;
+      line.style.transform = `rotate(${angle}deg)`;
+      field.appendChild(line);
+    }
+
+    function addInputMap(entry){
+      state.inputMap.push(entry);
+    }
+
+    function renderPuzzle(){
+      clearField();
+      updateTopbar();
+
+      const fieldRect = field.getBoundingClientRect();
+      const width = field.clientWidth;
+      const height = field.clientHeight;
+
+      state.currentPuzzle.lines.forEach((line, lineIdx) => {
+        const count = line.nums.length;
+        const y = lineY(lineIdx);
+        const xs = xPositions(count);
+        const hiddenNums = state.currentPuzzle.hiddenNumbers[lineIdx];
+        const hiddenOps = state.currentPuzzle.hiddenOps[lineIdx];
+
+        const playerCenters = [];
+
+        xs.forEach((xPercent, playerIdx) => {
+          const xPx = width * (xPercent / 100);
+          const yPx = height * (y / 100);
+          playerCenters.push({x: xPx, y: yPx});
+
+          const node = document.createElement("div");
+          node.className = "player-node";
+          node.style.left = `${xPercent}%`;
+          node.style.top = `${y}%`;
+
+          if(hiddenNums.includes(playerIdx)){
+            const input = document.createElement("input");
+            input.className = "input-number";
+            input.type = "text";
+            input.inputMode = "numeric";
+            input.maxLength = 2;
+            input.dataset.answer = line.nums[playerIdx];
+            input.dataset.kind = "number";
+            input.dataset.line = lineIdx;
+            input.dataset.index = playerIdx;
+            node.appendChild(input);
+            addInputMap({ element: input, answer: String(line.nums[playerIdx]), kind: "number" });
+          } else {
+            const jersey = document.createElement("div");
+            jersey.className = "jersey";
+            jersey.textContent = line.nums[playerIdx];
+            node.appendChild(jersey);
+          }
+
+          const label = document.createElement("div");
+          label.className = "player-label";
+          label.textContent = lineIdx === 0 ? "Defensa" : lineIdx === 1 ? "Medio" : "Ataque";
+          node.appendChild(label);
+
+          field.appendChild(node);
+        });
+
+        for(let i = 0; i < count - 1; i++){
+          const p1 = playerCenters[i];
+          const p2 = playerCenters[i + 1];
+          createConnector(p1.x, p1.y, p2.x, p2.y);
+
+          const opX = (xs[i] + xs[i + 1]) / 2;
+          const opY = y;
+          const opNode = document.createElement("div");
+          opNode.className = "op-node";
+          opNode.style.left = `${opX}%`;
+          opNode.style.top = `${opY}%`;
+
+          if(hiddenOps.includes(i)){
+            const input = document.createElement("input");
+            input.className = "input-op";
+            input.type = "text";
+            input.maxLength = 1;
+            input.dataset.answer = line.ops[i];
+            input.dataset.kind = "op";
+            input.dataset.line = lineIdx;
+            input.dataset.index = i;
+            opNode.appendChild(input);
+            addInputMap({ element: input, answer: line.ops[i], kind: "op" });
+          } else {
+            const fixed = document.createElement("div");
+            fixed.className = "input-op";
+            fixed.style.display = "flex";
+            fixed.style.alignItems = "center";
+            fixed.style.justifyContent = "center";
+            fixed.style.background = "#e0f2fe";
+            fixed.style.borderColor = "#bae6fd";
+            fixed.textContent = displayOp(line.ops[i]);
+            opNode.appendChild(fixed);
+          }
+
+          field.appendChild(opNode);
+        }
+      });
+    }
+
+    /**********************************************************************
+     * COMPROBACIÓN
+     **********************************************************************/
+    function clearCellStates(){
+      state.inputMap.forEach(item => {
+        item.element.classList.remove("cell-correct", "cell-wrong");
+      });
+    }
+
+    function checkAnswers(){
+      let wrongCount = 0;
+      clearCellStates();
+
+      state.inputMap.forEach(item => {
+        const raw = item.element.value.trim();
+        let ok = false;
+
+        if(item.kind === "number"){
+          ok = raw !== "" && Number(raw) === Number(item.answer);
+        } else {
+          ok = normalizeOp(raw) === item.answer;
+        }
+
+        if(ok){
+          item.element.classList.add("cell-correct");
+        } else {
+          item.element.classList.add("cell-wrong");
+          wrongCount++;
+        }
+      });
+
+      if(wrongCount > 0){
+        state.errors += wrongCount;
+        state.score = Math.max(0, state.score - wrongCount * ERROR_PENALTY);
+        updateTopbar();
+        setFeedback(
+          "bad",
+          "Todavía no está correcto",
+          `Hay ${wrongCount} casilla(s) incorrecta(s). Revisa las marcadas en rojo.`
+        );
+        return;
+      }
+
+      state.solved++;
+      setFeedback(
+        "good",
+        "¡Reto resuelto!",
+        "Todo está correcto. Puedes pasar al siguiente reto."
+      );
+
+      if(state.round >= TOTAL_ROUNDS){
+        finishGame();
+      } else {
+        state.round++;
+        state.currentPuzzle = generatePuzzle(state.mode);
+        setTimeout(() => {
+          renderPuzzle();
+          setFeedback("neutral", "Nuevo reto", "Completa las casillas vacías y pulsa “Enviar respuesta”.");
+        }, 650);
+      }
+    }
+
+    /**********************************************************************
+     * PARTIDA
+     **********************************************************************/
+    function startGame(mode){
+      state.mode = mode;
+      state.round = 1;
+      state.score = START_SCORE;
+      state.errors = 0;
+      state.solved = 0;
+      state.currentPuzzle = generatePuzzle(mode);
+
+      showScreen(gameScreen);
+      renderPuzzle();
+      setFeedback("neutral", "Preparado", "Completa las casillas vacías y pulsa “Enviar respuesta”.");
+    }
+
+    function newPuzzleSameRound(){
+      state.currentPuzzle = generatePuzzle(state.mode);
+      renderPuzzle();
+      setFeedback("neutral", "Reto regenerado", "Se ha generado una nueva alineación para este mismo reto.");
+    }
+
+    function finishGame(){
+      finalScore.textContent = state.score;
+      finalSolved.textContent = state.solved;
+      finalErrors.textContent = state.errors;
+      finalMode.textContent = MODE_NAMES[state.mode];
+
+      let message = "";
+      let rank = "";
+      let medal = "";
+
+      if(state.score < 500){
+        message = "Sigue practicando. Ya entiendes la mecánica, pero conviene revisar las cadenas de operaciones.";
+        rank = "🟠 Sigue practicando";
+        medal = "📘";
+      } else if(state.score < 750){
+        message = "Vas bien. Has resuelto varios retos y controlas buena parte del tablero táctico.";
+        rank = "🔵 Vas bien";
+        medal = "🥈";
+      } else if(state.score < 920){
+        message = "Buen trabajo. Has combinado cálculo y lectura táctica con bastante precisión.";
+        rank = "🟣 Buen trabajo";
+        medal = "🥇";
+      } else {
+        message = "¡Reto superado con éxito! Has dominado el puzle táctico con gran precisión.";
+        rank = "🏆 Reto superado";
+        medal = "👑";
+      }
+
+      finalMessage.textContent = message;
+      rankBadge.textContent = rank;
+      medalBox.textContent = medal;
+
+      showScreen(endScreen);
+    }
+
+    function goToMenu(){
+      showScreen(startScreen);
+    }
+
+    /**********************************************************************
+     * EVENTOS
+     **********************************************************************/
+    document.querySelectorAll(".mode-btn").forEach(btn => {
+      btn.addEventListener("click", () => startGame(btn.dataset.mode));
+    });
+
+    checkBtn.addEventListener("click", checkAnswers);
+    newPuzzleBtn.addEventListener("click", newPuzzleSameRound);
+    menuBtn.addEventListener("click", goToMenu);
+    restartBtn.addEventListener("click", () => startGame(state.mode));
+    backToMenuBtn.addEventListener("click", goToMenu);
+
+    field.addEventListener("input", (e) => {
+      const target = e.target;
+      if(!target.classList.contains("input-op")) return;
+      const val = target.value;
+      if(val.length > 0){
+        target.value = val.slice(-1);
+      }
+    });
+
+    showScreen(startScreen);
+  </script>
+</body>
+</html>
