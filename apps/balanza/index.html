@@ -241,7 +241,7 @@
       padding:18px;
       position:relative;
       overflow:hidden;
-      min-height:860px;
+      min-height:840px;
       border:1px solid rgba(16,33,58,.08);
     }
 
@@ -334,7 +334,7 @@
       border-radius:999px;
       background:linear-gradient(180deg,#0f172a,#334155);
       box-shadow:0 10px 18px rgba(0,0,0,.18);
-      transition:transform .55s ease;
+      transition:transform .35s ease;
       transform-origin:center center;
     }
 
@@ -355,7 +355,7 @@
       width:5px;
       background:#64748b;
       border-radius:99px;
-      transition:all .55s ease;
+      transition:all .35s ease;
       box-shadow:0 3px 6px rgba(0,0,0,.10);
     }
 
@@ -367,7 +367,7 @@
       border:2px solid #dbeafe;
       border-radius:24px;
       box-shadow:0 14px 28px rgba(15,23,42,.12);
-      transition:all .55s ease;
+      transition:all .35s ease;
       padding:14px;
       display:flex;
       flex-direction:column;
@@ -425,11 +425,6 @@
       background:linear-gradient(180deg,#ecfeff,#cffafe);
       color:#0f766e;
       border-color:#99f6e4;
-    }
-
-    .tile.ghost{
-      opacity:.45;
-      filter:grayscale(.1);
     }
 
     .move-panel{
@@ -773,14 +768,14 @@
         <div>
           <h1 class="title">Neri Balance Ultimate</h1>
           <p class="subtitle">
-            Aprende a despejar ecuaciones con una balanza gigante mucho más visual. La incógnita puede aparecer a izquierda, a derecha o en ambos lados, y el tutorial te enseña el desequilibrio paso a paso.
+            Aprende a despejar ecuaciones con una balanza gigante más visual. Los números aparecen sobre los platos y la incógnita puede estar a izquierda, a derecha o en ambos lados.
           </p>
 
           <div class="pill-row">
-            <span class="pill">⚖️ Balanza animada</span>
-            <span class="pill">🎓 Tutorial visual real</span>
+            <span class="pill">⚖️ Balanza visual</span>
+            <span class="pill">🎓 Tutorial limpio</span>
             <span class="pill">🧠 5 modos progresivos</span>
-            <span class="pill">✨ Más estilo y movimiento</span>
+            <span class="pill">✨ Estilo reforzado</span>
           </div>
 
           <div class="mode-grid">
@@ -806,7 +801,7 @@
 
             <button class="mode-btn mode-select" data-version="v5">
               <h3>V5 · x en ambos lados</h3>
-              <p>La incógnita aparece a la vez en ambos platos, así que hay que reagrupar y despejar con más estrategia.</p>
+              <p>La incógnita aparece en los dos platos, así que hay que reagrupar y despejar con más estrategia.</p>
             </button>
           </div>
         </div>
@@ -815,12 +810,12 @@
           <div class="mini">
             <span class="emoji">⚖️</span>
             <h3>Idea clave</h3>
-            <p>La balanza se desequilibra si actúas solo en un lado. Por eso debes repetir la operación en el otro.</p>
+            <p>Todo lo que hagas en un lado debes repetirlo en el otro para conservar la igualdad.</p>
           </div>
           <div class="mini">
             <span class="emoji">🧱</span>
             <h3>Números visibles</h3>
-            <p>Ahora los platos muestran de forma clara la x, los números, divisiones y cantidades presentes.</p>
+            <p>Ahora los platos muestran de forma clara la x, los números y las divisiones presentes.</p>
           </div>
           <div class="mini">
             <span class="emoji">🎯</span>
@@ -829,8 +824,8 @@
           </div>
           <div class="mini">
             <span class="emoji">🚀</span>
-            <h3>Tutorial real</h3>
-            <p>En cada tutorial verás el desequilibrio temporal y cómo se corrige al repetir la operación.</p>
+            <h3>V5 incluida</h3>
+            <p>La nueva versión obliga a reunir las x en un mismo lado antes de terminar de despejar.</p>
           </div>
         </div>
       </div>
@@ -841,7 +836,7 @@
         <div class="panel main-info">
           <span class="label">Tutorial</span>
           <div id="tutorialTitle" class="value">Tutorial de versión</div>
-          <div id="tutorialSub" class="sub">Aprende paso a paso antes de empezar a jugar.</div>
+          <div id="tutorialSub" class="sub">Aprende la lógica del modo antes de empezar a jugar.</div>
         </div>
 
         <div class="panel stat">
@@ -855,8 +850,8 @@
         </div>
 
         <div class="panel stat">
-          <span class="label">Fase visual</span>
-          <span id="tutorialPhaseValue" class="value">Antes</span>
+          <span class="label">Objetivo</span>
+          <span class="value">Aislar x</span>
         </div>
 
         <div class="panel stat">
@@ -868,7 +863,7 @@
       <div class="game-layout">
         <div class="arena">
           <div class="equation-banner">
-            <span class="eq-label">Ecuación del tutorial</span>
+            <span class="eq-label">Ejemplo del tutorial</span>
             <div id="tutorialEquation" class="eq-value">x + 3 = 8</div>
           </div>
 
@@ -897,12 +892,12 @@
 
           <div class="move-panel">
             <div class="move-box">
-              <span class="k">Primera mitad del paso</span>
-              <span id="tutorialActionText" class="v">Quitar 3 del lado izquierdo</span>
+              <span class="k">Acción correcta</span>
+              <span id="tutorialActionText" class="v">Restar 3 a ambos lados</span>
             </div>
             <div class="move-box">
-              <span class="k">Segunda mitad del paso</span>
-              <span id="tutorialMirrorText" class="v">Quitar 3 del lado derecho</span>
+              <span class="k">Resultado del paso</span>
+              <span id="tutorialMirrorText" class="v">x = 5</span>
             </div>
           </div>
 
@@ -913,7 +908,7 @@
             </div>
             <div class="status-card">
               <span class="k">Equilibrio</span>
-              <span id="tutorialBalanceText" class="v">Equilibrada</span>
+              <span id="tutorialBalanceText" class="v">Se mantiene estable</span>
             </div>
             <div class="status-card">
               <span class="k">Qué aprendes</span>
@@ -925,7 +920,7 @@
         <div class="side">
           <div id="tutorialFeedback" class="feedback neutral">
             <h3>Empieza el tutorial</h3>
-            <p>Vamos a ver cómo se despeja paso a paso manteniendo siempre la balanza en equilibrio.</p>
+            <p>Observa la ecuación, mira cómo se representa en la balanza y aprende qué acción conviene aplicar.</p>
           </div>
 
           <div class="panel">
@@ -933,7 +928,6 @@
             <div id="tutorialSteps" class="step-list"></div>
 
             <div class="btn-row">
-              <button id="tutorialPhaseBtn" class="btn primary">Ver desequilibrio</button>
               <button id="tutorialPrevBtn" class="btn secondary">Paso anterior</button>
               <button id="tutorialNextBtn" class="btn primary">Siguiente paso</button>
             </div>
@@ -942,9 +936,9 @@
           <div class="panel legend">
             <strong>Idea importante</strong>
             <ul>
-              <li>Primero verás qué pasa si actúas en un solo lado.</li>
-              <li>Después repetirás la misma operación en el otro lado para equilibrar.</li>
-              <li>El despeje correcto siempre conserva la igualdad.</li>
+              <li>El tutorial te dice la acción útil en cada tipo de ecuación.</li>
+              <li>La balanza representa visualmente ambos lados de la igualdad.</li>
+              <li>La meta siempre es dejar la x sola.</li>
             </ul>
 
             <div class="btn-row">
@@ -1136,9 +1130,6 @@
   </div>
 
   <script>
-    /**********************************************************************
-     * CONFIGURACIÓN
-     **********************************************************************/
     const TOTAL_ROUNDS = 6;
     const START_SCORE = 1000;
     const ERROR_PENALTY = 40;
@@ -1150,13 +1141,16 @@
         subtitle: "Ecuaciones básicas para empezar a despejar.",
         tutorial: [
           {
-            before: { type:"linear", side:"left", a:1, b:3, c:8, solution:5 },
-            temp: { type:"linear", side:"left", a:1, b:0, c:8, solution:5, unbalanced:-1 },
-            after: { type:"linear", side:"left", a:1, b:0, c:5, solution:5 },
-            action: "Quitar 3 del lado de la x",
-            mirror: "Quitar 3 del otro lado",
+            equation: { type:"linear", side:"left", a:1, b:3, c:8, solution:5 },
+            action: "Restar 3 a ambos lados",
             result: "x = 5",
-            text: "Primero quitamos 3 del lado donde está la x. La balanza se desequilibra. Después quitamos 3 en el otro lado para recuperar el equilibrio."
+            learn: "Si la x tiene un +3, restamos 3 en los dos lados."
+          },
+          {
+            equation: { type:"linear", side:"right", a:1, b:-4, c:3, solution:7 },
+            action: "Sumar 4 a ambos lados",
+            result: "x = 7",
+            learn: "Si la x tiene una resta, la cancelamos sumando."
           }
         ]
       },
@@ -1166,22 +1160,16 @@
         subtitle: "Empiezan a aparecer coeficientes y dos pasos de despeje.",
         tutorial: [
           {
-            before: { type:"linear", side:"left", a:3, b:6, c:18, solution:4 },
-            temp: { type:"linear", side:"left", a:3, b:0, c:18, solution:4, unbalanced:-1 },
-            after: { type:"linear", side:"left", a:3, b:0, c:12, solution:4 },
-            action: "Restar 6 del lado de la x",
-            mirror: "Restar 6 del otro lado",
-            result: "3x = 12",
-            text: "Para dejar 3x solo, primero quitamos el +6 donde aparece."
+            equation: { type:"linear", side:"left", a:3, b:6, c:18, solution:4 },
+            action: "Primero restar 6; luego dividir entre 3",
+            result: "x = 4",
+            learn: "Primero quitamos la constante y después el coeficiente."
           },
           {
-            before: { type:"linear", side:"left", a:3, b:0, c:12, solution:4 },
-            temp: { type:"linear", side:"left", a:1, b:0, c:12, solution:4, unbalanced:-1 },
-            after: { type:"linear", side:"left", a:1, b:0, c:4, solution:4 },
-            action: "Dividir entre 3 el lado de la x",
-            mirror: "Dividir entre 3 el otro lado",
-            result: "x = 4",
-            text: "Ahora eliminamos el coeficiente dividiendo ambos lados entre 3."
+            equation: { type:"linear", side:"right", a:4, b:0, c:20, solution:5 },
+            action: "Dividir entre 4 a ambos lados",
+            result: "x = 5",
+            learn: "Si tienes 4x = 20, basta con dividir entre 4."
           }
         ]
       },
@@ -1191,22 +1179,16 @@
         subtitle: "Incluye signos negativos y ecuaciones con división de la x.",
         tutorial: [
           {
-            before: { type:"linear", side:"left", a:2, b:-5, c:9, solution:7 },
-            temp: { type:"linear", side:"left", a:2, b:0, c:9, solution:7, unbalanced:1 },
-            after: { type:"linear", side:"left", a:2, b:0, c:14, solution:7 },
-            action: "Sumar 5 al lado de la x",
-            mirror: "Sumar 5 al otro lado",
-            result: "2x = 14",
-            text: "Cuando aparece una resta junto a la x, la cancelamos sumando."
+            equation: { type:"linear", side:"left", a:2, b:-5, c:9, solution:7 },
+            action: "Sumar 5; luego dividir entre 2",
+            result: "x = 7",
+            learn: "Una resta junto a la x se elimina sumando."
           },
           {
-            before: { type:"linear", side:"left", a:2, b:0, c:14, solution:7 },
-            temp: { type:"linear", side:"left", a:1, b:0, c:14, solution:7, unbalanced:-1 },
-            after: { type:"linear", side:"left", a:1, b:0, c:7, solution:7 },
-            action: "Dividir entre 2",
-            mirror: "Dividir entre 2",
-            result: "x = 7",
-            text: "Después quitamos el coeficiente."
+            equation: { type:"divide", side:"right", denom:4, c:3, solution:12 },
+            action: "Multiplicar por 4 a ambos lados",
+            result: "x = 12",
+            learn: "Si la x está dividida, la operación útil es multiplicar."
           }
         ]
       },
@@ -1216,13 +1198,16 @@
         subtitle: "Retos mixtos con más pasos y decisiones menos obvias.",
         tutorial: [
           {
-            before: { type:"divide", side:"left", denom:4, c:3, solution:12 },
-            temp: { type:"linear", side:"left", a:1, b:0, c:3, solution:12, unbalanced:1 },
-            after: { type:"linear", side:"left", a:1, b:0, c:12, solution:12 },
-            action: "Multiplicar por 4 el lado de la x",
-            mirror: "Multiplicar por 4 el otro lado",
-            result: "x = 12",
-            text: "Si la x está dividida, la operación útil es multiplicar ambos lados por ese número."
+            equation: { type:"linear", side:"right", a:5, b:10, c:25, solution:3 },
+            action: "Restar 10; luego dividir entre 5",
+            result: "x = 3",
+            learn: "Piensa siempre qué acompaña a la x y elimínalo por orden."
+          },
+          {
+            equation: { type:"divide", side:"left", denom:5, c:2, solution:10 },
+            action: "Multiplicar por 5 a ambos lados",
+            result: "x = 10",
+            learn: "La división desaparece multiplicando por el mismo número."
           }
         ]
       },
@@ -1232,39 +1217,21 @@
         subtitle: "La incógnita aparece en los dos lados y hay que reagrupar antes de terminar.",
         tutorial: [
           {
-            before: { type:"both", leftA:3, leftB:2, rightA:1, rightC:10, solution:4 },
-            temp: { type:"both", leftA:2, leftB:2, rightA:1, rightC:10, solution:4, unbalanced:-1 },
-            after: { type:"linear", side:"left", a:2, b:2, c:10, solution:4 },
-            action: "Quitar 1x del lado izquierdo",
-            mirror: "Quitar 1x del lado derecho",
-            result: "2x + 2 = 10",
-            text: "Cuando hay x en ambos lados, primero reunimos todas las x en un solo lado."
-          },
-          {
-            before: { type:"linear", side:"left", a:2, b:2, c:10, solution:4 },
-            temp: { type:"linear", side:"left", a:2, b:0, c:10, solution:4, unbalanced:-1 },
-            after: { type:"linear", side:"left", a:2, b:0, c:8, solution:4 },
-            action: "Restar 2",
-            mirror: "Restar 2",
-            result: "2x = 8",
-            text: "Después quitamos la constante que acompaña a la x."
-          },
-          {
-            before: { type:"linear", side:"left", a:2, b:0, c:8, solution:4 },
-            temp: { type:"linear", side:"left", a:1, b:0, c:8, solution:4, unbalanced:-1 },
-            after: { type:"linear", side:"left", a:1, b:0, c:4, solution:4 },
-            action: "Dividir entre 2",
-            mirror: "Dividir entre 2",
+            equation: { type:"both", leftA:3, leftB:2, rightA:1, rightC:10, solution:4 },
+            action: "Mover 1x al lado izquierdo; luego restar 2 y dividir entre 2",
             result: "x = 4",
-            text: "Y por último quitamos el coeficiente para dejar la x sola."
+            learn: "En V5 primero reunimos todas las x en un solo lado."
+          },
+          {
+            equation: { type:"both", leftA:4, leftB:0, rightA:2, rightC:6, solution:3 },
+            action: "Mover 2x a la izquierda; luego dividir entre 2",
+            result: "x = 3",
+            learn: "Si hay x en ambos lados, reagrúpalas antes de seguir."
           }
         ]
       }
     };
 
-    /**********************************************************************
-     * ESTADO
-     **********************************************************************/
     const state = {
       version: "v1",
       round: 1,
@@ -1272,14 +1239,10 @@
       errors: 0,
       solved: 0,
       tutorialStep: 0,
-      tutorialPhase: "before", // before | temp | after
       currentEquation: null,
       lastAction: "Sin movimientos"
     };
 
-    /**********************************************************************
-     * DOM
-     **********************************************************************/
     const startScreen = document.getElementById("startScreen");
     const tutorialScreen = document.getElementById("tutorialScreen");
     const gameScreen = document.getElementById("gameScreen");
@@ -1289,7 +1252,6 @@
     const tutorialSub = document.getElementById("tutorialSub");
     const tutorialVersionValue = document.getElementById("tutorialVersionValue");
     const tutorialStepValue = document.getElementById("tutorialStepValue");
-    const tutorialPhaseValue = document.getElementById("tutorialPhaseValue");
     const tutorialStatusValue = document.getElementById("tutorialStatusValue");
     const tutorialEquation = document.getElementById("tutorialEquation");
     const tutorialActionText = document.getElementById("tutorialActionText");
@@ -1299,7 +1261,6 @@
     const tutorialLearnText = document.getElementById("tutorialLearnText");
     const tutorialFeedback = document.getElementById("tutorialFeedback");
     const tutorialSteps = document.getElementById("tutorialSteps");
-    const tutorialPhaseBtn = document.getElementById("tutorialPhaseBtn");
     const tutorialPrevBtn = document.getElementById("tutorialPrevBtn");
     const tutorialNextBtn = document.getElementById("tutorialNextBtn");
     const tutorialMenuBtn = document.getElementById("tutorialMenuBtn");
@@ -1350,9 +1311,6 @@
     const restartBtn = document.getElementById("restartBtn");
     const finalMenuBtn = document.getElementById("finalMenuBtn");
 
-    /**********************************************************************
-     * UTILIDADES
-     **********************************************************************/
     function showScreen(screen){
       startScreen.classList.add("hidden");
       tutorialScreen.classList.add("hidden");
@@ -1378,6 +1336,18 @@
       return Math.random() < 0.5 ? "left" : "right";
     }
 
+    function formatAX(a){
+      if(a === 1) return "x";
+      if(a === -1) return "-x";
+      return `${a}x`;
+    }
+
+    function formatConst(b){
+      if(b > 0) return ` + ${b}`;
+      if(b < 0) return ` - ${Math.abs(b)}`;
+      return "";
+    }
+
     function equationToText(eq){
       if(eq.type === "divide"){
         return eq.side === "left"
@@ -1395,30 +1365,14 @@
       return eq.side === "left" ? `${expr} = ${eq.c}` : `${eq.c} = ${expr}`;
     }
 
-    function formatAX(a){
-      if(a === 1) return "x";
-      if(a === -1) return "-x";
-      return `${a}x`;
-    }
-
-    function formatConst(b){
-      if(b > 0) return ` + ${b}`;
-      if(b < 0) return ` - ${Math.abs(b)}`;
-      return "";
-    }
-
     function isSolved(eq){
-      if(eq.type !== "linear") return false;
-      return eq.a === 1 && eq.b === 0;
+      return eq.type === "linear" && eq.a === 1 && eq.b === 0;
     }
 
     function cloneEq(obj){
       return JSON.parse(JSON.stringify(obj));
     }
 
-    /**********************************************************************
-     * REPRESENTACIÓN VISUAL DE PLATOS
-     **********************************************************************/
     function buildTilesForLinearSide(a, b){
       const items = [];
       if(a !== 0){
@@ -1473,7 +1427,6 @@
         const tile = document.createElement("div");
         tile.className = `tile ${item.kind}`;
         tile.textContent = item.text;
-        if(item.ghost) tile.classList.add("ghost");
         container.appendChild(tile);
       });
     }
@@ -1484,7 +1437,7 @@
         if(item.kind === "x") weight += 5;
         else if(item.kind === "div") weight += 1;
         else if(item.kind === "num"){
-          const n = parseInt(String(item.text).replace("+","").replace("−","-"), 10);
+          const n = parseInt(String(item.text).replace("+",""), 10);
           if(!isNaN(n)) weight += Math.abs(n);
           else weight += 1;
         }
@@ -1499,14 +1452,9 @@
 
       const leftWeight = getVisualWeightFromItems(tiles.left);
       const rightWeight = getVisualWeightFromItems(tiles.right);
-      let diff = rightWeight - leftWeight;
+      const diff = rightWeight - leftWeight;
+      const tilt = Math.max(-8, Math.min(8, diff * 0.35));
 
-      if(eq.unbalanced){
-        diff += eq.unbalanced * 6;
-      }
-
-      const maxTilt = 12;
-      const tilt = Math.max(-maxTilt, Math.min(maxTilt, diff * 0.9));
       beam.style.transform = `translateX(-50%) rotate(${tilt}deg)`;
 
       const centerX = leftPlate.parentElement.clientWidth / 2;
@@ -1517,8 +1465,8 @@
       const leftDrop = 58 + Math.max(0, tilt);
       const rightDrop = 58 + Math.max(0, -tilt);
 
-      const leftPlateY = 250 + Math.max(0, tilt * 2.2);
-      const rightPlateY = 250 + Math.max(0, -tilt * 2.2);
+      const leftPlateY = 250 + Math.max(0, tilt * 1.6);
+      const rightPlateY = 250 + Math.max(0, -tilt * 1.6);
 
       leftRope.style.left = `${leftX}px`;
       leftRope.style.top = `${beamY}px`;
@@ -1535,9 +1483,6 @@
       rightPlate.style.top = `${rightPlateY}px`;
     }
 
-    /**********************************************************************
-     * GENERADORES
-     **********************************************************************/
     function generateEquation(version){
       if(version === "v1"){
         const side = randomSide();
@@ -1626,62 +1571,42 @@
       };
     }
 
-    /**********************************************************************
-     * TUTORIAL
-     **********************************************************************/
     function openTutorial(version){
       state.version = version;
       state.tutorialStep = 0;
-      state.tutorialPhase = "before";
       renderTutorial();
       showScreen(tutorialScreen);
-    }
-
-    function getTutorialEq(stepObj){
-      return cloneEq(stepObj[state.tutorialPhase]);
     }
 
     function renderTutorial(){
       const info = VERSION_INFO[state.version];
       const step = info.tutorial[state.tutorialStep];
-      const eq = getTutorialEq(step);
+      const eq = cloneEq(step.equation);
 
       tutorialTitle.textContent = `${info.title} · Tutorial`;
       tutorialSub.textContent = info.subtitle;
       tutorialVersionValue.textContent = info.label;
       tutorialStepValue.textContent = `${state.tutorialStep + 1}/${info.tutorial.length}`;
-      tutorialPhaseValue.textContent =
-        state.tutorialPhase === "before" ? "Antes" :
-        state.tutorialPhase === "temp" ? "Desequilibrio" : "Equilibrado";
+      tutorialStatusValue.textContent = "Equilibrio";
 
-      tutorialStatusValue.textContent = state.tutorialPhase === "temp" ? "Desbalanceada" : "Estable";
       tutorialEquation.textContent = equationToText(eq);
       tutorialActionText.textContent = step.action;
-      tutorialMirrorText.textContent = step.mirror;
+      tutorialMirrorText.textContent = step.result;
       tutorialResultText.textContent = step.result;
-      tutorialBalanceText.textContent = state.tutorialPhase === "temp" ? "Se inclina visualmente" : "Equilibrio correcto";
-      tutorialLearnText.textContent = state.tutorialPhase === "temp"
-        ? "Un solo lado rompe la igualdad"
-        : "La igualdad se conserva";
+      tutorialBalanceText.textContent = "Se mantiene estable";
+      tutorialLearnText.textContent = step.learn;
 
       tutorialSteps.innerHTML = info.tutorial.map((s, i) => `
         <div class="step-item" style="${i === state.tutorialStep ? 'border:2px solid #93c5fd;background:#eff6ff;' : ''}">
-          <strong>Paso ${i + 1}.</strong> ${s.text}
+          <strong>Paso ${i + 1}.</strong> ${s.learn}
         </div>
       `).join("");
 
-      const feedbackText =
-        state.tutorialPhase === "before"
-          ? "Observa la ecuación inicial. Todavía no hemos actuado."
-          : state.tutorialPhase === "temp"
-            ? "Ahora has tocado solo un lado. Mira cómo la balanza se inclina."
-            : "Al repetir la misma operación en el otro lado, el equilibrio vuelve.";
-
       setFeedback(
         tutorialFeedback,
-        state.tutorialPhase === "temp" ? "warn" : (state.tutorialStep === info.tutorial.length - 1 && state.tutorialPhase === "after" ? "good" : "neutral"),
-        state.tutorialPhase === "temp" ? "Desequilibrio temporal" : (state.tutorialStep === info.tutorial.length - 1 && state.tutorialPhase === "after" ? "Tutorial completado" : "Paso guiado"),
-        `${step.text} ${feedbackText}`
+        "neutral",
+        "Paso guiado",
+        `Observa esta representación: ${equationToText(eq)}. Acción recomendada: ${step.action}.`
       );
 
       updateBalanceVisual(
@@ -1695,59 +1620,10 @@
         eq
       );
 
-      tutorialPrevBtn.disabled = state.tutorialStep === 0 && state.tutorialPhase === "before";
-      tutorialPhaseBtn.disabled = state.tutorialPhase === "after";
-      tutorialPhaseBtn.textContent =
-        state.tutorialPhase === "before" ? "Ver desequilibrio" :
-        state.tutorialPhase === "temp" ? "Volver a equilibrar" :
-        "Paso completo";
-
-      tutorialNextBtn.textContent = (state.tutorialStep === info.tutorial.length - 1 && state.tutorialPhase === "after")
-        ? "Terminar tutorial"
-        : "Siguiente paso";
+      tutorialPrevBtn.disabled = state.tutorialStep === 0;
+      tutorialNextBtn.textContent = state.tutorialStep === info.tutorial.length - 1 ? "Terminar tutorial" : "Siguiente paso";
     }
 
-    function nextTutorialPhase(){
-      if(state.tutorialPhase === "before"){
-        state.tutorialPhase = "temp";
-      } else if(state.tutorialPhase === "temp"){
-        state.tutorialPhase = "after";
-      }
-      renderTutorial();
-    }
-
-    function prevTutorialPhase(){
-      if(state.tutorialPhase === "after"){
-        state.tutorialPhase = "temp";
-      } else if(state.tutorialPhase === "temp"){
-        state.tutorialPhase = "before";
-      } else if(state.tutorialStep > 0){
-        state.tutorialStep--;
-        state.tutorialPhase = "after";
-      }
-      renderTutorial();
-    }
-
-    function nextTutorialStep(){
-      const steps = VERSION_INFO[state.version].tutorial.length;
-
-      if(state.tutorialPhase !== "after"){
-        nextTutorialPhase();
-        return;
-      }
-
-      if(state.tutorialStep < steps - 1){
-        state.tutorialStep++;
-        state.tutorialPhase = "before";
-        renderTutorial();
-      } else {
-        startGame();
-      }
-    }
-
-    /**********************************************************************
-     * JUEGO
-     **********************************************************************/
     function getXStateText(eq){
       if(eq.type === "both") return "La x está en ambos lados";
       if(isSolved(eq)) return "La x ya está sola";
@@ -1931,19 +1807,23 @@
             type = "good";
           } else if(eq.rightA > eq.leftA){
             const newA = eq.rightA - eq.leftA;
-            const newC = eq.leftB;
+            const newC = eq.rightC - eq.leftB;
             state.lastAction = `Restar ${eq.leftA}x a ambos lados`;
             eq.type = "linear";
             eq.side = "right";
             eq.a = newA;
             eq.b = 0;
-            eq.c = eq.rightC - newC;
+            eq.c = newC;
+            delete eq.leftA;
+            delete eq.leftB;
+            delete eq.rightA;
+            delete eq.rightC;
             changed = true;
             title = "Buen movimiento";
             text = "Has reunido la x en el lado derecho restando la misma cantidad de x en ambos lados.";
             type = "good";
           } else {
-            registerError("Si las x tienen el mismo coeficiente en ambos lados, este tipo de ejercicio necesitaría otra estrategia distinta.");
+            registerError("Si las x tienen el mismo coeficiente en ambos lados, este ejercicio necesitaría otra estrategia distinta.");
             return;
           }
         } else {
@@ -2027,21 +1907,27 @@
       showScreen(endScreen);
     }
 
-    /**********************************************************************
-     * EVENTOS
-     **********************************************************************/
     document.querySelectorAll(".mode-select").forEach(btn => {
       btn.addEventListener("click", () => openTutorial(btn.dataset.version));
     });
 
-    tutorialPhaseBtn.addEventListener("click", () => {
-      if(state.tutorialPhase === "before") state.tutorialPhase = "temp";
-      else if(state.tutorialPhase === "temp") state.tutorialPhase = "after";
-      renderTutorial();
+    tutorialPrevBtn.addEventListener("click", () => {
+      if(state.tutorialStep > 0){
+        state.tutorialStep--;
+        renderTutorial();
+      }
     });
 
-    tutorialPrevBtn.addEventListener("click", prevTutorialPhase);
-    tutorialNextBtn.addEventListener("click", nextTutorialStep);
+    tutorialNextBtn.addEventListener("click", () => {
+      const steps = VERSION_INFO[state.version].tutorial.length;
+      if(state.tutorialStep < steps - 1){
+        state.tutorialStep++;
+        renderTutorial();
+      } else {
+        startGame();
+      }
+    });
+
     tutorialMenuBtn.addEventListener("click", () => showScreen(startScreen));
     tutorialPlayBtn.addEventListener("click", startGame);
 
