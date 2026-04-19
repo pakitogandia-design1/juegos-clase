@@ -37,7 +37,7 @@
     }
 
     .app{
-      max-width: 1180px;
+      max-width: 1280px;
       margin: 0 auto;
       padding: 28px 18px 40px;
       min-height:100vh;
@@ -48,7 +48,7 @@
 
     .screen{
       width:100%;
-      max-width:1020px;
+      max-width:1180px;
       background:rgba(255,255,255,.1);
       border:1px solid rgba(255,255,255,.12);
       backdrop-filter: blur(10px);
@@ -305,6 +305,13 @@
       color:#0f172a;
     }
 
+    .game-main{
+      display:grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap:16px;
+      align-items:start;
+    }
+
     .challenge{
       background:linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
       border-radius:24px;
@@ -457,6 +464,131 @@
       min-width:185px;
     }
 
+    .calculator-panel{
+      background:linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:18px;
+      border:1px solid rgba(15,23,42,.06);
+      position:sticky;
+      top:16px;
+    }
+
+    .calculator-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:14px;
+    }
+
+    .calculator-title h3{
+      margin:0;
+      font-size:1.05rem;
+      font-weight:900;
+      color:#0f172a;
+    }
+
+    .calculator-badge{
+      padding:6px 10px;
+      border-radius:999px;
+      background:#eef2ff;
+      color:#4338ca;
+      font-size:.8rem;
+      font-weight:800;
+    }
+
+    .calculator-display{
+      width:100%;
+      min-height:84px;
+      border-radius:18px;
+      border:2px solid #dbeafe;
+      background:linear-gradient(180deg, #eff6ff, #ffffff);
+      padding:14px 16px;
+      margin-bottom:14px;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+      align-items:flex-end;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+    }
+
+    .calculator-expression{
+      width:100%;
+      text-align:right;
+      font-size:.95rem;
+      color:#64748b;
+      min-height:22px;
+      word-break:break-word;
+    }
+
+    .calculator-result{
+      width:100%;
+      text-align:right;
+      font-size:1.8rem;
+      font-weight:900;
+      color:#0f172a;
+      line-height:1.15;
+      word-break:break-word;
+    }
+
+    .calculator-grid{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:10px;
+    }
+
+    .calc-btn{
+      border:none;
+      border-radius:18px;
+      min-height:58px;
+      font-size:1.08rem;
+      font-weight:900;
+      cursor:pointer;
+      background:linear-gradient(180deg, #ffffff, #f8fafc);
+      border:2px solid #e2e8f0;
+      box-shadow:0 8px 18px rgba(15,23,42,.06);
+      color:#0f172a;
+      transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease;
+    }
+
+    .calc-btn:hover{
+      transform:translateY(-2px);
+      border-color:#a5b4fc;
+      box-shadow:0 12px 22px rgba(79,70,229,.14);
+      background:linear-gradient(180deg, #ffffff, #f4f6ff);
+    }
+
+    .calc-btn.operator{
+      background:linear-gradient(135deg, #4f46e5, #7c3aed);
+      color:#fff;
+      border:none;
+      box-shadow:0 12px 24px rgba(79,70,229,.24);
+    }
+
+    .calc-btn.equal{
+      background:linear-gradient(135deg, #0891b2, #2563eb);
+      color:#fff;
+      border:none;
+      box-shadow:0 12px 24px rgba(37,99,235,.24);
+    }
+
+    .calc-btn.clear{
+      background:linear-gradient(180deg, #fff7ed, #ffffff);
+      color:#b45309;
+      border-color:#fed7aa;
+    }
+
+    .calc-btn.delete{
+      background:linear-gradient(180deg, #fef2f2, #ffffff);
+      color:#b91c1c;
+      border-color:#fecaca;
+    }
+
+    .calc-btn.zero{
+      grid-column: span 2;
+    }
+
     .final-wrap{
       text-align:center;
     }
@@ -575,6 +707,16 @@
     @keyframes fadeIn{
       from{opacity:0; transform:translateY(8px)}
       to{opacity:1; transform:translateY(0)}
+    }
+
+    @media (max-width: 980px){
+      .game-main{
+        grid-template-columns:1fr;
+      }
+
+      .calculator-panel{
+        position:static;
+      }
     }
 
     @media (max-width: 900px){
@@ -707,26 +849,65 @@
           </div>
         </div>
 
-        <div class="challenge">
-          <div id="challengeType" class="challenge-type">🧠 Reto</div>
-          <h2 id="questionText" class="question">Cargando reto...</h2>
+        <div class="game-main">
+          <div class="challenge">
+            <div id="challengeType" class="challenge-type">🧠 Reto</div>
+            <h2 id="questionText" class="question">Cargando reto...</h2>
 
-          <div class="visual-card">
-            <div>
-              <div id="visualValue" class="visual-value">---</div>
-              <div id="helperText" class="small-helper muted"></div>
+            <div class="visual-card">
+              <div>
+                <div id="visualValue" class="visual-value">---</div>
+                <div id="helperText" class="small-helper muted"></div>
+              </div>
+            </div>
+
+            <div id="optionsContainer" class="options"></div>
+
+            <div id="feedbackBox" class="feedback">
+              <h3 id="feedbackTitle">¡Correcto!</h3>
+              <p id="feedbackText"></p>
+              <div class="next-area">
+                <button id="nextBtn" class="next-btn">Siguiente reto</button>
+              </div>
             </div>
           </div>
 
-          <div id="optionsContainer" class="options"></div>
-
-          <div id="feedbackBox" class="feedback">
-            <h3 id="feedbackTitle">¡Correcto!</h3>
-            <p id="feedbackText"></p>
-            <div class="next-area">
-              <button id="nextBtn" class="next-btn">Siguiente reto</button>
+          <aside class="calculator-panel">
+            <div class="calculator-title">
+              <h3>🧮 Calculadora</h3>
+              <span class="calculator-badge">Durante la partida</span>
             </div>
-          </div>
+
+            <div class="calculator-display">
+              <div id="calcExpression" class="calculator-expression"></div>
+              <div id="calcResult" class="calculator-result">0</div>
+            </div>
+
+            <div class="calculator-grid">
+              <button class="calc-btn clear" data-calc-action="clear">C</button>
+              <button class="calc-btn delete" data-calc-action="delete">⌫</button>
+              <button class="calc-btn operator" data-calc-value="/">÷</button>
+              <button class="calc-btn operator" data-calc-value="*">×</button>
+
+              <button class="calc-btn" data-calc-value="7">7</button>
+              <button class="calc-btn" data-calc-value="8">8</button>
+              <button class="calc-btn" data-calc-value="9">9</button>
+              <button class="calc-btn operator" data-calc-value="-">−</button>
+
+              <button class="calc-btn" data-calc-value="4">4</button>
+              <button class="calc-btn" data-calc-value="5">5</button>
+              <button class="calc-btn" data-calc-value="6">6</button>
+              <button class="calc-btn operator" data-calc-value="+">+</button>
+
+              <button class="calc-btn" data-calc-value="1">1</button>
+              <button class="calc-btn" data-calc-value="2">2</button>
+              <button class="calc-btn" data-calc-value="3">3</button>
+              <button class="calc-btn equal" data-calc-action="equals">=</button>
+
+              <button class="calc-btn zero" data-calc-value="0">0</button>
+              <button class="calc-btn" data-calc-value=",">,</button>
+            </div>
+          </aside>
         </div>
       </div>
     </section>
@@ -785,7 +966,9 @@
       score: 0,
       hits: 0,
       answered: false,
-      mode: "full"
+      mode: "full",
+      calcExpression: "",
+      calcJustEvaluated: false
     };
 
     /**********************************************************************
@@ -814,6 +997,10 @@
     const feedbackBox = document.getElementById("feedbackBox");
     const feedbackTitle = document.getElementById("feedbackTitle");
     const feedbackText = document.getElementById("feedbackText");
+
+    const calcExpression = document.getElementById("calcExpression");
+    const calcResult = document.getElementById("calcResult");
+    const calcButtons = document.querySelectorAll(".calc-btn");
 
     const medalBox = document.getElementById("medalBox");
     const finalMessage = document.getElementById("finalMessage");
@@ -879,6 +1066,129 @@
 
     function sanitizeMinus(str){
       return String(str).replace(/-/g, "−");
+    }
+
+    function resetCalculator(){
+      state.calcExpression = "";
+      state.calcJustEvaluated = false;
+      updateCalculatorDisplay();
+    }
+
+    function updateCalculatorDisplay(resultOverride = null){
+      const shownExpression = state.calcExpression
+        .replace(/\*/g, "×")
+        .replace(/\//g, "÷")
+        .replace(/-/g, "−");
+
+      calcExpression.textContent = shownExpression;
+
+      if(resultOverride !== null){
+        calcResult.textContent = resultOverride;
+        return;
+      }
+
+      calcResult.textContent = shownExpression || "0";
+    }
+
+    function isOperator(char){
+      return ["+", "-", "*", "/"].includes(char);
+    }
+
+    function appendCalculatorValue(value){
+      let expr = state.calcExpression;
+
+      if(state.calcJustEvaluated){
+        if(/[0-9,]/.test(value)){
+          expr = "";
+        }
+        state.calcJustEvaluated = false;
+      }
+
+      if(value === ","){
+        const parts = expr.split(/[\+\-\*\/]/);
+        const currentPart = parts[parts.length - 1] || "";
+        if(currentPart.includes(",")) return;
+        if(currentPart === ""){
+          expr += "0,";
+        }else{
+          expr += ",";
+        }
+        state.calcExpression = expr;
+        updateCalculatorDisplay();
+        return;
+      }
+
+      if(isOperator(value)){
+        if(expr === ""){
+          if(value === "-"){
+            state.calcExpression = "-";
+            updateCalculatorDisplay();
+          }
+          return;
+        }
+
+        const lastChar = expr.slice(-1);
+        if(isOperator(lastChar)){
+          expr = expr.slice(0, -1) + value;
+        }else if(lastChar === ","){
+          expr += "0" + value;
+        }else{
+          expr += value;
+        }
+
+        state.calcExpression = expr;
+        updateCalculatorDisplay();
+        return;
+      }
+
+      state.calcExpression = expr + value;
+      updateCalculatorDisplay();
+    }
+
+    function deleteCalculatorChar(){
+      if(state.calcJustEvaluated){
+        state.calcJustEvaluated = false;
+      }
+      state.calcExpression = state.calcExpression.slice(0, -1);
+      updateCalculatorDisplay();
+    }
+
+    function evaluateCalculator(){
+      let expr = state.calcExpression;
+
+      if(!expr) return;
+
+      const lastChar = expr.slice(-1);
+      if(isOperator(lastChar) || lastChar === ","){
+        expr = expr.slice(0, -1);
+      }
+
+      if(!expr) return;
+
+      const normalized = expr.replace(/,/g, ".");
+
+      if(!/^[0-9+\-*/.() ]+$/.test(normalized)){
+        updateCalculatorDisplay("Error");
+        return;
+      }
+
+      try{
+        const result = Function(`"use strict"; return (${normalized})`)();
+
+        if(!Number.isFinite(result)){
+          updateCalculatorDisplay("Error");
+          return;
+        }
+
+        const rounded = roundTo(result, 8);
+        const formatted = formatNumberES(rounded, 8);
+
+        state.calcExpression = String(rounded).replace(/\./g, ",");
+        state.calcJustEvaluated = true;
+        updateCalculatorDisplay(formatted);
+      }catch{
+        updateCalculatorDisplay("Error");
+      }
     }
 
     function uniqueFormattedOptions(correctValue, wrongValueGenerator, formatter, total = 4){
@@ -1375,6 +1685,7 @@
       state.score = 0;
       state.hits = 0;
       state.answered = false;
+      resetCalculator();
       updateTopbar();
       showScreen(gameScreen);
       renderRound();
@@ -1542,17 +1853,81 @@
     backToMenuBtn.addEventListener("click", goToMenu);
     nextBtn.addEventListener("click", nextRound);
 
+    calcButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const action = btn.dataset.calcAction;
+        const value = btn.dataset.calcValue;
+
+        if(action === "clear"){
+          resetCalculator();
+          return;
+        }
+
+        if(action === "delete"){
+          deleteCalculatorChar();
+          return;
+        }
+
+        if(action === "equals"){
+          evaluateCalculator();
+          return;
+        }
+
+        if(value){
+          appendCalculatorValue(value);
+        }
+      });
+    });
+
     /**********************************************************************
      * ATAJOS DE TECLADO
      **********************************************************************/
     document.addEventListener("keydown", (e) => {
       if(gameScreen.classList.contains("hidden")) return;
 
+      const tag = document.activeElement?.tagName;
+      if(tag === "INPUT" || tag === "TEXTAREA") return;
+
+      const allowedCalcKeys = "0123456789+-*/,.";
+      if(allowedCalcKeys.includes(e.key)){
+        e.preventDefault();
+        appendCalculatorValue(e.key === "." ? "," : e.key);
+        return;
+      }
+
+      if(e.key === "Backspace"){
+        e.preventDefault();
+        deleteCalculatorChar();
+        return;
+      }
+
+      if(e.key === "Escape"){
+        e.preventDefault();
+        resetCalculator();
+        return;
+      }
+
+      if(e.key === "="){
+        e.preventDefault();
+        evaluateCalculator();
+        return;
+      }
+
+      if(e.key === "Enter"){
+        e.preventDefault();
+        if(state.answered){
+          nextRound();
+        }else{
+          evaluateCalculator();
+        }
+        return;
+      }
+
       const buttons = [...document.querySelectorAll(".option")];
       if(!state.answered && ["1","2","3","4"].includes(e.key)){
         const idx = Number(e.key) - 1;
         if(buttons[idx]) buttons[idx].click();
-      }else if(state.answered && (e.key === "Enter" || e.key === " ")){
+      }else if(state.answered && e.key === " "){
         e.preventDefault();
         nextRound();
       }
