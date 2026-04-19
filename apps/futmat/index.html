@@ -399,6 +399,12 @@
       background:#fef2f2 !important;
     }
 
+    .cell-hint{
+      border-color:#f59e0b !important;
+      background:#fffbeb !important;
+      box-shadow:0 0 0 4px rgba(245,158,11,.22) !important;
+    }
+
     .line-connector{
       position:absolute;
       height:2px;
@@ -475,6 +481,12 @@
       color:#1e3a8a;
     }
 
+    .feedback.warn{
+      background:linear-gradient(180deg, #fffbeb, #fefce8);
+      border:1px solid #fde68a;
+      color:#92400e;
+    }
+
     .feedback h3{
       margin:0 0 8px;
       font-size:1.06rem;
@@ -518,6 +530,12 @@
       background:linear-gradient(180deg, #ffffff, #f8fafc);
       border:2px solid #e2e8f0;
       box-shadow:0 10px 20px rgba(15,23,42,.06);
+    }
+
+    .btn.warn{
+      color:#fff;
+      background:linear-gradient(135deg, #f59e0b, #ef4444);
+      box-shadow:0 14px 28px rgba(239,68,68,.20);
     }
 
     .legend{
@@ -742,9 +760,9 @@
             <p>Al enviar, el juego marca casillas correctas e incorrectas visualmente.</p>
           </div>
           <div class="mini">
-            <span class="emoji">🏅</span>
-            <h3>Puntuación con penalización</h3>
-            <p>Cada error resta puntos. Resuelve con el menor número de fallos posible.</p>
+            <span class="emoji">💡</span>
+            <h3>Ayuda integrada</h3>
+            <p>Puedes pedir una solución parcial, pero contará como un fallo extra y restará puntuación.</p>
           </div>
         </div>
       </div>
@@ -809,6 +827,7 @@
             <div class="btn-row">
               <button id="checkBtn" class="btn primary">Enviar respuesta</button>
               <button id="newPuzzleBtn" class="btn secondary">Nuevo reto</button>
+              <button id="hintBtn" class="btn warn">Mostrar una solución</button>
             </div>
           </div>
 
@@ -848,10 +867,10 @@
           <div class="panel legend">
             <strong>Cómo se juega</strong>
             <ul>
-              <li>Ahora el juego sí respeta la prioridad de operaciones: <strong>× y ÷ antes que + y −</strong>.</li>
-              <li>Las líneas se validan por su resultado completo, no por una lógica izquierda-derecha incorrecta.</li>
+              <li>El juego respeta la prioridad de operaciones: <strong>× y ÷ antes que + y −</strong>.</li>
+              <li>Las líneas se validan por su resultado completo.</li>
               <li>En las casillas de operación puedes usar: +, -, *, x, × o /.</li>
-              <li>Si fallas, el juego marca en rojo y resta puntuación.</li>
+              <li>El botón <strong>Mostrar una solución</strong> rellena una casilla y cuenta como fallo extra.</li>
             </ul>
 
             <div class="btn-row">
@@ -961,6 +980,7 @@
 
     const checkBtn = document.getElementById("checkBtn");
     const newPuzzleBtn = document.getElementById("newPuzzleBtn");
+    const hintBtn = document.getElementById("hintBtn");
     const menuBtn = document.getElementById("menuBtn");
     const feedbackBox = document.getElementById("feedbackBox");
 
@@ -1317,7 +1337,7 @@
      **********************************************************************/
     function clearCellStates(){
       state.inputMap.forEach(item => {
-        item.element.classList.remove("cell-correct", "cell-wrong");
+        item.element.classList.remove("cell-correct", "cell-wrong", "cell-hint");
       });
     }
 
@@ -1447,6 +1467,74 @@
     }
 
     /**********************************************************************
+     * AYUDA: MOSTRAR UNA SOLUCIÓN
+     **********************************************************************/
+    function getExpectedValue(item){
+      const line = state.currentPuzzle.lines[item.line];
+      if(item.kind === "number"){
+        return String(line.nums[item.index]);
+      }
+      return displayOp(line.ops[item.index]);
+    }
+
+    function isItemCorrect(item){
+      const expected = getExpectedValue(item);
+      const current = item.element.value.trim();
+
+      if(item.kind === "number"){
+        return current !== "" && Number(current) === Number(expected);
+      }
+      return normalizeOp(current) === normalizeOp(expected);
+    }
+
+    function showOneSolution(){
+      clearCellStates();
+
+      const incorrectItems = state.inputMap.filter(item => {
+        const current = item.element.value.trim();
+        return current !== "" && !isItemCorrect(item);
+      });
+
+      const emptyItems = state.inputMap.filter(item => {
+        const current = item.element.value.trim();
+        return current === "";
+      });
+
+      let candidate = null;
+
+      if(incorrectItems.length > 0){
+        candidate = pick(incorrectItems);
+      } else if(emptyItems.length > 0){
+        candidate = pick(emptyItems);
+      }
+
+      if(!candidate){
+        setFeedback(
+          "neutral",
+          "No hace falta ayuda",
+          "No hay casillas erróneas ni vacías que revelar en este momento."
+        );
+        return;
+      }
+
+      candidate.element.value = getExpectedValue(candidate);
+      candidate.element.classList.add("cell-hint");
+      setActiveInput(candidate.element);
+
+      state.errors += 1;
+      state.score = Math.max(0, state.score - ERROR_PENALTY);
+      updateTopbar();
+
+      const typeText = candidate.kind === "number" ? "dorsal" : "operación";
+
+      setFeedback(
+        "warn",
+        "Se ha mostrado una solución",
+        `He rellenado un ${typeText} correcto y se ha contabilizado 1 fallo extra.`
+      );
+    }
+
+    /**********************************************************************
      * TECLADO VISUAL
      **********************************************************************/
     function applyPadValue(value){
@@ -1551,6 +1639,7 @@
 
     checkBtn.addEventListener("click", checkAnswers);
     newPuzzleBtn.addEventListener("click", newPuzzleSameRound);
+    hintBtn.addEventListener("click", showOneSolution);
     menuBtn.addEventListener("click", goToMenu);
     restartBtn.addEventListener("click", () => startGame(state.mode));
     backToMenuBtn.addEventListener("click", goToMenu);
