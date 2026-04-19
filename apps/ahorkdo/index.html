@@ -37,7 +37,7 @@
     }
 
     .app{
-      max-width:1240px;
+      max-width:1320px;
       margin:0 auto;
       padding:24px 16px 30px;
     }
@@ -256,7 +256,7 @@
 
     .game-top{
       display:grid;
-      grid-template-columns:1.35fr repeat(4, auto);
+      grid-template-columns:1.55fr repeat(4, auto);
       gap:14px;
       margin-bottom:16px;
       align-items:stretch;
@@ -289,7 +289,7 @@
 
     .main-info .sub{
       color:#475569;
-      line-height:1.4;
+      line-height:1.45;
       font-size:.95rem;
     }
 
@@ -317,7 +317,7 @@
 
     .hangman-zone{
       display:grid;
-      grid-template-columns:420px 1fr;
+      grid-template-columns:400px 1fr;
       gap:16px;
       align-items:stretch;
     }
@@ -350,13 +350,15 @@
       box-shadow:0 10px 20px rgba(0,0,0,.18);
       display:none;
       z-index:2;
+      text-align:center;
+      width:min(92%, 320px);
     }
 
     .grave-banner.show{display:block;}
 
     svg{
       width:100%;
-      max-width:360px;
+      max-width:340px;
       height:auto;
     }
 
@@ -377,14 +379,6 @@
       transition:opacity .25s ease;
     }
 
-    .dead-eye{
-      stroke:#dc2626;
-      stroke-width:4;
-      display:none;
-    }
-
-    .dead-eye.show{display:block;}
-
     .word-area{
       background:linear-gradient(180deg, #ffffff, #f8fbff);
       border-radius:24px;
@@ -396,30 +390,42 @@
       align-content:start;
     }
 
+    .word-display-wrap{
+      width:100%;
+      overflow-x:auto;
+      overflow-y:hidden;
+      padding-bottom:6px;
+    }
+
     .word-display{
       display:flex;
-      flex-wrap:wrap;
-      gap:10px 10px;
+      flex-wrap:nowrap;
+      gap:10px;
       align-items:flex-end;
       min-height:120px;
+      width:max-content;
+      min-width:100%;
+      white-space:nowrap;
     }
 
     .letter-slot{
-      min-width:44px;
-      height:58px;
+      min-width:52px;
+      height:70px;
       border-bottom:4px solid #334155;
       display:flex;
       align-items:flex-end;
       justify-content:center;
-      font-size:1.8rem;
+      font-size:2.2rem;
       font-weight:900;
       color:#0f172a;
       text-transform:uppercase;
+      flex:0 0 auto;
     }
 
     .space-slot{
-      min-width:24px;
-      height:58px;
+      min-width:30px;
+      height:70px;
+      flex:0 0 auto;
     }
 
     .guess-row{
@@ -515,23 +521,6 @@
       background:#fef2f2;
       border-color:#ef4444;
       color:#991b1b;
-    }
-
-    .used-letters{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      min-height:38px;
-    }
-
-    .chip{
-      padding:8px 12px;
-      border-radius:999px;
-      font-weight:900;
-      font-size:.92rem;
-      background:#eef2ff;
-      color:#3730a3;
-      border:1px solid #dbe3ff;
     }
 
     .final-wrap{
@@ -649,7 +638,15 @@
       .screen{padding:8px}
       .card{padding:18px}
       .panel{padding:14px}
-      .letter-slot{min-width:34px; font-size:1.45rem}
+      .letter-slot{
+        min-width:38px;
+        height:58px;
+        font-size:1.6rem;
+      }
+      .space-slot{
+        min-width:20px;
+        height:58px;
+      }
     }
   </style>
 </head>
@@ -750,7 +747,11 @@
         <div class="panel main-info">
           <span class="label">Partida actual</span>
           <div id="gameTitle" class="value">Modo palabra</div>
-          <div id="gameSub" class="sub">Adivina letra a letra o prueba con la respuesta completa.</div>
+          <div id="gameSub" class="sub">Modo palabra · máximo 7 errores · también podéis escribir la respuesta completa y si falláis cuenta como intento.</div>
+          <div class="btn-row">
+            <button id="newGameBtn" class="btn primary">Nueva partida</button>
+            <button id="backToMenuBtn" class="btn secondary">Menú principal</button>
+          </div>
         </div>
 
         <div class="panel stat">
@@ -831,7 +832,9 @@
             <div class="word-area">
               <div>
                 <span class="label">Respuesta oculta</span>
-                <div id="wordDisplay" class="word-display"></div>
+                <div class="word-display-wrap">
+                  <div id="wordDisplay" class="word-display"></div>
+                </div>
               </div>
 
               <div class="answer-row">
@@ -865,24 +868,9 @@
 
         <div>
           <div class="panel">
-            <strong>Letras usadas</strong>
-            <div id="usedLetters" class="used-letters" style="margin-top:12px;"></div>
-
-            <div class="btn-row">
-              <button id="newGameBtn" class="btn primary">Nueva partida</button>
-              <button id="backToMenuBtn" class="btn secondary">Menú principal</button>
-            </div>
-          </div>
-
-          <div class="panel" style="margin-top:14px;">
-            <strong>Reglas</strong>
-            <div class="small-note" style="margin-top:10px;">
-              <ul style="margin:0; padding-left:18px; line-height:1.5;">
-                <li>Modo palabra: 7 errores.</li>
-                <li>Modo frase: 9 errores.</li>
-                <li>Un fallo al escribir la respuesta completa también cuenta como error.</li>
-                <li>Aunque el personaje muera, podéis seguir resolviendo.</li>
-              </ul>
+            <strong>Estado de la partida</strong>
+            <div class="small-note" style="margin-top:10px; line-height:1.5;">
+              Usa el teclado visual o escribe en la caja. Cuando una letra ya se ha probado, se marca directamente en el teclado.
             </div>
           </div>
         </div>
@@ -927,9 +915,6 @@
   </div>
 
   <script>
-    /**********************************************************************
-     * ESTADO
-     **********************************************************************/
     const state = {
       mode: "word",
       maxErrors: 7,
@@ -954,9 +939,6 @@
       "No está. El ahorcado está redactando su testamento."
     ];
 
-    /**********************************************************************
-     * DOM
-     **********************************************************************/
     const menuScreen = document.getElementById("menuScreen");
     const setupScreen = document.getElementById("setupScreen");
     const gameScreen = document.getElementById("gameScreen");
@@ -984,7 +966,6 @@
     const guessLetterBtn = document.getElementById("guessLetterBtn");
     const guessFullBtn = document.getElementById("guessFullBtn");
     const feedbackBox = document.getElementById("feedbackBox");
-    const usedLetters = document.getElementById("usedLetters");
     const alphabet = document.getElementById("alphabet");
     const graveBanner = document.getElementById("graveBanner");
 
@@ -1001,9 +982,6 @@
     const playAgainBtn = document.getElementById("playAgainBtn");
     const finalMenuBtn = document.getElementById("finalMenuBtn");
 
-    /**********************************************************************
-     * UTILIDADES
-     **********************************************************************/
     function showScreen(screen){
       menuScreen.classList.add("hidden");
       setupScreen.classList.add("hidden");
@@ -1052,6 +1030,9 @@
       const keys = alphabet.querySelectorAll(".key");
       keys.forEach(btn => {
         const letter = btn.textContent;
+        btn.disabled = false;
+        btn.classList.remove("hit", "miss");
+
         if(state.used.includes(letter)){
           btn.disabled = true;
           if(state.solution.includes(letter)){
@@ -1060,20 +1041,6 @@
             btn.classList.add("miss");
           }
         }
-      });
-    }
-
-    function updateUsedLetters(){
-      usedLetters.innerHTML = "";
-      if(state.used.length === 0){
-        usedLetters.innerHTML = `<span class="small-note">Aún no habéis probado ninguna letra.</span>`;
-        return;
-      }
-      state.used.forEach(letter => {
-        const chip = document.createElement("span");
-        chip.className = "chip";
-        chip.textContent = letter;
-        usedLetters.appendChild(chip);
       });
     }
 
@@ -1086,14 +1053,13 @@
     }
 
     function updateHangman(){
-      const totalParts = state.mode === "word" ? 7 : 9;
       for(let i = 1; i <= 9; i++){
         const part = document.getElementById(`part${i}`);
         if(!part) continue;
         part.style.display = i <= state.errors ? "block" : "none";
       }
 
-      if(state.errors >= totalParts){
+      if(state.errors >= state.maxErrors){
         state.dead = true;
       }
       updateStats();
@@ -1146,9 +1112,6 @@
       showScreen(finalScreen);
     }
 
-    /**********************************************************************
-     * LÓGICA DEL JUEGO
-     **********************************************************************/
     function registerError(customText = ""){
       state.errors++;
       updateHangman();
@@ -1177,7 +1140,6 @@
       if(state.solution.includes(letter)){
         state.guessed.add(letter);
         renderWord();
-        updateUsedLetters();
         updateAlphabetStates();
 
         if(isSolved()){
@@ -1187,7 +1149,6 @@
           setFeedback("good", "¡Bien!", `La letra ${letter} sí aparece en la respuesta.`);
         }
       } else {
-        updateUsedLetters();
         updateAlphabetStates();
         registerError();
       }
@@ -1251,13 +1212,13 @@
 
       gameTitle.textContent = state.mode === "word" ? "Modo palabra" : "Modo frase";
       gameSub.textContent = state.mode === "word"
-        ? "Tienes 7 errores máximos. También puedes intentar la palabra completa."
-        : "Tienes 9 errores máximos. Los espacios ya están resueltos automáticamente.";
+        ? "Modo palabra · máximo 7 errores · también podéis escribir la respuesta completa y si falláis cuenta como intento."
+        : "Modo frase · máximo 9 errores · los espacios ya están resueltos automáticamente y podéis probar la frase completa.";
 
       buildAlphabet();
-      updateUsedLetters();
       updateStats();
       updateHangman();
+      updateAlphabetStates();
       renderWord();
       setFeedback("neutral", "Preparados", "Empieza diciendo letras o intenta resolver la respuesta completa.");
 
@@ -1265,9 +1226,6 @@
       letterInput.focus();
     }
 
-    /**********************************************************************
-     * FLUJO DE PANTALLAS
-     **********************************************************************/
     function openSetup(mode){
       state.mode = mode;
 
@@ -1275,13 +1233,13 @@
         setupSubtitle.textContent = "Introduce la palabra oculta. Nadie la verá en pantalla.";
         solutionLabel.textContent = "Palabra secreta";
         setupNote.textContent = "Solo se permiten letras. El juego ocultará completamente la palabra al empezar.";
-        modeSummary.textContent = "Modo palabra. Se permiten hasta 7 errores. No se admiten espacios.";
+        modeSummary.textContent = "Modo palabra. Se permiten hasta 7 errores.";
         secretInput.placeholder = "Escribe aquí la palabra oculta";
       } else {
         setupSubtitle.textContent = "Introduce la frase oculta. Los espacios estarán permitidos y no romperán el juego.";
         solutionLabel.textContent = "Frase secreta";
         setupNote.textContent = "Se permiten letras y espacios. Los espacios quedarán resueltos automáticamente en el tablero.";
-        modeSummary.textContent = "Modo frase. Se permiten hasta 9 errores. Los espacios forman parte de la solución.";
+        modeSummary.textContent = "Modo frase. Se permiten hasta 9 errores.";
         secretInput.placeholder = "Escribe aquí la frase oculta";
       }
 
@@ -1297,9 +1255,6 @@
       showScreen(menuScreen);
     }
 
-    /**********************************************************************
-     * EVENTOS
-     **********************************************************************/
     document.querySelectorAll(".mode-btn").forEach(btn => {
       btn.addEventListener("click", () => openSetup(btn.dataset.mode));
     });
