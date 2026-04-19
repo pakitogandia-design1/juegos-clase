@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NERI INVADERS · Racionales vs Irracionales</title>
+  <style>
+    :root{
+      --bg1:#081120;
+      --bg2:#101b33;
+      --panel:#eaf4ff;
+      --panel2:#ffffff;
+      --text:#10213a;
+      --muted:#5f728f;
+      --primary:#4f46e5;
+      --primary2:#7c3aed;
+      --accent:#06b6d4;
+      --good:#16a34a;
+      --bad:#dc2626;
+      --warn:#f59e0b;
+      --shadow:0 18px 40px rgba(8,17,32,.24);
+      --radius:22px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(124,58,237,.20), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(6,182,212,.16), transparent 32%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow-x:hidden;
+    }
+
+    .app{
+      max-width:1240px;
+      margin:0 auto;
+      padding:24px 16px 34px;
+    }
+
+    .screen{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(10px);
+      border-radius:28px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      animation:fadeIn .35s ease;
+    }
+
+    .hidden{display:none !important}
+
+    .card{
+      background:linear-gradient(180deg, #ffffff, #f7fbff);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      border:1px solid rgba(16,33,58,.06);
+      padding:28px;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.08fr .92fr;
+      gap:18px;
+      align-items:stretch;
+    }
+
+    .title{
+      margin:0 0 10px;
+      font-size:clamp(2rem, 4vw, 3.3rem);
+      line-height:1.03;
+      letter-spacing:-.03em;
+      font-weight:900;
+    }
+
+    .subtitle{
+      margin:0 0 18px;
+      color:#334155;
+      line-height:1.5;
+      font-size:1.08rem;
+      max-width:62ch;
+    }
+
+    .pill-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin:14px 0 20px;
+    }
+
+    .pill{
+      padding:10px 14px;
+      border-radius:999px;
+      background:#eef2ff;
+      border:1px solid #dbe3ff;
+      color:#3730a3;
+      font-weight:800;
+      font-size:.94rem;
+    }
+
+    .mode-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+      margin-top:16px;
+    }
+
+    .mode-btn{
+      border:none;
+      border-radius:20px;
+      padding:18px 16px;
+      text-align:left;
+      cursor:pointer;
+      background:linear-gradient(180deg, #ffffff, #f8fafc);
+      border:2px solid #e2e8f0;
+      color:#0f172a;
+      box-shadow:0 10px 22px rgba(15,23,42,.06);
+      min-height:112px;
+      transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .mode-btn:hover{
+      transform:translateY(-2px);
+      border-color:#a5b4fc;
+      box-shadow:0 14px 24px rgba(79,70,229,.14);
+    }
+
+    .mode-btn h3{
+      margin:0 0 8px;
+      font-size:1.08rem;
+      font-weight:900;
+    }
+
+    .mode-btn p{
+      margin:0;
+      color:#475569;
+      line-height:1.4;
+      font-size:.95rem;
+    }
+
+    .info-grid{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:14px;
+      height:100%;
+    }
+
+    .mini{
+      background:linear-gradient(180deg, #eff6ff, #ffffff);
+      border-radius:20px;
+      padding:18px;
+      border:1px solid #dbeafe;
+      min-height:118px;
+    }
+
+    .mini .emoji{
+      font-size:1.7rem;
+      margin-bottom:8px;
+      display:block;
+    }
+
+    .mini h3{
+      margin:0 0 6px;
+      font-size:1rem;
+    }
+
+    .mini p{
+      margin:0;
+      color:#475569;
+      line-height:1.35;
+      font-size:.95rem;
+    }
+
+    .hud{
+      display:grid;
+      grid-template-columns: 1.25fr repeat(4, auto);
+      gap:14px;
+      align-items:center;
+      margin-bottom:16px;
+    }
+
+    .panel{
+      background:linear-gradient(180deg, #ffffff, #f8fbff);
+      border-radius:20px;
+      border:1px solid rgba(16,33,58,.08);
+      box-shadow:var(--shadow);
+      padding:16px 18px;
+    }
+
+    .mission{
+      min-width:0;
+    }
+
+    .mission .label{
+      font-size:.84rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--muted);
+      font-weight:800;
+      margin-bottom:8px;
+      display:block;
+    }
+
+    .mission-title{
+      font-size:1.18rem;
+      font-weight:900;
+      margin-bottom:8px;
+      color:#0f172a;
+    }
+
+    .mission-sub{
+      color:#475569;
+      line-height:1.4;
+      font-size:.95rem;
+    }
+
+    .stat{
+      text-align:center;
+      min-width:118px;
+    }
+
+    .stat .label{
+      display:block;
+      color:var(--muted);
+      font-size:.82rem;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+
+    .stat .value{
+      font-size:1.5rem;
+      font-weight:900;
+      color:#0f172a;
+    }
+
+    .game-wrap{
+      display:grid;
+      grid-template-columns: 1fr 310px;
+      gap:16px;
+    }
+
+    .canvas-panel{
+      background:linear-gradient(180deg, #0a1428, #0d1930);
+      border-radius:24px;
+      padding:12px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    canvas{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:18px;
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,.07), transparent 30%),
+        linear-gradient(180deg, #0a1224 0%, #101d3a 100%);
+    }
+
+    .side{
+      display:grid;
+      gap:14px;
+      align-content:start;
+    }
+
+    .controls ul{
+      padding-left:18px;
+      margin:10px 0 0;
+      color:#334155;
+      line-height:1.55;
+    }
+
+    .feedback{
+      border-radius:20px;
+      padding:16px;
+      font-weight:700;
+      line-height:1.45;
+      min-height:112px;
+    }
+
+    .feedback.good{
+      background:linear-gradient(180deg, #ecfdf5, #f0fdf4);
+      border:1px solid #bbf7d0;
+      color:#166534;
+    }
+
+    .feedback.bad{
+      background:linear-gradient(180deg, #fef2f2, #fff5f5);
+      border:1px solid #fecaca;
+      color:#991b1b;
+    }
+
+    .feedback.neutral{
+      background:linear-gradient(180deg, #eff6ff, #f8fbff);
+      border:1px solid #dbeafe;
+      color:#1e3a8a;
+    }
+
+    .feedback h3{
+      margin:0 0 8px;
+      font-size:1.06rem;
+    }
+
+    .feedback p{
+      margin:0;
+      font-weight:700;
+      color:inherit;
+    }
+
+    .btn-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .btn{
+      border:none;
+      border-radius:18px;
+      padding:14px 18px;
+      font-size:1rem;
+      font-weight:900;
+      cursor:pointer;
+      transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    }
+
+    .btn:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.03);
+    }
+
+    .btn.primary{
+      color:#fff;
+      background:linear-gradient(135deg, var(--primary), var(--primary2));
+      box-shadow:0 14px 28px rgba(79,70,229,.28);
+    }
+
+    .btn.secondary{
+      color:#0f172a;
+      background:linear-gradient(180deg, #ffffff, #f8fafc);
+      border:2px solid #e2e8f0;
+      box-shadow:0 10px 20px rgba(15,23,42,.06);
+    }
+
+    .legend-list{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .legend-item{
+      background:linear-gradient(180deg, #ffffff, #f8fafc);
+      border:1px solid #e2e8f0;
+      border-radius:16px;
+      padding:12px 14px;
+      font-weight:800;
+      color:#0f172a;
+    }
+
+    .final-wrap{
+      text-align:center;
+    }
+
+    .medal{
+      width:136px;
+      height:136px;
+      margin:0 auto 18px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      font-size:4rem;
+      background:linear-gradient(180deg, #fff7ed, #ffffff);
+      border:6px solid rgba(255,255,255,.85);
+      box-shadow:var(--shadow);
+    }
+
+    .final-title{
+      margin:0 0 10px;
+      font-size:clamp(2rem, 4vw, 2.8rem);
+      font-weight:900;
+    }
+
+    .final-sub{
+      margin:0 auto 22px;
+      max-width:58ch;
+      color:#475569;
+      line-height:1.5;
+      font-size:1.06rem;
+    }
+
+    .results{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:14px;
+      margin:24px 0 26px;
+    }
+
+    .result-box{
+      background:linear-gradient(180deg, #ffffff, #f8fafc);
+      border-radius:20px;
+      padding:18px;
+      border:1px solid #e2e8f0;
+      box-shadow:0 10px 20px rgba(15,23,42,.06);
+    }
+
+    .result-box .k{
+      display:block;
+      color:#64748b;
+      font-size:.82rem;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+
+    .result-box .v{
+      font-size:1.45rem;
+      font-weight:900;
+      color:#0f172a;
+    }
+
+    .rank{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 18px;
+      border-radius:999px;
+      background:#eef2ff;
+      color:#3730a3;
+      font-weight:900;
+      margin-bottom:18px;
+    }
+
+    .footer-note{
+      margin-top:14px;
+      color:#64748b;
+      font-size:.94rem;
+    }
+
+    @keyframes fadeIn{
+      from{opacity:0; transform:translateY(8px)}
+      to{opacity:1; transform:translateY(0)}
+    }
+
+    @media (max-width: 980px){
+      .hero{grid-template-columns:1fr}
+      .hud{grid-template-columns:1fr 1fr}
+      .game-wrap{grid-template-columns:1fr}
+      .results{grid-template-columns:repeat(2,1fr)}
+    }
+
+    @media (max-width: 700px){
+      .mode-grid,
+      .info-grid,
+      .results{grid-template-columns:1fr}
+      .hud{grid-template-columns:1fr}
+      .app{padding:16px 10px 24px}
+      .screen{padding:10px}
+      .card{padding:20px}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section id="startScreen" class="screen">
+      <div class="card hero">
+        <div>
+          <h1 class="title">NERI INVADERS</h1>
+          <p class="subtitle">
+            Un arcade educativo tipo <strong>Space Invaders</strong> adaptado a matemáticas.
+            Mueve tu nave, dispara y destruye solo los enemigos correctos según la misión.
+          </p>
+
+          <div class="pill-row">
+            <span class="pill">🚀 Arcade clásico</span>
+            <span class="pill">🔢 Matemáticas</span>
+            <span class="pill">🎯 Dispara al objetivo correcto</span>
+            <span class="pill">🧠 Rejugable</span>
+          </div>
+
+          <div class="mode-grid">
+            <button class="mode-btn" data-mode="rational">
+              <h3>🔎 Solo racionales</h3>
+              <p>Destruye únicamente números racionales. Evita los irracionales.</p>
+            </button>
+
+            <button class="mode-btn" data-mode="irrational">
+              <h3>✨ Solo irracionales</h3>
+              <p>Destruye únicamente números irracionales. Evita los racionales.</p>
+            </button>
+
+            <button class="mode-btn" data-mode="mixed">
+              <h3>🎮 Modo mixto</h3>
+              <p>Cada oleada puede pedir racionales o irracionales. Más variedad.</p>
+            </button>
+
+            <button class="mode-btn" data-mode="survival">
+              <h3>🔥 Supervivencia</h3>
+              <p>Más velocidad y cambio de misión continuo. Ideal para reto rápido.</p>
+            </button>
+          </div>
+        </div>
+
+        <div class="info-grid">
+          <div class="mini">
+            <span class="emoji">🛸</span>
+            <h3>Enemigos con números</h3>
+            <p>Fracciones, enteros, decimales, raíces, π y decimales infinitos.</p>
+          </div>
+          <div class="mini">
+            <span class="emoji">✅</span>
+            <h3>Disparo correcto</h3>
+            <p>Sumas puntos si disparas al objetivo adecuado.</p>
+          </div>
+          <div class="mini">
+            <span class="emoji">❌</span>
+            <h3>Error de clasificación</h3>
+            <p>Si destruyes un enemigo incorrecto, pierdes puntos y recibes aviso.</p>
+          </div>
+          <div class="mini">
+            <span class="emoji">❤️</span>
+            <h3>Vidas y oleadas</h3>
+            <p>Si los enemigos llegan abajo, pierdes vida. Supera oleadas para ganar.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen hidden">
+      <div class="hud">
+        <div class="panel mission">
+          <span class="label">Misión actual</span>
+          <div id="missionTitle" class="mission-title">Destruye los racionales</div>
+          <div id="missionSub" class="mission-sub">Recuerda: un racional puede escribirse como fracción.</div>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Puntuación</span>
+          <span id="scoreValue" class="value">0</span>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Vidas</span>
+          <span id="livesValue" class="value">3</span>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Oleada</span>
+          <span id="waveValue" class="value">1</span>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Objetivos</span>
+          <span id="targetsValue" class="value">0</span>
+        </div>
+      </div>
+
+      <div class="game-wrap">
+        <div class="canvas-panel">
+          <canvas id="gameCanvas" width="900" height="580" aria-label="Juego NERI Invaders"></canvas>
+        </div>
+
+        <div class="side">
+          <div class="panel controls">
+            <strong>Controles</strong>
+            <ul>
+              <li>Mover: <strong>←</strong> y <strong>→</strong></li>
+              <li>Disparar: <strong>espacio</strong></li>
+              <li>Pausa: <strong>P</strong></li>
+            </ul>
+          </div>
+
+          <div id="feedbackBox" class="feedback neutral">
+            <h3>Preparado para despegar</h3>
+            <p>Observa la misión y dispara solo a los enemigos correctos.</p>
+          </div>
+
+          <div class="panel">
+            <strong>Leyenda rápida</strong>
+            <div class="legend-list">
+              <div class="legend-item">Racional: entero, fracción, decimal exacto o periódico.</div>
+              <div class="legend-item">Irracional: π, √2, √3, decimales infinitos no periódicos.</div>
+            </div>
+
+            <div class="btn-row">
+              <button id="pauseBtn" class="btn secondary">Pausar</button>
+              <button id="menuBtn" class="btn secondary">Menú principal</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="endScreen" class="screen hidden">
+      <div class="card final-wrap">
+        <div id="medalBox" class="medal">🏅</div>
+        <h2 class="final-title">Partida terminada</h2>
+        <p id="finalMessage" class="final-sub">Buen trabajo.</p>
+        <div id="rankBadge" class="rank">🏆 Rango</div>
+
+        <div class="results">
+          <div class="result-box">
+            <span class="k">Puntuación</span>
+            <span id="finalScore" class="v">0</span>
+          </div>
+          <div class="result-box">
+            <span class="k">Oleadas</span>
+            <span id="finalWaves" class="v">0</span>
+          </div>
+          <div class="result-box">
+            <span class="k">Aciertos</span>
+            <span id="finalHits" class="v">0</span>
+          </div>
+          <div class="result-box">
+            <span class="k">Fallos</span>
+            <span id="finalMistakes" class="v">0</span>
+          </div>
+        </div>
+
+        <div class="btn-row" style="justify-content:center">
+          <button id="restartBtn" class="btn primary">Jugar otra vez</button>
+          <button id="backToMenuBtn" class="btn secondary">Volver al menú principal</button>
+        </div>
+
+        <p class="footer-note">Cada partida genera nuevos enemigos y nuevas combinaciones.</p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /**********************************************************************
+     * NERI INVADERS
+     * Juego arcade educativo tipo Space Invaders
+     * Todo en un único HTML: HTML + CSS + JavaScript
+     **********************************************************************/
+
+    /**********************************************************************
+     * CONFIGURACIÓN GENERAL
+     **********************************************************************/
+    const CONFIG = {
+      canvasWidth: 900,
+      canvasHeight: 580,
+      playerSpeed: 6.4,
+      bulletSpeed: 8.5,
+      enemyCols: 5,
+      enemyRows: 3,
+      enemyWidth: 128,
+      enemyHeight: 56,
+      enemyGapX: 18,
+      enemyGapY: 18,
+      startY: 70,
+      maxLives: 3,
+      maxWavesNormal: 6,
+      maxWavesSurvival: 8,
+      shootCooldown: 320
+    };
+
+    /**********************************************************************
+     * ESTADO GLOBAL
+     **********************************************************************/
+    const state = {
+      screen: "start",
+      mode: "mixed",
+      running: false,
+      paused: false,
+      score: 0,
+      lives: CONFIG.maxLives,
+      wave: 1,
+      hits: 0,
+      mistakes: 0,
+      targetsRemaining: 0,
+      mission: "rational",
+      player: null,
+      bullets: [],
+      enemies: [],
+      keys: {},
+      lastShotAt: 0,
+      lastTimestamp: 0,
+      feedbackTimer: 0,
+      gameOver: false
+    };
+
+    /**********************************************************************
+     * DOM
+     **********************************************************************/
+    const startScreen = document.getElementById("startScreen");
+    const gameScreen = document.getElementById("gameScreen");
+    const endScreen = document.getElementById("endScreen");
+
+    const missionTitle = document.getElementById("missionTitle");
+    const missionSub = document.getElementById("missionSub");
+    const scoreValue = document.getElementById("scoreValue");
+    const livesValue = document.getElementById("livesValue");
+    const waveValue = document.getElementById("waveValue");
+    const targetsValue = document.getElementById("targetsValue");
+    const feedbackBox = document.getElementById("feedbackBox");
+
+    const pauseBtn = document.getElementById("pauseBtn");
+    const menuBtn = document.getElementById("menuBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const backToMenuBtn = document.getElementById("backToMenuBtn");
+
+    const finalMessage = document.getElementById("finalMessage");
+    const finalScore = document.getElementById("finalScore");
+    const finalWaves = document.getElementById("finalWaves");
+    const finalHits = document.getElementById("finalHits");
+    const finalMistakes = document.getElementById("finalMistakes");
+    const medalBox = document.getElementById("medalBox");
+    const rankBadge = document.getElementById("rankBadge");
+
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    /**********************************************************************
+     * UTILIDADES
+     **********************************************************************/
+    function randInt(min, max){
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function randFloat(min, max, decimals = 1){
+      const factor = Math.pow(10, decimals);
+      return Math.round((Math.random() * (max - min) + min) * factor) / factor;
+    }
+
+    function pick(arr){
+      return arr[randInt(0, arr.length - 1)];
+    }
+
+    function shuffle(array){
+      const arr = [...array];
+      for(let i = arr.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function showScreen(screenEl){
+      startScreen.classList.add("hidden");
+      gameScreen.classList.add("hidden");
+      endScreen.classList.add("hidden");
+      screenEl.classList.remove("hidden");
+    }
+
+    function clamp(value, min, max){
+      return Math.max(min, Math.min(max, value));
+    }
+
+    /**********************************************************************
+     * GENERACIÓN MATEMÁTICA
+     **********************************************************************/
+    function createRationalEntry(){
+      const cases = [
+        () => {
+          const n = randInt(-25, 25);
+          return {
+            label: String(n).replace("-", "−"),
+            kind: "rational",
+            explain: `Es entero, y todo entero es racional porque puede escribirse como ${n}/1.`
+          };
+        },
+        () => {
+          let a = randInt(1, 16), b = randInt(2, 12);
+          if(a % b === 0) a += 1;
+          const sign = randInt(0,1) ? "" : "−";
+          return {
+            label: `${sign}${a}/${b}`,
+            kind: "rational",
+            explain: "Es una fracción de enteros con denominador distinto de 0, así que es racional."
+          };
+        },
+        () => {
+          const decimals = randInt(1, 2);
+          const n = randFloat(0.2, 18.9, decimals).toFixed(decimals).replace(".", ",");
+          return {
+            label: n,
+            kind: "rational",
+            explain: "Es un decimal exacto, y los decimales exactos son racionales."
+          };
+        },
+        () => {
+          const d = randInt(1, 9);
+          return {
+            label: `0,${d}${d}${d}...`,
+            kind: "rational",
+            explain: "Es un decimal periódico, y los decimales periódicos son racionales."
+          };
+        }
+      ];
+      return pick(cases)();
+    }
+
+    function createIrrationalEntry(){
+      const cases = [
+        () => ({
+          label: "π",
+          kind: "irrational",
+          explain: "π es irracional porque tiene infinitas cifras decimales no periódicas."
+        }),
+        () => {
+          const n = pick([2,3,5,6,7,8,10,11,12,13,14,15,17,18,19]);
+          return {
+            label: `√${n}`,
+            kind: "irrational",
+            explain: `√${n} es irracional porque ${n} no es un cuadrado perfecto.`
+          };
+        },
+        () => ({
+          label: "1,41421356...",
+          kind: "irrational",
+          explain: "Es un decimal infinito no periódico, por eso es irracional."
+        }),
+        () => ({
+          label: "3,14159265...",
+          kind: "irrational",
+          explain: "Es un decimal infinito no periódico, así que es irracional."
+        })
+      ];
+      return pick(cases)();
+    }
+
+    function createMixedEntry(forceKind = null){
+      if(forceKind === "rational") return createRationalEntry();
+      if(forceKind === "irrational") return createIrrationalEntry();
+      return Math.random() < 0.5 ? createRationalEntry() : createIrrationalEntry();
+    }
+
+    /**********************************************************************
+     * MISIONES
+     **********************************************************************/
+    function chooseMission(){
+      if(state.mode === "rational") return "rational";
+      if(state.mode === "irrational") return "irrational";
+      if(state.mode === "mixed") return Math.random() < 0.5 ? "rational" : "irrational";
+      if(state.mode === "survival") return Math.random() < 0.5 ? "rational" : "irrational";
+      return "rational";
+    }
+
+    function updateMissionText(){
+      if(state.mission === "rational"){
+        missionTitle.textContent = "Destruye los racionales";
+        missionSub.textContent = "Busca enteros, fracciones, decimales exactos o periódicos.";
+      } else {
+        missionTitle.textContent = "Destruye los irracionales";
+        missionSub.textContent = "Busca π, raíces no exactas o decimales infinitos no periódicos.";
+      }
+    }
+
+    /**********************************************************************
+     * CREACIÓN DE OLEADAS
+     **********************************************************************/
+    function createWave(){
+      state.mission = chooseMission();
+      updateMissionText();
+
+      state.bullets = [];
+      state.enemies = [];
+      const speedBase = state.mode === "survival"
+        ? 1.1 + (state.wave - 1) * 0.22
+        : 0.75 + (state.wave - 1) * 0.12;
+
+      let xStart = (CONFIG.canvasWidth - ((CONFIG.enemyCols * CONFIG.enemyWidth) + ((CONFIG.enemyCols - 1) * CONFIG.enemyGapX))) / 2;
+      let yStart = CONFIG.startY;
+
+      const totalEnemies = CONFIG.enemyCols * CONFIG.enemyRows;
+
+      // Garantizar mezcla y que existan objetivos correctos
+      let mustHaveTargets = randInt(5, 8);
+      const slots = [];
+      for(let i = 0; i < totalEnemies; i++){
+        slots.push(i < mustHaveTargets ? state.mission : (state.mission === "rational" ? "irrational" : "rational"));
+      }
+      const shuffledKinds = shuffle(slots);
+
+      let idx = 0;
+      for(let row = 0; row < CONFIG.enemyRows; row++){
+        for(let col = 0; col < CONFIG.enemyCols; col++){
+          const entry = createMixedEntry(shuffledKinds[idx]);
+          state.enemies.push({
+            x: xStart + col * (CONFIG.enemyWidth + CONFIG.enemyGapX),
+            y: yStart + row * (CONFIG.enemyHeight + CONFIG.enemyGapY),
+            width: CONFIG.enemyWidth,
+            height: CONFIG.enemyHeight,
+            label: entry.label,
+            kind: entry.kind,
+            explanation: entry.explain,
+            alive: true
+          });
+          idx++;
+        }
+      }
+
+      state.enemies.direction = 1;
+      state.enemies.speed = speedBase;
+      state.targetsRemaining = state.enemies.filter(e => e.kind === state.mission).length;
+      updateHUD();
+      setFeedback("neutral", "Nueva oleada", "Observa la misión y destruye solo los objetivos correctos.");
+    }
+
+    /**********************************************************************
+     * INICIO DE PARTIDA
+     **********************************************************************/
+    function startGame(mode){
+      state.mode = mode;
+      state.running = true;
+      state.paused = false;
+      state.score = 0;
+      state.lives = CONFIG.maxLives;
+      state.wave = 1;
+      state.hits = 0;
+      state.mistakes = 0;
+      state.targetsRemaining = 0;
+      state.lastShotAt = 0;
+      state.feedbackTimer = 0;
+      state.gameOver = false;
+
+      state.player = {
+        x: CONFIG.canvasWidth / 2 - 28,
+        y: CONFIG.canvasHeight - 56,
+        width: 56,
+        height: 28
+      };
+
+      createWave();
+      updateHUD();
+      showScreen(gameScreen);
+    }
+
+    function updateHUD(){
+      scoreValue.textContent = state.score;
+      livesValue.textContent = state.lives;
+      waveValue.textContent = state.wave;
+      targetsValue.textContent = state.targetsRemaining;
+    }
+
+    /**********************************************************************
+     * FEEDBACK
+     **********************************************************************/
+    function setFeedback(type, title, text){
+      feedbackBox.className = `feedback ${type}`;
+      feedbackBox.innerHTML = `<h3>${title}</h3><p>${text}</p>`;
+      state.feedbackTimer = 180;
+    }
+
+    /**********************************************************************
+     * DISPARO
+     **********************************************************************/
+    function shoot(){
+      const now = performance.now();
+      if(now - state.lastShotAt < CONFIG.shootCooldown) return;
+
+      state.bullets.push({
+        x: state.player.x + state.player.width / 2 - 3,
+        y: state.player.y - 10,
+        width: 6,
+        height: 14,
+        speed: CONFIG.bulletSpeed
+      });
+      state.lastShotAt = now;
+    }
+
+    /**********************************************************************
+     * ACTUALIZACIÓN DEL JUEGO
+     **********************************************************************/
+    function update(){
+      if(!state.running || state.paused || state.gameOver) return;
+
+      // Movimiento jugador
+      if(state.keys["ArrowLeft"]){
+        state.player.x -= CONFIG.playerSpeed;
+      }
+      if(state.keys["ArrowRight"]){
+        state.player.x += CONFIG.playerSpeed;
+      }
+      state.player.x = clamp(state.player.x, 10, CONFIG.canvasWidth - state.player.width - 10);
+
+      // Balas
+      state.bullets.forEach(b => b.y -= b.speed);
+      state.bullets = state.bullets.filter(b => b.y + b.height > 0);
+
+      // Enemigos
+      let minX = Infinity;
+      let maxX = -Infinity;
+      let aliveEnemies = state.enemies.filter(e => e.alive);
+
+      aliveEnemies.forEach(enemy => {
+        enemy.x += state.enemies.direction * state.enemies.speed;
+        minX = Math.min(minX, enemy.x);
+        maxX = Math.max(maxX, enemy.x + enemy.width);
+      });
+
+      if(maxX >= CONFIG.canvasWidth - 10 || minX <= 10){
+        state.enemies.direction *= -1;
+        aliveEnemies.forEach(enemy => {
+          enemy.y += state.mode === "survival" ? 20 : 16;
+        });
+      }
+
+      // Colisiones bala-enemigo
+      state.bullets.forEach(bullet => {
+        aliveEnemies.forEach(enemy => {
+          if(enemy.alive && rectsOverlap(bullet, enemy)){
+            enemy.alive = false;
+            bullet.y = -100;
+
+            const isCorrect = enemy.kind === state.mission;
+            if(isCorrect){
+              state.score += 120;
+              state.hits++;
+              state.targetsRemaining = Math.max(0, state.targetsRemaining - 1);
+              setFeedback("good", "¡Acierto!", enemy.explanation);
+            } else {
+              state.score = Math.max(0, state.score - 80);
+              state.mistakes++;
+              setFeedback("bad", "Objetivo incorrecto", enemy.explanation);
+            }
+          }
+        });
+      });
+
+      // Enemigos abajo
+      aliveEnemies = state.enemies.filter(e => e.alive);
+      const reachedBottom = aliveEnemies.some(e => e.y + e.height >= state.player.y - 6);
+      if(reachedBottom){
+        state.lives--;
+        if(state.lives <= 0){
+          finishGame();
+          return;
+        }
+        setFeedback("bad", "¡Han llegado abajo!", "Has perdido una vida. Intenta controlar mejor la oleada.");
+        createWave();
+        return;
+      }
+
+      // Fin de oleada cuando no quedan objetivos correctos
+      if(state.targetsRemaining <= 0){
+        state.score += 180;
+        const maxWaves = state.mode === "survival" ? CONFIG.maxWavesSurvival : CONFIG.maxWavesNormal;
+        if(state.wave >= maxWaves){
+          finishGame();
+          return;
+        }
+        state.wave++;
+        createWave();
+        return;
+      }
+
+      if(state.feedbackTimer > 0){
+        state.feedbackTimer--;
+      }
+
+      updateHUD();
+    }
+
+    function rectsOverlap(a, b){
+      return (
+        a.x < b.x + b.width &&
+        a.x + a.width > b.x &&
+        a.y < b.y + b.height &&
+        a.y + a.height > b.y
+      );
+    }
+
+    /**********************************************************************
+     * DIBUJO
+     **********************************************************************/
+    function drawBackground(){
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Estrellas
+      for(let i = 0; i < 42; i++){
+        const x = (i * 137) % canvas.width;
+        const y = (i * 91 + state.wave * 13) % canvas.height;
+        const r = (i % 3) + 1;
+        ctx.globalAlpha = 0.25 + (i % 5) * 0.1;
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      // Línea inferior
+      ctx.fillStyle = "rgba(255,255,255,.08)";
+      ctx.fillRect(0, canvas.height - 84, canvas.width, 2);
+    }
+
+    function drawPlayer(){
+      const p = state.player;
+      if(!p) return;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+
+      // Base
+      ctx.fillStyle = "#4f46e5";
+      roundRect(ctx, 6, 10, 44, 16, 8);
+      ctx.fill();
+
+      // Cabina
+      ctx.fillStyle = "#93c5fd";
+      roundRect(ctx, 16, 0, 24, 16, 8);
+      ctx.fill();
+
+      // Alas
+      ctx.fillStyle = "#7c3aed";
+      ctx.fillRect(0, 18, 12, 6);
+      ctx.fillRect(44, 18, 12, 6);
+
+      // Brillo
+      ctx.fillStyle = "rgba(255,255,255,.25)";
+      ctx.fillRect(20, 4, 10, 4);
+
+      ctx.restore();
+    }
+
+    function drawBullets(){
+      state.bullets.forEach(b => {
+        ctx.fillStyle = "#22d3ee";
+        roundRect(ctx, b.x, b.y, b.width, b.height, 3);
+        ctx.fill();
+      });
+    }
+
+    function drawEnemies(){
+      state.enemies.forEach(enemy => {
+        if(!enemy.alive) return;
+
+        const isTarget = enemy.kind === state.mission;
+
+        ctx.save();
+        ctx.translate(enemy.x, enemy.y);
+
+        // Cuerpo
+        ctx.fillStyle = isTarget ? "rgba(22,163,74,.95)" : "rgba(220,38,38,.95)";
+        roundRect(ctx, 0, 0, enemy.width, enemy.height, 14);
+        ctx.fill();
+
+        // Brillo
+        ctx.fillStyle = "rgba(255,255,255,.16)";
+        roundRect(ctx, 6, 6, enemy.width - 12, 14, 8);
+        ctx.fill();
+
+        // Texto
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 22px Segoe UI";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(enemy.label, enemy.width / 2, enemy.height / 2 + 3);
+
+        // Pie
+        ctx.fillStyle = "rgba(255,255,255,.15)";
+        ctx.fillRect(14, enemy.height - 8, enemy.width - 28, 4);
+
+        ctx.restore();
+      });
+    }
+
+    function drawStatusOverlay(){
+      if(state.paused){
+        drawOverlay("PAUSA", "Pulsa P o el botón para continuar");
+      }
+      if(state.gameOver){
+        drawOverlay("FIN", "Pulsa jugar otra vez o vuelve al menú");
+      }
+    }
+
+    function drawOverlay(title, subtitle){
+      ctx.fillStyle = "rgba(3,7,18,.58)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "center";
+      ctx.font = "900 48px Segoe UI";
+      ctx.fillText(title, canvas.width / 2, canvas.height / 2 - 10);
+
+      ctx.font = "700 22px Segoe UI";
+      ctx.fillText(subtitle, canvas.width / 2, canvas.height / 2 + 34);
+    }
+
+    function draw(){
+      drawBackground();
+      drawEnemies();
+      drawBullets();
+      drawPlayer();
+      drawStatusOverlay();
+    }
+
+    function roundRect(ctx, x, y, width, height, radius){
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+
+    /**********************************************************************
+     * FIN DE PARTIDA
+     **********************************************************************/
+    function finishGame(){
+      state.running = false;
+      state.gameOver = true;
+
+      let message = "";
+      let rank = "";
+      let medal = "";
+
+      if(state.score < 600){
+        message = "Sigue practicando. Ya controlas la mecánica, ahora toca afinar la clasificación.";
+        rank = "🟠 Sigue practicando";
+        medal = "📘";
+      } else if(state.score < 1400){
+        message = "Vas bien. Has identificado bastantes objetivos correctamente.";
+        rank = "🔵 Vas bien";
+        medal = "🥈";
+      } else if(state.score < 2200){
+        message = "Buen trabajo. Tu puntería matemática está bastante afinada.";
+        rank = "🟣 Buen trabajo";
+        medal = "🥇";
+      } else {
+        message = "¡Reto superado con éxito! Has dominado la nave y la clasificación matemática.";
+        rank = "🏆 Reto superado";
+        medal = "👑";
+      }
+
+      finalMessage.textContent = message;
+      rankBadge.textContent = rank;
+      medalBox.textContent = medal;
+      finalScore.textContent = state.score;
+      finalWaves.textContent = state.wave;
+      finalHits.textContent = state.hits;
+      finalMistakes.textContent = state.mistakes;
+
+      showScreen(endScreen);
+    }
+
+    /**********************************************************************
+     * MENÚ / PAUSA
+     **********************************************************************/
+    function goToMenu(){
+      state.running = false;
+      state.paused = false;
+      state.gameOver = false;
+      showScreen(startScreen);
+    }
+
+    function togglePause(){
+      if(!state.running) return;
+      state.paused = !state.paused;
+      pauseBtn.textContent = state.paused ? "Continuar" : "Pausar";
+      setFeedback("neutral", state.paused ? "Juego en pausa" : "Partida reanudada",
+        state.paused ? "Pulsa P o el botón para continuar." : "Sigue disparando a los objetivos correctos.");
+    }
+
+    /**********************************************************************
+     * LOOP PRINCIPAL
+     **********************************************************************/
+    function gameLoop(timestamp){
+      state.lastTimestamp = timestamp;
+      update();
+      draw();
+      requestAnimationFrame(gameLoop);
+    }
+
+    /**********************************************************************
+     * EVENTOS
+     **********************************************************************/
+    document.querySelectorAll(".mode-btn").forEach(btn => {
+      btn.addEventListener("click", () => startGame(btn.dataset.mode));
+    });
+
+    pauseBtn.addEventListener("click", togglePause);
+    menuBtn.addEventListener("click", goToMenu);
+    restartBtn.addEventListener("click", () => startGame(state.mode));
+    backToMenuBtn.addEventListener("click", goToMenu);
+
+    window.addEventListener("keydown", e => {
+      state.keys[e.key] = true;
+
+      if(e.code === "Space"){
+        if(gameScreen.classList.contains("hidden")) return;
+        e.preventDefault();
+        if(!state.paused && state.running) shoot();
+      }
+
+      if(e.key === "p" || e.key === "P"){
+        if(!gameScreen.classList.contains("hidden")){
+          togglePause();
+        }
+      }
+    });
+
+    window.addEventListener("keyup", e => {
+      state.keys[e.key] = false;
+    });
+
+    /**********************************************************************
+     * INICIO VISUAL
+     **********************************************************************/
+    showScreen(startScreen);
+    setFeedback("neutral", "Preparado para despegar", "Observa la misión y dispara solo a los enemigos correctos.");
+    requestAnimationFrame(gameLoop);
+  </script>
+</body>
+</html>
