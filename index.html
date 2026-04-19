@@ -1,70 +1,273 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Biblioteca de juegos</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Biblioteca de juegos de clase</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 40px 20px;
-      background: #f4f7fb;
-      color: #1f2937;
-      text-align: center;
+    :root {
+      --verde-oscuro: #2f5d50;
+      --verde-medio: #4d806f;
+      --verde-suave: #dcefe7;
+      --crema: #f8f6f1;
+      --blanco: #ffffff;
+      --texto: #24312d;
+      --gris: #6b7280;
+      --sombra: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --radio: 20px;
     }
-    .contenedor {
-      max-width: 900px;
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #eef7f2 0%, #f8f6f1 100%);
+      color: var(--texto);
+    }
+
+    .hero {
+      padding: 70px 20px 50px;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(77,128,111,0.15), rgba(220,239,231,0.75));
+    }
+
+    .hero-contenido {
+      max-width: 950px;
       margin: 0 auto;
     }
+
+    .etiqueta {
+      display: inline-block;
+      background: var(--blanco);
+      color: var(--verde-oscuro);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      box-shadow: var(--sombra);
+      margin-bottom: 18px;
+    }
+
     h1 {
-      margin-bottom: 10px;
+      margin: 0 0 16px;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 1.1;
+      color: var(--verde-oscuro);
     }
-    p {
-      margin-bottom: 30px;
+
+    .subtitulo {
+      max-width: 760px;
+      margin: 0 auto;
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: #355449;
     }
-    .tarjetas {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
+
+    .contenedor {
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 40px 20px 70px;
+    }
+
+    .bloque {
       margin-top: 30px;
     }
-    .tarjeta {
-      background: white;
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      text-align: left;
+
+    .bloque h2 {
+      font-size: 1.7rem;
+      margin-bottom: 10px;
+      color: var(--verde-oscuro);
     }
-    .tarjeta h2 {
+
+    .bloque p {
       margin-top: 0;
+      color: var(--gris);
+      line-height: 1.6;
+    }
+
+    .rejilla {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      margin-top: 28px;
+    }
+
+    .tarjeta {
+      background: var(--blanco);
+      border-radius: var(--radio);
+      padding: 24px;
+      box-shadow: var(--sombra);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border: 1px solid rgba(47, 93, 80, 0.08);
+    }
+
+    .tarjeta:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .icono {
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      background: var(--verde-suave);
+      margin-bottom: 18px;
+    }
+
+    .tarjeta h3 {
+      margin: 0 0 10px;
+      color: var(--verde-oscuro);
       font-size: 1.2rem;
     }
+
+    .tarjeta p {
+      margin: 0 0 18px;
+      color: #4b5563;
+      line-height: 1.6;
+    }
+
+    .meta {
+      font-size: 0.9rem;
+      color: var(--verde-medio);
+      font-weight: bold;
+      margin-bottom: 16px;
+    }
+
     .boton {
       display: inline-block;
-      margin-top: 10px;
-      padding: 10px 16px;
-      background: #2563eb;
+      background: var(--verde-oscuro);
       color: white;
       text-decoration: none;
-      border-radius: 10px;
+      padding: 11px 18px;
+      border-radius: 12px;
+      font-weight: bold;
+      transition: background 0.2s ease;
     }
+
     .boton:hover {
-      opacity: 0.9;
+      background: var(--verde-medio);
+    }
+
+    .info {
+      margin-top: 50px;
+      background: rgba(255,255,255,0.75);
+      border: 1px solid rgba(47, 93, 80, 0.1);
+      border-radius: var(--radio);
+      padding: 26px;
+      box-shadow: var(--sombra);
+    }
+
+    .info h2 {
+      margin-top: 0;
+      color: var(--verde-oscuro);
+    }
+
+    .info ul {
+      margin: 14px 0 0;
+      padding-left: 20px;
+      color: #475569;
+      line-height: 1.8;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px 20px 45px;
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 700px) {
+      .hero {
+        padding: 55px 18px 35px;
+      }
+
+      .contenedor {
+        padding: 30px 16px 60px;
+      }
+
+      .tarjeta {
+        padding: 20px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="contenedor">
-    <h1>Biblioteca de juegos de clase</h1>
-    <p>Aquí irán mis juegos y apps educativas.</p>
 
- <div class="tarjeta">
-  <h2>Juego de prueba</h2>
-  <p>Primera app publicada para comprobar que todo funciona bien.</p>
-  <a class="boton" href="apps/prueba/">Abrir juego</a>
-</div>
+  <section class="hero">
+    <div class="hero-contenido">
+      <div class="etiqueta">Recursos interactivos para el aula</div>
+      <h1>Biblioteca de juegos y apps educativas</h1>
+      <p class="subtitulo">
+        Bienvenido a este espacio de aprendizaje interactivo. Aquí encontrarás juegos, actividades
+        y aplicaciones creadas para repasar contenidos de forma más visual, práctica y motivadora.
+      </p>
     </div>
-  </div>
+  </section>
+
+  <main class="contenedor">
+    <section class="bloque">
+      <h2>Juegos y actividades</h2>
+      <p>
+        Pulsa en una tarjeta para abrir cada recurso. Poco a poco esta biblioteca irá creciendo
+        con nuevas propuestas para clase.
+      </p>
+
+      <div class="rejilla">
+        <article class="tarjeta">
+          <div class="icono">🧪</div>
+          <div class="meta">Prueba inicial</div>
+          <h3>Juego de prueba</h3>
+          <p>
+            Primera app publicada para comprobar que la web funciona correctamente y que los enlaces
+            se abren sin problema.
+          </p>
+          <a class="boton" href="apps/prueba/">Abrir juego</a>
+        </article>
+
+        <article class="tarjeta">
+          <div class="icono">🌿</div>
+          <div class="meta">Próximamente</div>
+          <h3>Nuevo juego de jardinería</h3>
+          <p>
+            Aquí podrás añadir una futura actividad sobre plantas, riego, herramientas,
+            reconocimiento de especies o cualquier otro contenido.
+          </p>
+          <a class="boton" href="#">Muy pronto</a>
+        </article>
+
+        <article class="tarjeta">
+          <div class="icono">💐</div>
+          <div class="meta">Próximamente</div>
+          <h3>Nueva app de floristería</h3>
+          <p>
+            Este espacio puede utilizarse para actividades relacionadas con composiciones florales,
+            materiales, estilos o repaso visual.
+          </p>
+          <a class="boton" href="#">Muy pronto</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="info">
+      <h2>Sobre esta biblioteca</h2>
+      <ul>
+        <li>Todos los recursos están pensados para aprender de forma activa e interactiva.</li>
+        <li>La colección irá ampliándose con nuevas apps y juegos educativos.</li>
+        <li>Puedes acceder desde ordenador, tablet o móvil.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    Biblioteca de juegos de clase · Recursos educativos interactivos
+  </footer>
+
 </body>
 </html>
