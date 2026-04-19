@@ -39,7 +39,7 @@
     }
 
     .app{
-      max-width:1280px;
+      max-width:1360px;
       margin:0 auto;
       padding:24px 16px 32px;
     }
@@ -232,7 +232,7 @@
 
     .game-layout{
       display:grid;
-      grid-template-columns:1fr 330px;
+      grid-template-columns:1fr 360px;
       gap:16px;
     }
 
@@ -382,9 +382,11 @@
       text-transform:uppercase;
     }
 
-    .input-number:focus, .input-op:focus{
-      border-color:#60a5fa;
-      box-shadow:0 0 0 4px rgba(96,165,250,.26);
+    .input-number:focus, .input-op:focus,
+    .input-selected{
+      border-color:#60a5fa !important;
+      box-shadow:0 0 0 4px rgba(96,165,250,.26) !important;
+      background:#eff6ff !important;
     }
 
     .cell-correct{
@@ -529,6 +531,43 @@
       padding-left:18px;
     }
 
+    .pad-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .pad-btn{
+      border:none;
+      border-radius:14px;
+      padding:14px 8px;
+      font-weight:900;
+      font-size:1rem;
+      cursor:pointer;
+      background:linear-gradient(180deg, #ffffff, #f8fafc);
+      border:2px solid #e2e8f0;
+      color:#0f172a;
+      box-shadow:0 8px 16px rgba(15,23,42,.05);
+      transition:transform .12s ease, filter .12s ease;
+    }
+
+    .pad-btn:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.03);
+    }
+
+    .pad-btn.wide{
+      grid-column:span 2;
+    }
+
+    .pad-note{
+      margin-top:10px;
+      color:#64748b;
+      font-size:.9rem;
+      line-height:1.4;
+    }
+
     .final-wrap{
       text-align:center;
     }
@@ -645,6 +684,9 @@
         width:44px;
         height:44px;
       }
+      .pad-grid{
+        grid-template-columns:repeat(4, minmax(0,1fr));
+      }
     }
   </style>
 </head>
@@ -713,7 +755,7 @@
         <div class="panel main-info">
           <span class="label">Reto actual</span>
           <div id="challengeTitle" class="value">Alineación 4-4-2</div>
-          <div id="challengeSub" class="sub">Completa las casillas vacías para que cada línea dé el resultado correcto.</div>
+          <div id="challengeSub" class="sub">Completa las casillas vacías para que cada línea dé el resultado correcto respetando la prioridad de operaciones.</div>
         </div>
 
         <div class="panel stat">
@@ -775,12 +817,40 @@
             <p>Completa las casillas vacías y pulsa “Enviar respuesta”.</p>
           </div>
 
+          <div class="panel">
+            <strong>Teclado rápido</strong>
+            <div class="pad-grid">
+              <button class="pad-btn" data-pad="7">7</button>
+              <button class="pad-btn" data-pad="8">8</button>
+              <button class="pad-btn" data-pad="9">9</button>
+              <button class="pad-btn" data-pad="+">+</button>
+
+              <button class="pad-btn" data-pad="4">4</button>
+              <button class="pad-btn" data-pad="5">5</button>
+              <button class="pad-btn" data-pad="6">6</button>
+              <button class="pad-btn" data-pad="-">-</button>
+
+              <button class="pad-btn" data-pad="1">1</button>
+              <button class="pad-btn" data-pad="2">2</button>
+              <button class="pad-btn" data-pad="3">3</button>
+              <button class="pad-btn" data-pad="*">×</button>
+
+              <button class="pad-btn" data-pad="0">0</button>
+              <button class="pad-btn" data-pad="/" data-display="÷">÷</button>
+              <button class="pad-btn wide" id="padBackspace">Borrar</button>
+              <button class="pad-btn wide" id="padClear">Limpiar</button>
+            </div>
+            <div class="pad-note">
+              Toca primero una casilla del campo para seleccionarla. Luego usa este teclado para rellenarla.
+            </div>
+          </div>
+
           <div class="panel legend">
             <strong>Cómo se juega</strong>
             <ul>
-              <li>Cada línea se resuelve de izquierda a derecha.</li>
-              <li>Solo se usan operaciones que den resultados enteros.</li>
-              <li>En las casillas de operación puedes escribir: +, -, *, x, × o /.</li>
+              <li>Ahora el juego sí respeta la prioridad de operaciones: <strong>× y ÷ antes que + y −</strong>.</li>
+              <li>Las líneas se validan por su resultado completo, no por una lógica izquierda-derecha incorrecta.</li>
+              <li>En las casillas de operación puedes usar: +, -, *, x, × o /.</li>
               <li>Si fallas, el juego marca en rojo y resta puntuación.</li>
             </ul>
 
@@ -866,7 +936,8 @@
       errors: 0,
       solved: 0,
       currentPuzzle: null,
-      inputMap: []
+      inputMap: [],
+      activeInput: null
     };
 
     /**********************************************************************
@@ -902,6 +973,10 @@
     const rankBadge = document.getElementById("rankBadge");
     const restartBtn = document.getElementById("restartBtn");
     const backToMenuBtn = document.getElementById("backToMenuBtn");
+
+    const padButtons = document.querySelectorAll(".pad-btn[data-pad]");
+    const padBackspace = document.getElementById("padBackspace");
+    const padClear = document.getElementById("padClear");
 
     /**********************************************************************
      * UTILIDADES
@@ -948,30 +1023,53 @@
       return op;
     }
 
-    function evaluateChain(nums, ops){
-      let result = nums[0];
+    /**********************************************************************
+     * EVALUACIÓN CORRECTA CON PRIORIDAD DE OPERACIONES
+     **********************************************************************/
+    function evaluateWithPrecedence(nums, ops){
+      if(!Array.isArray(nums) || !Array.isArray(ops)) return null;
+      if(nums.length === 0) return null;
+      if(nums.length !== ops.length + 1) return null;
+      if(nums.some(n => !Number.isInteger(n))) return null;
+      if(ops.some(op => !OPS.includes(op))) return null;
+
+      const collapsedNums = [nums[0]];
+      const collapsedOps = [];
+
       for(let i = 0; i < ops.length; i++){
         const op = ops[i];
-        const n = nums[i + 1];
-        if(op === "+") result += n;
-        else if(op === "-") result -= n;
-        else if(op === "*") result *= n;
-        else if(op === "/"){
-          if(n === 0 || result % n !== 0) return null;
-          result = result / n;
+        const next = nums[i + 1];
+
+        if(op === "*" || op === "/"){
+          const left = collapsedNums.pop();
+
+          if(op === "*"){
+            collapsedNums.push(left * next);
+          } else {
+            if(next === 0) return null;
+            if(left % next !== 0) return null;
+            collapsedNums.push(left / next);
+          }
         } else {
-          return null;
+          collapsedNums.push(next);
+          collapsedOps.push(op);
         }
       }
+
+      let result = collapsedNums[0];
+      for(let i = 0; i < collapsedOps.length; i++){
+        const op = collapsedOps[i];
+        const n = collapsedNums[i + 1];
+        if(op === "+") result += n;
+        else if(op === "-") result -= n;
+        else return null;
+      }
+
       return result;
     }
 
     function buildLineNumbers(count){
-      const nums = [];
-      for(let i = 0; i < count; i++){
-        nums.push(randInt(2, 12));
-      }
-      return nums;
+      return Array.from({length: count}, () => randInt(2, 12));
     }
 
     function buildLineOps(count){
@@ -980,17 +1078,17 @@
 
     function generateValidLine(count){
       let attempts = 0;
-      while(attempts < 500){
+      while(attempts < 800){
         attempts++;
         const nums = buildLineNumbers(count);
         const ops = buildLineOps(count);
-        const result = evaluateChain(nums, ops);
+        const result = evaluateWithPrecedence(nums, ops);
+
         if(result !== null && Number.isInteger(result) && result >= -200 && result <= 300){
           return { nums, ops, result };
         }
       }
 
-      // respaldo fácil y estable
       const nums = Array.from({length: count}, () => randInt(2, 9));
       const ops = Array.from({length: count - 1}, () => "+");
       return {
@@ -1045,7 +1143,7 @@
     function updateTopbar(){
       const formation = state.currentPuzzle.formation;
       challengeTitle.textContent = `Alineación ${formationText(formation)}`;
-      challengeSub.textContent = "Completa las casillas vacías para que defensa, medio y ataque den el resultado correcto.";
+      challengeSub.textContent = "Completa las casillas vacías para que defensa, medio y ataque den el resultado correcto respetando × y ÷ antes que + y −.";
       modeValue.textContent = MODE_NAMES[state.mode];
       roundValue.textContent = `${state.round}/${TOTAL_ROUNDS}`;
       scoreValue.textContent = state.score;
@@ -1060,7 +1158,7 @@
      * POSICIONES EN EL CAMPO
      **********************************************************************/
     function lineY(index){
-      const ys = [76, 50, 24]; // defensa, medio, ataque en %
+      const ys = [76, 50, 24];
       return ys[index];
     }
 
@@ -1080,6 +1178,7 @@
       const extra = field.querySelectorAll(".player-node, .line-connector, .op-node");
       extra.forEach(el => el.remove());
       state.inputMap = [];
+      clearActiveInput();
     }
 
     function createConnector(x1, y1, x2, y2){
@@ -1101,11 +1200,26 @@
       state.inputMap.push(entry);
     }
 
+    function setActiveInput(input){
+      clearActiveInput();
+      state.activeInput = input;
+      if(input){
+        input.classList.add("input-selected");
+        input.focus();
+      }
+    }
+
+    function clearActiveInput(){
+      if(state.activeInput){
+        state.activeInput.classList.remove("input-selected");
+      }
+      state.activeInput = null;
+    }
+
     function renderPuzzle(){
       clearField();
       updateTopbar();
 
-      const fieldRect = field.getBoundingClientRect();
       const width = field.clientWidth;
       const height = field.clientHeight;
 
@@ -1132,14 +1246,15 @@
             const input = document.createElement("input");
             input.className = "input-number";
             input.type = "text";
-            input.inputMode = "numeric";
+            input.inputMode = "none";
             input.maxLength = 2;
-            input.dataset.answer = line.nums[playerIdx];
             input.dataset.kind = "number";
             input.dataset.line = lineIdx;
             input.dataset.index = playerIdx;
+            input.addEventListener("focus", () => setActiveInput(input));
+            input.addEventListener("click", () => setActiveInput(input));
             node.appendChild(input);
-            addInputMap({ element: input, answer: String(line.nums[playerIdx]), kind: "number" });
+            addInputMap({ element: input, kind: "number", line: lineIdx, index: playerIdx });
           } else {
             const jersey = document.createElement("div");
             jersey.className = "jersey";
@@ -1171,13 +1286,15 @@
             const input = document.createElement("input");
             input.className = "input-op";
             input.type = "text";
+            input.inputMode = "none";
             input.maxLength = 1;
-            input.dataset.answer = line.ops[i];
             input.dataset.kind = "op";
             input.dataset.line = lineIdx;
             input.dataset.index = i;
+            input.addEventListener("focus", () => setActiveInput(input));
+            input.addEventListener("click", () => setActiveInput(input));
             opNode.appendChild(input);
-            addInputMap({ element: input, answer: line.ops[i], kind: "op" });
+            addInputMap({ element: input, kind: "op", line: lineIdx, index: i });
           } else {
             const fixed = document.createElement("div");
             fixed.className = "input-op";
@@ -1196,7 +1313,7 @@
     }
 
     /**********************************************************************
-     * COMPROBACIÓN
+     * LECTURA Y VALIDACIÓN DE LÍNEAS
      **********************************************************************/
     function clearCellStates(){
       state.inputMap.forEach(item => {
@@ -1204,37 +1321,109 @@
       });
     }
 
+    function getValueForNumber(lineIdx, numIdx){
+      const hidden = state.currentPuzzle.hiddenNumbers[lineIdx].includes(numIdx);
+      if(!hidden) return state.currentPuzzle.lines[lineIdx].nums[numIdx];
+
+      const item = state.inputMap.find(i => i.kind === "number" && i.line === lineIdx && i.index === numIdx);
+      if(!item) return null;
+      const raw = item.element.value.trim();
+      if(raw === "" || !/^-?\d+$/.test(raw)) return null;
+      return Number(raw);
+    }
+
+    function getValueForOp(lineIdx, opIdx){
+      const hidden = state.currentPuzzle.hiddenOps[lineIdx].includes(opIdx);
+      if(!hidden) return state.currentPuzzle.lines[lineIdx].ops[opIdx];
+
+      const item = state.inputMap.find(i => i.kind === "op" && i.line === lineIdx && i.index === opIdx);
+      if(!item) return null;
+      const raw = normalizeOp(item.element.value.trim());
+      if(!OPS.includes(raw)) return null;
+      return raw;
+    }
+
+    function validateLine(lineIdx){
+      const line = state.currentPuzzle.lines[lineIdx];
+      const nums = [];
+      const ops = [];
+
+      for(let i = 0; i < line.nums.length; i++){
+        nums.push(getValueForNumber(lineIdx, i));
+      }
+
+      for(let i = 0; i < line.ops.length; i++){
+        ops.push(getValueForOp(lineIdx, i));
+      }
+
+      const complete = nums.every(v => v !== null) && ops.every(v => v !== null);
+      if(!complete){
+        return { ok: false, incomplete: true, nums, ops, result: null };
+      }
+
+      const result = evaluateWithPrecedence(nums, ops);
+      return {
+        ok: result !== null && result === line.result,
+        incomplete: false,
+        nums,
+        ops,
+        result
+      };
+    }
+
+    function markLine(lineIdx, ok){
+      state.inputMap
+        .filter(item => item.line === lineIdx)
+        .forEach(item => {
+          item.element.classList.remove("cell-correct", "cell-wrong");
+          item.element.classList.add(ok ? "cell-correct" : "cell-wrong");
+        });
+    }
+
     function checkAnswers(){
-      let wrongCount = 0;
       clearCellStates();
 
-      state.inputMap.forEach(item => {
-        const raw = item.element.value.trim();
-        let ok = false;
+      let wrongCount = 0;
+      let incompleteCount = 0;
 
-        if(item.kind === "number"){
-          ok = raw !== "" && Number(raw) === Number(item.answer);
+      for(let lineIdx = 0; lineIdx < 3; lineIdx++){
+        const validation = validateLine(lineIdx);
+
+        if(validation.ok){
+          markLine(lineIdx, true);
         } else {
-          ok = normalizeOp(raw) === item.answer;
+          markLine(lineIdx, false);
+          if(validation.incomplete) incompleteCount++;
+          else wrongCount++;
         }
+      }
 
-        if(ok){
-          item.element.classList.add("cell-correct");
-        } else {
-          item.element.classList.add("cell-wrong");
-          wrongCount++;
-        }
-      });
+      const totalProblemLines = wrongCount + incompleteCount;
 
-      if(wrongCount > 0){
-        state.errors += wrongCount;
-        state.score = Math.max(0, state.score - wrongCount * ERROR_PENALTY);
+      if(totalProblemLines > 0){
+        state.errors += totalProblemLines;
+        state.score = Math.max(0, state.score - totalProblemLines * ERROR_PENALTY);
         updateTopbar();
-        setFeedback(
-          "bad",
-          "Todavía no está correcto",
-          `Hay ${wrongCount} casilla(s) incorrecta(s). Revisa las marcadas en rojo.`
-        );
+
+        if(incompleteCount > 0 && wrongCount === 0){
+          setFeedback(
+            "bad",
+            "Faltan casillas por completar",
+            `Hay ${incompleteCount} línea(s) incompleta(s). Completa todas las casillas vacías antes de validar.`
+          );
+        } else if(incompleteCount > 0){
+          setFeedback(
+            "bad",
+            "Todavía no está correcto",
+            `Hay ${wrongCount} línea(s) incorrecta(s) y ${incompleteCount} incompleta(s). Revisa las marcadas en rojo.`
+          );
+        } else {
+          setFeedback(
+            "bad",
+            "Todavía no está correcto",
+            `Hay ${wrongCount} línea(s) incorrecta(s). Revisa las marcadas en rojo.`
+          );
+        }
         return;
       }
 
@@ -1242,7 +1431,7 @@
       setFeedback(
         "good",
         "¡Reto resuelto!",
-        "Todo está correcto. Puedes pasar al siguiente reto."
+        "Todo está correcto. El resultado de cada línea coincide respetando la prioridad de operaciones."
       );
 
       if(state.round >= TOTAL_ROUNDS){
@@ -1258,6 +1447,41 @@
     }
 
     /**********************************************************************
+     * TECLADO VISUAL
+     **********************************************************************/
+    function applyPadValue(value){
+      if(!state.activeInput) return;
+
+      const input = state.activeInput;
+      const kind = input.dataset.kind;
+
+      if(kind === "op"){
+        if (["+", "-", "*", "/"].includes(value)) {
+          input.value = value === "*" ? "×" : value === "/" ? "÷" : value;
+        }
+        return;
+      }
+
+      if(kind === "number"){
+        const raw = input.value.trim();
+        if (!/^\d*$/.test(raw)) input.value = "";
+        if (input.value.length < 2 && /^\d$/.test(value)) {
+          input.value += value;
+        }
+      }
+    }
+
+    function padBackspaceAction(){
+      if(!state.activeInput) return;
+      state.activeInput.value = state.activeInput.value.slice(0, -1);
+    }
+
+    function padClearAction(){
+      if(!state.activeInput) return;
+      state.activeInput.value = "";
+    }
+
+    /**********************************************************************
      * PARTIDA
      **********************************************************************/
     function startGame(mode){
@@ -1270,7 +1494,7 @@
 
       showScreen(gameScreen);
       renderPuzzle();
-      setFeedback("neutral", "Preparado", "Completa las casillas vacías y pulsa “Enviar respuesta”.");
+      setFeedback("neutral", "Preparado", "Selecciona una casilla y complétala con el teclado visual o con el teclado físico.");
     }
 
     function newPuzzleSameRound(){
@@ -1290,7 +1514,7 @@
       let medal = "";
 
       if(state.score < 500){
-        message = "Sigue practicando. Ya entiendes la mecánica, pero conviene revisar las cadenas de operaciones.";
+        message = "Sigue practicando. Ya entiendes la mecánica, pero conviene revisar la prioridad de operaciones.";
         rank = "🟠 Sigue practicando";
         medal = "📘";
       } else if(state.score < 750){
@@ -1333,12 +1557,33 @@
 
     field.addEventListener("input", (e) => {
       const target = e.target;
-      if(!target.classList.contains("input-op")) return;
-      const val = target.value;
-      if(val.length > 0){
-        target.value = val.slice(-1);
+
+      if(target.classList.contains("input-op")){
+        const val = target.value;
+        if(val.length > 0){
+          target.value = val.slice(-1);
+        }
+      }
+
+      if(target.classList.contains("input-number")){
+        target.value = target.value.replace(/[^\d]/g, "").slice(0, 2);
       }
     });
+
+    document.addEventListener("click", (e) => {
+      const clickedInput = e.target.closest(".input-number, .input-op");
+      if(clickedInput) return;
+      const clickedPad = e.target.closest(".pad-btn");
+      if(clickedPad) return;
+      clearActiveInput();
+    });
+
+    padButtons.forEach(btn => {
+      btn.addEventListener("click", () => applyPadValue(btn.dataset.pad));
+    });
+
+    padBackspace.addEventListener("click", padBackspaceAction);
+    padClear.addEventListener("click", padClearAction);
 
     showScreen(startScreen);
   </script>
