@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ahorcado personalizable</title>
+  <style>
+    :root{
+      --bg1:#0b1220;
+      --bg2:#172554;
+      --panel:#ffffff;
+      --panel-soft:#f8fbff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --primary:#2563eb;
+      --primary2:#7c3aed;
+      --accent:#06b6d4;
+      --good:#16a34a;
+      --bad:#dc2626;
+      --warn:#f59e0b;
+      --line:#cbd5e1;
+      --shadow:0 18px 40px rgba(2, 12, 27, .24);
+      --radius:24px;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(124,58,237,.22), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(6,182,212,.14), transparent 34%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+    }
+
+    .app{
+      max-width:1240px;
+      margin:0 auto;
+      padding:24px 16px 30px;
+    }
+
+    .screen{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(10px);
+      border-radius:28px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      animation:fadeIn .35s ease;
+    }
+
+    .hidden{display:none !important}
+
+    .card{
+      background:linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:28px;
+      border:1px solid rgba(16,33,58,.06);
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:18px;
+      align-items:stretch;
+    }
+
+    .title{
+      margin:0 0 10px;
+      font-size:clamp(2rem, 4vw, 3.3rem);
+      line-height:1.02;
+      letter-spacing:-.04em;
+      font-weight:900;
+      color:#0f172a;
+    }
+
+    .subtitle{
+      margin:0 0 18px;
+      color:#334155;
+      line-height:1.5;
+      font-size:1.08rem;
+      max-width:62ch;
+    }
+
+    .pill-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin:14px 0 24px;
+    }
+
+    .pill{
+      padding:10px 14px;
+      border-radius:999px;
+      background:#eef2ff;
+      border:1px solid #dbe3ff;
+      color:#3730a3;
+      font-weight:800;
+      font-size:.94rem;
+    }
+
+    .mode-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+      margin-top:16px;
+    }
+
+    .mode-btn{
+      border:none;
+      border-radius:22px;
+      padding:20px 18px;
+      text-align:left;
+      cursor:pointer;
+      background:linear-gradient(180deg, #ffffff, #f8fafc);
+      border:2px solid #e2e8f0;
+      color:#0f172a;
+      box-shadow:0 10px 22px rgba(15,23,42,.06);
+      min-height:132px;
+      transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .mode-btn:hover{
+      transform:translateY(-2px);
+      border-color:#a5b4fc;
+      box-shadow:0 14px 24px rgba(79,70,229,.14);
+    }
+
+    .mode-btn h3{
+      margin:0 0 8px;
+      font-size:1.08rem;
+      font-weight:900;
+    }
+
+    .mode-btn p{
+      margin:0;
+      color:#475569;
+      line-height:1.42;
+      font-size:.95rem;
+    }
+
+    .info-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+      height:100%;
+    }
+
+    .mini{
+      background:linear-gradient(180deg, #eff6ff, #ffffff);
+      border-radius:20px;
+      padding:18px;
+      border:1px solid #dbeafe;
+      min-height:120px;
+    }
+
+    .mini .emoji{
+      font-size:1.7rem;
+      display:block;
+      margin-bottom:8px;
+    }
+
+    .mini h3{
+      margin:0 0 6px;
+      font-size:1rem;
+      color:#0f172a;
+    }
+
+    .mini p{
+      margin:0;
+      color:#475569;
+      line-height:1.35;
+      font-size:.95rem;
+    }
+
+    .setup-grid{
+      display:grid;
+      grid-template-columns:1fr 340px;
+      gap:16px;
+      align-items:start;
+    }
+
+    .label{
+      display:block;
+      font-size:.88rem;
+      color:#475569;
+      font-weight:800;
+      margin-bottom:8px;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+    }
+
+    .text-input{
+      width:100%;
+      border:none;
+      outline:none;
+      border-radius:18px;
+      padding:18px 18px;
+      font-size:1.08rem;
+      font-weight:800;
+      background:#ffffff;
+      border:2px solid #dbeafe;
+      box-shadow:0 10px 20px rgba(15,23,42,.06);
+      color:#0f172a;
+    }
+
+    .text-input:focus{
+      border-color:#60a5fa;
+      box-shadow:0 0 0 4px rgba(96,165,250,.24);
+    }
+
+    .small-note{
+      color:#64748b;
+      font-size:.94rem;
+      line-height:1.45;
+    }
+
+    .btn-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .btn{
+      border:none;
+      border-radius:18px;
+      padding:14px 18px;
+      font-size:1rem;
+      font-weight:900;
+      cursor:pointer;
+      transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    }
+
+    .btn:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.03);
+    }
+
+    .btn.primary{
+      color:#fff;
+      background:linear-gradient(135deg, var(--primary), var(--primary2));
+      box-shadow:0 14px 28px rgba(79,70,229,.28);
+    }
+
+    .btn.secondary{
+      color:#0f172a;
+      background:linear-gradient(180deg, #ffffff, #f8fafc);
+      border:2px solid #e2e8f0;
+      box-shadow:0 10px 20px rgba(15,23,42,.06);
+    }
+
+    .game-top{
+      display:grid;
+      grid-template-columns:1.35fr repeat(4, auto);
+      gap:14px;
+      margin-bottom:16px;
+      align-items:stretch;
+    }
+
+    .panel{
+      background:linear-gradient(180deg, #ffffff, #f8fbff);
+      border-radius:20px;
+      border:1px solid rgba(16,33,58,.08);
+      box-shadow:var(--shadow);
+      padding:16px 18px;
+    }
+
+    .main-info .label, .stat .label{
+      font-size:.82rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--muted);
+      font-weight:800;
+      display:block;
+      margin-bottom:8px;
+    }
+
+    .main-info .value{
+      font-size:1.22rem;
+      font-weight:900;
+      color:#0f172a;
+      margin-bottom:6px;
+    }
+
+    .main-info .sub{
+      color:#475569;
+      line-height:1.4;
+      font-size:.95rem;
+    }
+
+    .stat{
+      text-align:center;
+      min-width:116px;
+    }
+
+    .stat .value{
+      font-size:1.46rem;
+      font-weight:900;
+      color:#0f172a;
+    }
+
+    .game-layout{
+      display:grid;
+      grid-template-columns:1fr 340px;
+      gap:16px;
+    }
+
+    .play-card{
+      display:grid;
+      gap:16px;
+    }
+
+    .hangman-zone{
+      display:grid;
+      grid-template-columns:420px 1fr;
+      gap:16px;
+      align-items:stretch;
+    }
+
+    .canvas-wrap{
+      background:linear-gradient(180deg, #ffffff, #f8fbff);
+      border-radius:24px;
+      padding:16px;
+      border:1px solid rgba(16,33,58,.08);
+      box-shadow:var(--shadow);
+      display:grid;
+      place-items:center;
+      min-height:420px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .grave-banner{
+      position:absolute;
+      top:16px;
+      left:50%;
+      transform:translateX(-50%);
+      background:linear-gradient(135deg, #111827, #374151);
+      color:#fff;
+      padding:10px 16px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:.92rem;
+      letter-spacing:.02em;
+      box-shadow:0 10px 20px rgba(0,0,0,.18);
+      display:none;
+      z-index:2;
+    }
+
+    .grave-banner.show{display:block;}
+
+    svg{
+      width:100%;
+      max-width:360px;
+      height:auto;
+    }
+
+    .gallow{
+      stroke:#475569;
+      stroke-width:10;
+      fill:none;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .body{
+      stroke:#0f172a;
+      stroke-width:8;
+      fill:none;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+      transition:opacity .25s ease;
+    }
+
+    .dead-eye{
+      stroke:#dc2626;
+      stroke-width:4;
+      display:none;
+    }
+
+    .dead-eye.show{display:block;}
+
+    .word-area{
+      background:linear-gradient(180deg, #ffffff, #f8fbff);
+      border-radius:24px;
+      padding:18px;
+      border:1px solid rgba(16,33,58,.08);
+      box-shadow:var(--shadow);
+      display:grid;
+      gap:18px;
+      align-content:start;
+    }
+
+    .word-display{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px 10px;
+      align-items:flex-end;
+      min-height:120px;
+    }
+
+    .letter-slot{
+      min-width:44px;
+      height:58px;
+      border-bottom:4px solid #334155;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      font-size:1.8rem;
+      font-weight:900;
+      color:#0f172a;
+      text-transform:uppercase;
+    }
+
+    .space-slot{
+      min-width:24px;
+      height:58px;
+    }
+
+    .guess-row{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:12px;
+    }
+
+    .answer-row{
+      display:grid;
+      gap:10px;
+    }
+
+    .feedback{
+      border-radius:20px;
+      padding:16px;
+      font-weight:700;
+      line-height:1.45;
+      min-height:108px;
+    }
+
+    .feedback.good{
+      background:linear-gradient(180deg, #ecfdf5, #f0fdf4);
+      border:1px solid #bbf7d0;
+      color:#166534;
+    }
+
+    .feedback.bad{
+      background:linear-gradient(180deg, #fef2f2, #fff5f5);
+      border:1px solid #fecaca;
+      color:#991b1b;
+    }
+
+    .feedback.warn{
+      background:linear-gradient(180deg, #fffbeb, #fefce8);
+      border:1px solid #fde68a;
+      color:#92400e;
+    }
+
+    .feedback.neutral{
+      background:linear-gradient(180deg, #eff6ff, #f8fbff);
+      border:1px solid #dbeafe;
+      color:#1e3a8a;
+    }
+
+    .feedback h3{
+      margin:0 0 8px;
+      font-size:1.06rem;
+    }
+
+    .feedback p{
+      margin:0;
+      color:inherit;
+    }
+
+    .alphabet{
+      display:grid;
+      grid-template-columns:repeat(7, minmax(0,1fr));
+      gap:10px;
+    }
+
+    .key{
+      border:none;
+      border-radius:14px;
+      padding:12px 8px;
+      font-weight:900;
+      font-size:1rem;
+      cursor:pointer;
+      background:linear-gradient(180deg, #ffffff, #f8fafc);
+      border:2px solid #e2e8f0;
+      color:#0f172a;
+      box-shadow:0 8px 16px rgba(15,23,42,.05);
+      transition:transform .12s ease, filter .12s ease;
+    }
+
+    .key:hover:not(:disabled){
+      transform:translateY(-2px);
+      filter:brightness(1.03);
+    }
+
+    .key:disabled{
+      cursor:default;
+      opacity:.7;
+    }
+
+    .key.hit{
+      background:#ecfdf5;
+      border-color:#22c55e;
+      color:#166534;
+    }
+
+    .key.miss{
+      background:#fef2f2;
+      border-color:#ef4444;
+      color:#991b1b;
+    }
+
+    .used-letters{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      min-height:38px;
+    }
+
+    .chip{
+      padding:8px 12px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:.92rem;
+      background:#eef2ff;
+      color:#3730a3;
+      border:1px solid #dbe3ff;
+    }
+
+    .final-wrap{
+      text-align:center;
+    }
+
+    .medal{
+      width:140px;
+      height:140px;
+      margin:0 auto 18px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      font-size:4rem;
+      background:linear-gradient(180deg, #fff7ed, #ffffff);
+      border:6px solid rgba(255,255,255,.85);
+      box-shadow:var(--shadow);
+    }
+
+    .final-title{
+      margin:0 0 10px;
+      font-size:clamp(2rem, 4vw, 2.8rem);
+      font-weight:900;
+      color:#0f172a;
+    }
+
+    .final-sub{
+      margin:0 auto 22px;
+      max-width:58ch;
+      color:#475569;
+      line-height:1.5;
+      font-size:1.06rem;
+    }
+
+    .results-final{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:14px;
+      margin:24px 0 26px;
+    }
+
+    .result-box{
+      background:linear-gradient(180deg, #ffffff, #f8fafc);
+      border-radius:20px;
+      padding:18px;
+      border:1px solid #e2e8f0;
+      box-shadow:0 10px 20px rgba(15,23,42,.06);
+    }
+
+    .result-box .k{
+      display:block;
+      color:#64748b;
+      font-size:.82rem;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+
+    .result-box .v{
+      font-size:1.18rem;
+      font-weight:900;
+      color:#0f172a;
+      word-break:break-word;
+    }
+
+    .rank{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 18px;
+      border-radius:999px;
+      background:#eef2ff;
+      color:#3730a3;
+      font-weight:900;
+      margin-bottom:18px;
+    }
+
+    .footer-note{
+      margin-top:14px;
+      color:#64748b;
+      font-size:.94rem;
+    }
+
+    @keyframes fadeIn{
+      from{opacity:0; transform:translateY(8px)}
+      to{opacity:1; transform:translateY(0)}
+    }
+
+    @media (max-width: 1080px){
+      .hero,
+      .setup-grid,
+      .game-layout,
+      .hangman-zone{
+        grid-template-columns:1fr;
+      }
+      .game-top{grid-template-columns:1fr 1fr}
+      .results-final{grid-template-columns:repeat(2,1fr)}
+    }
+
+    @media (max-width: 760px){
+      .mode-grid,
+      .info-grid,
+      .results-final{
+        grid-template-columns:1fr;
+      }
+      .game-top{grid-template-columns:1fr}
+      .alphabet{
+        grid-template-columns:repeat(5, minmax(0,1fr));
+      }
+      .guess-row{
+        grid-template-columns:1fr;
+      }
+      .app{padding:12px 8px 20px}
+      .screen{padding:8px}
+      .card{padding:18px}
+      .panel{padding:14px}
+      .letter-slot{min-width:34px; font-size:1.45rem}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- MENÚ PRINCIPAL -->
+    <section id="menuScreen" class="screen">
+      <div class="card hero">
+        <div>
+          <h1 class="title">Ahorcado personalizable</h1>
+          <p class="subtitle">
+            Elige el modo de juego, introduce la respuesta de forma oculta y juega proyectándolo sin revelar la solución.
+          </p>
+
+          <div class="pill-row">
+            <span class="pill">🕵️ Entrada oculta</span>
+            <span class="pill">🎮 2 modos</span>
+            <span class="pill">💀 7 o 9 errores</span>
+            <span class="pill">✍️ Letras o respuesta completa</span>
+          </div>
+
+          <div class="mode-grid">
+            <button class="mode-btn" data-mode="word">
+              <h3>🔤 Modo Palabra</h3>
+              <p>Para una sola palabra. Máximo 7 errores. Ideal para vocabulario y retos rápidos.</p>
+            </button>
+
+            <button class="mode-btn" data-mode="phrase">
+              <h3>📝 Modo Frase</h3>
+              <p>Permite espacios y varias palabras. Máximo 9 errores. Perfecto para expresiones o títulos.</p>
+            </button>
+          </div>
+        </div>
+
+        <div class="info-grid">
+          <div class="mini">
+            <span class="emoji">🙈</span>
+            <h3>Oculto de verdad</h3>
+            <p>La palabra o frase se introduce como contraseña y no se muestra en ningún momento durante la configuración.</p>
+          </div>
+          <div class="mini">
+            <span class="emoji">😂</span>
+            <h3>Fallos divertidos</h3>
+            <p>Cada error muestra un comentario diferente para darle más vida al juego.</p>
+          </div>
+          <div class="mini">
+            <span class="emoji">💀</span>
+            <h3>Se puede seguir</h3>
+            <p>Aunque el personaje muera, la partida continúa para intentar completar la solución.</p>
+          </div>
+          <div class="mini">
+            <span class="emoji">✅</span>
+            <h3>Dos formas de ganar</h3>
+            <p>Puedes completar la respuesta letra a letra o escribir directamente la solución entera.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONFIGURACIÓN -->
+    <section id="setupScreen" class="screen hidden">
+      <div class="setup-grid">
+        <div class="card">
+          <h2 class="title" style="font-size:2rem;">Configurar partida</h2>
+          <p class="subtitle" id="setupSubtitle">Introduce la palabra oculta. Nadie la verá en pantalla.</p>
+
+          <div>
+            <label class="label" id="solutionLabel" for="secretInput">Palabra secreta</label>
+            <input id="secretInput" class="text-input" type="password" autocomplete="off" spellcheck="false" placeholder="Escribe aquí la respuesta oculta" />
+          </div>
+
+          <div class="small-note" id="setupNote">
+            Solo se permitirán letras y, en el modo frase, también espacios. La respuesta no se mostrará después de pulsar empezar.
+          </div>
+
+          <div class="btn-row">
+            <button id="startGameBtn" class="btn primary">Empezar partida</button>
+            <button id="backToMenuFromSetup" class="btn secondary">Volver al menú</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <strong>Resumen del modo</strong>
+          <div class="small-note" id="modeSummary" style="margin-top:10px;">
+            Modo palabra. Se permiten hasta 7 errores.
+          </div>
+
+          <div class="small-note" style="margin-top:16px;">
+            Consejo: prepara la palabra o frase antes de proyectar, o introdúcela rápidamente porque el campo está oculto pero el teclado del sistema podría sugerir cosas en algunos dispositivos.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- JUEGO -->
+    <section id="gameScreen" class="screen hidden">
+      <div class="game-top">
+        <div class="panel main-info">
+          <span class="label">Partida actual</span>
+          <div id="gameTitle" class="value">Modo palabra</div>
+          <div id="gameSub" class="sub">Adivina letra a letra o prueba con la respuesta completa.</div>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Modo</span>
+          <span id="modeValue" class="value">Palabra</span>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Errores</span>
+          <span id="errorsValue" class="value">0</span>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Límite</span>
+          <span id="maxErrorsValue" class="value">7</span>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Estado</span>
+          <span id="statusValue" class="value">Vivo</span>
+        </div>
+      </div>
+
+      <div class="game-layout">
+        <div class="play-card">
+          <div class="hangman-zone">
+            <div class="canvas-wrap">
+              <div id="graveBanner" class="grave-banner">💀 El personaje ya está muerto... pero aún podéis resolverlo</div>
+
+              <svg viewBox="0 0 320 320" aria-label="Ahorcado">
+                <path class="gallow" d="M50 290 L220 290" />
+                <path class="gallow" d="M95 290 L95 35" />
+                <path class="gallow" d="M95 35 L220 35" />
+                <path class="gallow" d="M220 35 L220 65" />
+
+                <g id="part1" class="body" style="display:none;">
+                  <circle cx="220" cy="95" r="30"></circle>
+                </g>
+
+                <g id="part2" class="body" style="display:none;">
+                  <line x1="220" y1="125" x2="220" y2="195"></line>
+                </g>
+
+                <g id="part3" class="body" style="display:none;">
+                  <line x1="220" y1="145" x2="180" y2="175"></line>
+                </g>
+
+                <g id="part4" class="body" style="display:none;">
+                  <line x1="220" y1="145" x2="260" y2="175"></line>
+                </g>
+
+                <g id="part5" class="body" style="display:none;">
+                  <line x1="220" y1="195" x2="188" y2="245"></line>
+                </g>
+
+                <g id="part6" class="body" style="display:none;">
+                  <line x1="220" y1="195" x2="252" y2="245"></line>
+                </g>
+
+                <g id="part7" class="body" style="display:none;">
+                  <line x1="205" y1="88" x2="214" y2="96"></line>
+                  <line x1="214" y1="88" x2="205" y2="96"></line>
+                  <line x1="226" y1="88" x2="235" y2="96"></line>
+                  <line x1="235" y1="88" x2="226" y2="96"></line>
+                </g>
+
+                <g id="part8" class="body" style="display:none;">
+                  <line x1="210" y1="108" x2="230" y2="108"></line>
+                </g>
+
+                <g id="part9" class="body" style="display:none;">
+                  <line x1="214" y1="260" x2="228" y2="275"></line>
+                  <line x1="228" y1="260" x2="214" y2="275"></line>
+                </g>
+              </svg>
+            </div>
+
+            <div class="word-area">
+              <div>
+                <span class="label">Respuesta oculta</span>
+                <div id="wordDisplay" class="word-display"></div>
+              </div>
+
+              <div class="answer-row">
+                <span class="label">Decir una letra</span>
+                <div class="guess-row">
+                  <input id="letterInput" class="text-input" type="text" maxlength="1" autocomplete="off" spellcheck="false" placeholder="Escribe una letra" />
+                  <button id="guessLetterBtn" class="btn primary">Probar letra</button>
+                </div>
+              </div>
+
+              <div class="answer-row">
+                <span class="label">O arriesgar con la respuesta completa</span>
+                <div class="guess-row">
+                  <input id="fullGuessInput" class="text-input" type="text" autocomplete="off" spellcheck="false" placeholder="Escribe la palabra o frase completa" />
+                  <button id="guessFullBtn" class="btn secondary">Enviar respuesta completa</button>
+                </div>
+              </div>
+
+              <div id="feedbackBox" class="feedback neutral">
+                <h3>Preparados</h3>
+                <p>Empieza diciendo letras o intenta resolver la respuesta completa.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <span class="label">Teclado de letras</span>
+            <div id="alphabet" class="alphabet"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="panel">
+            <strong>Letras usadas</strong>
+            <div id="usedLetters" class="used-letters" style="margin-top:12px;"></div>
+
+            <div class="btn-row">
+              <button id="newGameBtn" class="btn primary">Nueva partida</button>
+              <button id="backToMenuBtn" class="btn secondary">Menú principal</button>
+            </div>
+          </div>
+
+          <div class="panel" style="margin-top:14px;">
+            <strong>Reglas</strong>
+            <div class="small-note" style="margin-top:10px;">
+              <ul style="margin:0; padding-left:18px; line-height:1.5;">
+                <li>Modo palabra: 7 errores.</li>
+                <li>Modo frase: 9 errores.</li>
+                <li>Un fallo al escribir la respuesta completa también cuenta como error.</li>
+                <li>Aunque el personaje muera, podéis seguir resolviendo.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL -->
+    <section id="finalScreen" class="screen hidden">
+      <div class="card final-wrap">
+        <div id="medalBox" class="medal">🏆</div>
+        <h2 class="final-title">Partida resuelta</h2>
+        <p id="finalMessage" class="final-sub">Buen trabajo.</p>
+        <div id="rankBadge" class="rank">🎯 Resultado</div>
+
+        <div class="results-final">
+          <div class="result-box">
+            <span class="k">Modo</span>
+            <span id="finalMode" class="v">-</span>
+          </div>
+          <div class="result-box">
+            <span class="k">Errores</span>
+            <span id="finalErrors" class="v">0</span>
+          </div>
+          <div class="result-box">
+            <span class="k">Estado final</span>
+            <span id="finalStatus" class="v">Vivo</span>
+          </div>
+          <div class="result-box">
+            <span class="k">Solución</span>
+            <span id="finalSolution" class="v">-</span>
+          </div>
+        </div>
+
+        <div class="btn-row" style="justify-content:center">
+          <button id="playAgainBtn" class="btn primary">Jugar otra vez</button>
+          <button id="finalMenuBtn" class="btn secondary">Volver al menú principal</button>
+        </div>
+
+        <p class="footer-note">Ahorcado personalizable listo para usar en clase o en una pantalla proyectada.</p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /**********************************************************************
+     * ESTADO
+     **********************************************************************/
+    const state = {
+      mode: "word",
+      maxErrors: 7,
+      solution: "",
+      guessed: new Set(),
+      used: [],
+      errors: 0,
+      dead: false,
+      resolved: false
+    };
+
+    const FAIL_MESSAGES = [
+      "Uy... el muñeco ha pedido revisión arbitral y no ha servido de nada.",
+      "Esa letra se ha ido más fuera que un penalti a la tercera fila.",
+      "No estaba. El ahorcado empieza a sospechar de vuestras decisiones.",
+      "Fallaste. El personaje ha puesto cara de “yo no firmé este guion”.",
+      "Nada de nada. Esto ya parece una misión imposible con cuerda incluida.",
+      "Incorrecto. El muñeco acaba de perder fe en la humanidad.",
+      "Otra que no entra. La cuerda está haciendo horas extra.",
+      "No aparece por ningún lado. El personaje ya mira al vacío.",
+      "Fallaste otra vez. Esto huele a tragedia teatral.",
+      "No está. El ahorcado está redactando su testamento."
+    ];
+
+    /**********************************************************************
+     * DOM
+     **********************************************************************/
+    const menuScreen = document.getElementById("menuScreen");
+    const setupScreen = document.getElementById("setupScreen");
+    const gameScreen = document.getElementById("gameScreen");
+    const finalScreen = document.getElementById("finalScreen");
+
+    const secretInput = document.getElementById("secretInput");
+    const setupSubtitle = document.getElementById("setupSubtitle");
+    const solutionLabel = document.getElementById("solutionLabel");
+    const setupNote = document.getElementById("setupNote");
+    const modeSummary = document.getElementById("modeSummary");
+
+    const startGameBtn = document.getElementById("startGameBtn");
+    const backToMenuFromSetup = document.getElementById("backToMenuFromSetup");
+
+    const gameTitle = document.getElementById("gameTitle");
+    const gameSub = document.getElementById("gameSub");
+    const modeValue = document.getElementById("modeValue");
+    const errorsValue = document.getElementById("errorsValue");
+    const maxErrorsValue = document.getElementById("maxErrorsValue");
+    const statusValue = document.getElementById("statusValue");
+
+    const wordDisplay = document.getElementById("wordDisplay");
+    const letterInput = document.getElementById("letterInput");
+    const fullGuessInput = document.getElementById("fullGuessInput");
+    const guessLetterBtn = document.getElementById("guessLetterBtn");
+    const guessFullBtn = document.getElementById("guessFullBtn");
+    const feedbackBox = document.getElementById("feedbackBox");
+    const usedLetters = document.getElementById("usedLetters");
+    const alphabet = document.getElementById("alphabet");
+    const graveBanner = document.getElementById("graveBanner");
+
+    const newGameBtn = document.getElementById("newGameBtn");
+    const backToMenuBtn = document.getElementById("backToMenuBtn");
+
+    const finalMessage = document.getElementById("finalMessage");
+    const rankBadge = document.getElementById("rankBadge");
+    const medalBox = document.getElementById("medalBox");
+    const finalMode = document.getElementById("finalMode");
+    const finalErrors = document.getElementById("finalErrors");
+    const finalStatus = document.getElementById("finalStatus");
+    const finalSolution = document.getElementById("finalSolution");
+    const playAgainBtn = document.getElementById("playAgainBtn");
+    const finalMenuBtn = document.getElementById("finalMenuBtn");
+
+    /**********************************************************************
+     * UTILIDADES
+     **********************************************************************/
+    function showScreen(screen){
+      menuScreen.classList.add("hidden");
+      setupScreen.classList.add("hidden");
+      gameScreen.classList.add("hidden");
+      finalScreen.classList.add("hidden");
+      screen.classList.remove("hidden");
+    }
+
+    function normalizeText(str, allowSpaces){
+      let s = str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toUpperCase();
+
+      s = allowSpaces ? s.replace(/[^A-ZÑÜ\s]/g, "") : s.replace(/[^A-ZÑÜ]/g, "");
+      s = s.replace(/\s+/g, " ").trim();
+      return s;
+    }
+
+    function setFeedback(type, title, text){
+      feedbackBox.className = `feedback ${type}`;
+      feedbackBox.innerHTML = `<h3>${title}</h3><p>${text}</p>`;
+    }
+
+    function randomFailMessage(){
+      return FAIL_MESSAGES[state.errors % FAIL_MESSAGES.length];
+    }
+
+    function currentModeName(){
+      return state.mode === "word" ? "Palabra" : "Frase";
+    }
+
+    function buildAlphabet(){
+      const letters = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","Ñ","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+      alphabet.innerHTML = "";
+      letters.forEach(letter => {
+        const btn = document.createElement("button");
+        btn.className = "key";
+        btn.textContent = letter;
+        btn.addEventListener("click", () => tryLetter(letter));
+        alphabet.appendChild(btn);
+      });
+    }
+
+    function updateAlphabetStates(){
+      const keys = alphabet.querySelectorAll(".key");
+      keys.forEach(btn => {
+        const letter = btn.textContent;
+        if(state.used.includes(letter)){
+          btn.disabled = true;
+          if(state.solution.includes(letter)){
+            btn.classList.add("hit");
+          } else {
+            btn.classList.add("miss");
+          }
+        }
+      });
+    }
+
+    function updateUsedLetters(){
+      usedLetters.innerHTML = "";
+      if(state.used.length === 0){
+        usedLetters.innerHTML = `<span class="small-note">Aún no habéis probado ninguna letra.</span>`;
+        return;
+      }
+      state.used.forEach(letter => {
+        const chip = document.createElement("span");
+        chip.className = "chip";
+        chip.textContent = letter;
+        usedLetters.appendChild(chip);
+      });
+    }
+
+    function updateStats(){
+      modeValue.textContent = currentModeName();
+      errorsValue.textContent = state.errors;
+      maxErrorsValue.textContent = state.maxErrors;
+      statusValue.textContent = state.dead ? "Muerto" : "Vivo";
+      graveBanner.classList.toggle("show", state.dead);
+    }
+
+    function updateHangman(){
+      const totalParts = state.mode === "word" ? 7 : 9;
+      for(let i = 1; i <= 9; i++){
+        const part = document.getElementById(`part${i}`);
+        if(!part) continue;
+        part.style.display = i <= state.errors ? "block" : "none";
+      }
+
+      if(state.errors >= totalParts){
+        state.dead = true;
+      }
+      updateStats();
+    }
+
+    function renderWord(){
+      wordDisplay.innerHTML = "";
+      for(const ch of state.solution){
+        if(ch === " "){
+          const space = document.createElement("div");
+          space.className = "space-slot";
+          wordDisplay.appendChild(space);
+        } else {
+          const slot = document.createElement("div");
+          slot.className = "letter-slot";
+          slot.textContent = state.guessed.has(ch) ? ch : "";
+          wordDisplay.appendChild(slot);
+        }
+      }
+    }
+
+    function isSolved(){
+      for(const ch of state.solution){
+        if(ch !== " " && !state.guessed.has(ch)) return false;
+      }
+      return true;
+    }
+
+    function finishGame(){
+      state.resolved = true;
+      finalMode.textContent = currentModeName();
+      finalErrors.textContent = state.errors;
+      finalStatus.textContent = state.dead ? "Muerto pero resuelto" : "Resuelto con vida";
+      finalSolution.textContent = state.solution;
+
+      if(state.dead){
+        finalMessage.textContent = "Habéis resuelto la respuesta... aunque el personaje no lo ha contado.";
+        rankBadge.textContent = "💀 Victoria póstuma";
+        medalBox.textContent = "🪦";
+      } else if(state.errors <= 2){
+        finalMessage.textContent = "Resolución impecable. El personaje sigue muy vivo y bastante orgulloso.";
+        rankBadge.textContent = "🏆 Partida brillante";
+        medalBox.textContent = "👑";
+      } else {
+        finalMessage.textContent = "Buen trabajo. La respuesta quedó resuelta antes del desastre total.";
+        rankBadge.textContent = "🎯 Resuelto";
+        medalBox.textContent = "🥇";
+      }
+
+      showScreen(finalScreen);
+    }
+
+    /**********************************************************************
+     * LÓGICA DEL JUEGO
+     **********************************************************************/
+    function registerError(customText = ""){
+      state.errors++;
+      updateHangman();
+
+      const text = customText || randomFailMessage();
+      if(state.dead){
+        setFeedback("warn", "💀 Demasiados errores", `El personaje ya está muerto. ${text} Pero aún podéis seguir hasta resolver la respuesta.`);
+      } else {
+        setFeedback("bad", "Fallo", text);
+      }
+    }
+
+    function tryLetter(rawLetter){
+      if(state.resolved) return;
+
+      const letter = normalizeText(rawLetter, false);
+      if(!letter || letter.length !== 1) return;
+
+      if(state.used.includes(letter)){
+        setFeedback("neutral", "Letra repetida", `La letra ${letter} ya se había probado.`);
+        return;
+      }
+
+      state.used.push(letter);
+
+      if(state.solution.includes(letter)){
+        state.guessed.add(letter);
+        renderWord();
+        updateUsedLetters();
+        updateAlphabetStates();
+
+        if(isSolved()){
+          setFeedback("good", "¡Respuesta completa!", `La letra ${letter} estaba en la solución y habéis terminado la partida.`);
+          finishGame();
+        } else {
+          setFeedback("good", "¡Bien!", `La letra ${letter} sí aparece en la respuesta.`);
+        }
+      } else {
+        updateUsedLetters();
+        updateAlphabetStates();
+        registerError();
+      }
+
+      letterInput.value = "";
+      letterInput.focus();
+    }
+
+    function tryFullAnswer(){
+      if(state.resolved) return;
+
+      const allowSpaces = state.mode === "phrase";
+      const guess = normalizeText(fullGuessInput.value, allowSpaces);
+      if(!guess){
+        setFeedback("neutral", "Sin respuesta", "Escribe una palabra o frase antes de enviarla.");
+        return;
+      }
+
+      if(guess === state.solution){
+        for(const ch of state.solution){
+          if(ch !== " ") state.guessed.add(ch);
+        }
+        renderWord();
+        setFeedback("good", "¡Respuesta exacta!", "Habéis acertado la solución completa.");
+        finishGame();
+      } else {
+        registerError("La respuesta completa no era correcta. Ese intento también cuenta.");
+      }
+
+      fullGuessInput.value = "";
+      fullGuessInput.focus();
+    }
+
+    function startConfiguredGame(){
+      const allowSpaces = state.mode === "phrase";
+      const normalized = normalizeText(secretInput.value, allowSpaces);
+
+      if(!normalized){
+        alert(state.mode === "word"
+          ? "Escribe una palabra válida."
+          : "Escribe una frase válida.");
+        return;
+      }
+
+      if(state.mode === "word" && normalized.includes(" ")){
+        alert("En el modo palabra no se permiten espacios.");
+        return;
+      }
+
+      state.solution = normalized;
+      state.maxErrors = state.mode === "word" ? 7 : 9;
+      state.guessed = new Set();
+      state.used = [];
+      state.errors = 0;
+      state.dead = false;
+      state.resolved = false;
+
+      secretInput.value = "";
+      letterInput.value = "";
+      fullGuessInput.value = "";
+
+      gameTitle.textContent = state.mode === "word" ? "Modo palabra" : "Modo frase";
+      gameSub.textContent = state.mode === "word"
+        ? "Tienes 7 errores máximos. También puedes intentar la palabra completa."
+        : "Tienes 9 errores máximos. Los espacios ya están resueltos automáticamente.";
+
+      buildAlphabet();
+      updateUsedLetters();
+      updateStats();
+      updateHangman();
+      renderWord();
+      setFeedback("neutral", "Preparados", "Empieza diciendo letras o intenta resolver la respuesta completa.");
+
+      showScreen(gameScreen);
+      letterInput.focus();
+    }
+
+    /**********************************************************************
+     * FLUJO DE PANTALLAS
+     **********************************************************************/
+    function openSetup(mode){
+      state.mode = mode;
+
+      if(mode === "word"){
+        setupSubtitle.textContent = "Introduce la palabra oculta. Nadie la verá en pantalla.";
+        solutionLabel.textContent = "Palabra secreta";
+        setupNote.textContent = "Solo se permiten letras. El juego ocultará completamente la palabra al empezar.";
+        modeSummary.textContent = "Modo palabra. Se permiten hasta 7 errores. No se admiten espacios.";
+        secretInput.placeholder = "Escribe aquí la palabra oculta";
+      } else {
+        setupSubtitle.textContent = "Introduce la frase oculta. Los espacios estarán permitidos y no romperán el juego.";
+        solutionLabel.textContent = "Frase secreta";
+        setupNote.textContent = "Se permiten letras y espacios. Los espacios quedarán resueltos automáticamente en el tablero.";
+        modeSummary.textContent = "Modo frase. Se permiten hasta 9 errores. Los espacios forman parte de la solución.";
+        secretInput.placeholder = "Escribe aquí la frase oculta";
+      }
+
+      secretInput.value = "";
+      showScreen(setupScreen);
+      setTimeout(() => secretInput.focus(), 60);
+    }
+
+    function backToMenu(){
+      secretInput.value = "";
+      letterInput.value = "";
+      fullGuessInput.value = "";
+      showScreen(menuScreen);
+    }
+
+    /**********************************************************************
+     * EVENTOS
+     **********************************************************************/
+    document.querySelectorAll(".mode-btn").forEach(btn => {
+      btn.addEventListener("click", () => openSetup(btn.dataset.mode));
+    });
+
+    startGameBtn.addEventListener("click", startConfiguredGame);
+    backToMenuFromSetup.addEventListener("click", backToMenu);
+    backToMenuBtn.addEventListener("click", backToMenu);
+    finalMenuBtn.addEventListener("click", backToMenu);
+    newGameBtn.addEventListener("click", () => openSetup(state.mode));
+    playAgainBtn.addEventListener("click", () => openSetup(state.mode));
+
+    guessLetterBtn.addEventListener("click", () => tryLetter(letterInput.value));
+    guessFullBtn.addEventListener("click", tryFullAnswer);
+
+    letterInput.addEventListener("input", () => {
+      letterInput.value = normalizeText(letterInput.value, false).slice(0,1);
+    });
+
+    letterInput.addEventListener("keydown", (e) => {
+      if(e.key === "Enter"){
+        e.preventDefault();
+        tryLetter(letterInput.value);
+      }
+    });
+
+    fullGuessInput.addEventListener("keydown", (e) => {
+      if(e.key === "Enter"){
+        e.preventDefault();
+        tryFullAnswer();
+      }
+    });
+
+    showScreen(menuScreen);
+  </script>
+</body>
+</html>
