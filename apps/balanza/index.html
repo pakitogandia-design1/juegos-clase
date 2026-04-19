@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neri Balance Ultimate</title>
+  <style>
+    :root{
+      --bg1:#091120;
+      --bg2:#152b4a;
+      --panel:#ffffff;
+      --panel-soft:#f8fbff;
+      --text:#10213a;
+      --muted:#64748b;
+      --primary:#2563eb;
+      --primary2:#7c3aed;
+      --accent:#06b6d4;
+      --good:#16a34a;
+      --bad:#dc2626;
+      --warn:#f59e0b;
+      --glass:rgba(255,255,255,.12);
+      --shadow:0 20px 44px rgba(8,17,32,.24);
+      --radius:24px;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(124,58,237,.22), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(6,182,212,.16), transparent 34%),
+        linear-gradient(135deg,var(--bg1),var(--bg2));
+      overflow-x:hidden;
+    }
+
+    .app{
+      max-width:1400px;
+      margin:0 auto;
+      padding:24px 16px 34px;
+    }
+
+    .screen{
+      background:var(--glass);
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(10px);
+      border-radius:28px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      animation:fadeIn .35s ease;
+    }
+
+    .hidden{display:none !important}
+
+    .card{
+      background:linear-gradient(180deg,#ffffff,#f7fbff);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:28px;
+      border:1px solid rgba(16,33,58,.06);
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:18px;
+      align-items:stretch;
+    }
+
+    .title{
+      margin:0 0 10px;
+      font-size:clamp(2.2rem,4vw,3.6rem);
+      line-height:1.02;
+      letter-spacing:-.04em;
+      font-weight:900;
+      color:#0f172a;
+    }
+
+    .subtitle{
+      margin:0 0 18px;
+      color:#334155;
+      line-height:1.5;
+      font-size:1.08rem;
+      max-width:66ch;
+    }
+
+    .pill-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin:14px 0 24px;
+    }
+
+    .pill{
+      padding:10px 14px;
+      border-radius:999px;
+      background:#eef2ff;
+      border:1px solid #dbe3ff;
+      color:#3730a3;
+      font-weight:800;
+      font-size:.94rem;
+    }
+
+    .mode-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+      margin-top:16px;
+    }
+
+    .mode-btn{
+      border:none;
+      border-radius:22px;
+      padding:20px 18px;
+      text-align:left;
+      cursor:pointer;
+      background:linear-gradient(180deg,#ffffff,#f8fafc);
+      border:2px solid #e2e8f0;
+      color:#0f172a;
+      box-shadow:0 10px 22px rgba(15,23,42,.06);
+      min-height:140px;
+      transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .mode-btn:hover{
+      transform:translateY(-2px);
+      border-color:#a5b4fc;
+      box-shadow:0 14px 24px rgba(79,70,229,.14);
+    }
+
+    .mode-btn h3{
+      margin:0 0 8px;
+      font-size:1.08rem;
+      font-weight:900;
+    }
+
+    .mode-btn p{
+      margin:0;
+      color:#475569;
+      line-height:1.42;
+      font-size:.95rem;
+    }
+
+    .info-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+      height:100%;
+    }
+
+    .mini{
+      background:linear-gradient(180deg,#eff6ff,#ffffff);
+      border-radius:20px;
+      padding:18px;
+      border:1px solid #dbeafe;
+      min-height:126px;
+    }
+
+    .mini .emoji{
+      font-size:1.7rem;
+      margin-bottom:8px;
+      display:block;
+    }
+
+    .mini h3{
+      margin:0 0 6px;
+      font-size:1rem;
+      color:#0f172a;
+    }
+
+    .mini p{
+      margin:0;
+      color:#475569;
+      line-height:1.35;
+      font-size:.95rem;
+    }
+
+    .topbar{
+      display:grid;
+      grid-template-columns:1.25fr repeat(4,auto);
+      gap:14px;
+      margin-bottom:16px;
+      align-items:stretch;
+    }
+
+    .panel{
+      background:linear-gradient(180deg,#ffffff,#f8fbff);
+      border-radius:20px;
+      border:1px solid rgba(16,33,58,.08);
+      box-shadow:var(--shadow);
+      padding:16px 18px;
+    }
+
+    .main-info .label,
+    .stat .label{
+      font-size:.82rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--muted);
+      font-weight:800;
+      display:block;
+      margin-bottom:8px;
+    }
+
+    .main-info .value{
+      font-size:1.22rem;
+      font-weight:900;
+      color:#0f172a;
+      margin-bottom:6px;
+    }
+
+    .main-info .sub{
+      color:#475569;
+      line-height:1.4;
+      font-size:.95rem;
+    }
+
+    .stat{
+      text-align:center;
+      min-width:116px;
+    }
+
+    .stat .value{
+      font-size:1.46rem;
+      font-weight:900;
+      color:#0f172a;
+    }
+
+    .game-layout{
+      display:grid;
+      grid-template-columns:1fr 370px;
+      gap:16px;
+    }
+
+    .arena{
+      background:linear-gradient(180deg,#f7fbff,#eef6ff);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:18px;
+      position:relative;
+      overflow:hidden;
+      min-height:780px;
+      border:1px solid rgba(16,33,58,.08);
+    }
+
+    .arena::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(37,99,235,.08), transparent 30%),
+        radial-gradient(circle at 20% 80%, rgba(124,58,237,.08), transparent 28%),
+        radial-gradient(circle at 80% 85%, rgba(6,182,212,.08), transparent 26%);
+      pointer-events:none;
+    }
+
+    .equation-banner{
+      position:relative;
+      z-index:2;
+      background:linear-gradient(135deg,#0f172a,#1e3a8a);
+      color:#fff;
+      border-radius:22px;
+      padding:16px 18px;
+      box-shadow:0 14px 24px rgba(15,23,42,.18);
+      margin-bottom:18px;
+      text-align:center;
+    }
+
+    .equation-banner .eq-label{
+      display:block;
+      font-size:.82rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:#cbd5e1;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+
+    .equation-banner .eq-value{
+      font-size:clamp(1.5rem,3vw,2.2rem);
+      font-weight:900;
+      letter-spacing:.02em;
+    }
+
+    .balance-zone{
+      position:relative;
+      z-index:2;
+      min-height:430px;
+      display:grid;
+      align-items:end;
+    }
+
+    .balance-wrap{
+      position:relative;
+      width:100%;
+      height:410px;
+      margin:0 auto;
+    }
+
+    .balance-base{
+      position:absolute;
+      left:50%;
+      bottom:26px;
+      transform:translateX(-50%);
+      width:200px;
+      height:24px;
+      border-radius:999px;
+      background:linear-gradient(180deg,#475569,#1f2937);
+      box-shadow:0 8px 14px rgba(0,0,0,.16);
+    }
+
+    .balance-pillar{
+      position:absolute;
+      left:50%;
+      bottom:42px;
+      transform:translateX(-50%);
+      width:26px;
+      height:160px;
+      border-radius:18px;
+      background:linear-gradient(180deg,#64748b,#334155);
+      box-shadow:0 10px 18px rgba(0,0,0,.16);
+    }
+
+    .balance-beam{
+      position:absolute;
+      left:50%;
+      bottom:198px;
+      transform:translateX(-50%) rotate(0deg);
+      width:660px;
+      height:18px;
+      border-radius:999px;
+      background:linear-gradient(180deg,#0f172a,#334155);
+      box-shadow:0 10px 18px rgba(0,0,0,.16);
+      transition:transform .45s ease;
+      transform-origin:center center;
+    }
+
+    .beam-center{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      background:#f8fafc;
+      border:4px solid #0f172a;
+    }
+
+    .rope{
+      position:absolute;
+      width:4px;
+      background:#64748b;
+      border-radius:99px;
+      transition:all .45s ease;
+    }
+
+    .plate{
+      position:absolute;
+      width:232px;
+      min-height:116px;
+      background:linear-gradient(180deg,#ffffff,#f8fafc);
+      border:2px solid #dbeafe;
+      border-radius:20px;
+      box-shadow:0 12px 24px rgba(15,23,42,.10);
+      transition:all .45s ease;
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+      gap:10px;
+    }
+
+    .plate-title{
+      font-size:.82rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:#64748b;
+      font-weight:800;
+    }
+
+    .plate-items{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:10px;
+      min-height:58px;
+    }
+
+    .tile{
+      min-width:52px;
+      height:52px;
+      padding:0 12px;
+      border-radius:16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+      font-size:1.06rem;
+      box-shadow:0 8px 16px rgba(15,23,42,.08);
+      border:2px solid transparent;
+      animation:popIn .22s ease;
+    }
+
+    .tile.x{
+      background:linear-gradient(180deg,#ede9fe,#ddd6fe);
+      color:#5b21b6;
+      border-color:#c4b5fd;
+    }
+
+    .tile.num{
+      background:linear-gradient(180deg,#eff6ff,#dbeafe);
+      color:#1d4ed8;
+      border-color:#bfdbfe;
+    }
+
+    .tile.op{
+      background:linear-gradient(180deg,#fff7ed,#ffedd5);
+      color:#c2410c;
+      border-color:#fdba74;
+    }
+
+    .tile.div{
+      background:linear-gradient(180deg,#ecfeff,#cffafe);
+      color:#0f766e;
+      border-color:#99f6e4;
+    }
+
+    .balance-status{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:14px;
+      position:relative;
+      z-index:2;
+    }
+
+    .status-card{
+      background:linear-gradient(180deg,#ffffff,#f8fafc);
+      border:1px solid #e2e8f0;
+      border-radius:18px;
+      padding:14px;
+      text-align:center;
+      box-shadow:0 10px 18px rgba(15,23,42,.06);
+    }
+
+    .status-card .k{
+      display:block;
+      font-size:.78rem;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      color:#64748b;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+
+    .status-card .v{
+      font-size:1.08rem;
+      font-weight:900;
+      color:#0f172a;
+      line-height:1.25;
+    }
+
+    .side{
+      display:grid;
+      gap:14px;
+      align-content:start;
+    }
+
+    .actions-grid{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .action-btn{
+      border:none;
+      border-radius:16px;
+      padding:14px 14px;
+      font-size:.98rem;
+      font-weight:900;
+      text-align:left;
+      cursor:pointer;
+      background:linear-gradient(180deg,#ffffff,#f8fafc);
+      border:2px solid #e2e8f0;
+      color:#0f172a;
+      box-shadow:0 8px 16px rgba(15,23,42,.05);
+      transition:transform .14s ease, filter .14s ease, border-color .14s ease;
+    }
+
+    .action-btn:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.03);
+      border-color:#bfdbfe;
+    }
+
+    .action-btn small{
+      display:block;
+      margin-top:6px;
+      color:#64748b;
+      font-weight:700;
+      line-height:1.35;
+    }
+
+    .feedback{
+      border-radius:20px;
+      padding:16px;
+      font-weight:700;
+      line-height:1.45;
+      min-height:116px;
+    }
+
+    .feedback.good{
+      background:linear-gradient(180deg,#ecfdf5,#f0fdf4);
+      border:1px solid #bbf7d0;
+      color:#166534;
+    }
+
+    .feedback.bad{
+      background:linear-gradient(180deg,#fef2f2,#fff5f5);
+      border:1px solid #fecaca;
+      color:#991b1b;
+    }
+
+    .feedback.neutral{
+      background:linear-gradient(180deg,#eff6ff,#f8fbff);
+      border:1px solid #dbeafe;
+      color:#1e3a8a;
+    }
+
+    .feedback.warn{
+      background:linear-gradient(180deg,#fffbeb,#fefce8);
+      border:1px solid #fde68a;
+      color:#92400e;
+    }
+
+    .feedback h3{
+      margin:0 0 8px;
+      font-size:1.06rem;
+    }
+
+    .feedback p{
+      margin:0;
+      color:inherit;
+    }
+
+    .btn-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .btn{
+      border:none;
+      border-radius:18px;
+      padding:14px 18px;
+      font-size:1rem;
+      font-weight:900;
+      cursor:pointer;
+      transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    }
+
+    .btn:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.03);
+    }
+
+    .btn.primary{
+      color:#fff;
+      background:linear-gradient(135deg,var(--primary),var(--primary2));
+      box-shadow:0 14px 28px rgba(79,70,229,.28);
+    }
+
+    .btn.secondary{
+      color:#0f172a;
+      background:linear-gradient(180deg,#ffffff,#f8fafc);
+      border:2px solid #e2e8f0;
+      box-shadow:0 10px 20px rgba(15,23,42,.06);
+    }
+
+    .legend{
+      color:#475569;
+      font-size:.95rem;
+      line-height:1.45;
+    }
+
+    .legend ul{
+      margin:10px 0 0;
+      padding-left:18px;
+    }
+
+    .step-list{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .step-item{
+      background:linear-gradient(180deg,#ffffff,#f8fafc);
+      border:1px solid #e2e8f0;
+      border-radius:16px;
+      padding:12px 14px;
+      color:#334155;
+      line-height:1.38;
+      font-weight:700;
+    }
+
+    .final-wrap{
+      text-align:center;
+    }
+
+    .medal{
+      width:140px;
+      height:140px;
+      margin:0 auto 18px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      font-size:4rem;
+      background:linear-gradient(180deg,#fff7ed,#ffffff);
+      border:6px solid rgba(255,255,255,.85);
+      box-shadow:var(--shadow);
+    }
+
+    .final-title{
+      margin:0 0 10px;
+      font-size:clamp(2rem,4vw,2.8rem);
+      font-weight:900;
+      color:#0f172a;
+    }
+
+    .final-sub{
+      margin:0 auto 22px;
+      max-width:58ch;
+      color:#475569;
+      line-height:1.5;
+      font-size:1.06rem;
+    }
+
+    .results-final{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+      margin:24px 0 26px;
+    }
+
+    .result-box{
+      background:linear-gradient(180deg,#ffffff,#f8fafc);
+      border-radius:20px;
+      padding:18px;
+      border:1px solid #e2e8f0;
+      box-shadow:0 10px 20px rgba(15,23,42,.06);
+    }
+
+    .result-box .k{
+      display:block;
+      color:#64748b;
+      font-size:.82rem;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+
+    .result-box .v{
+      font-size:1.45rem;
+      font-weight:900;
+      color:#0f172a;
+    }
+
+    .rank{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 18px;
+      border-radius:999px;
+      background:#eef2ff;
+      color:#3730a3;
+      font-weight:900;
+      margin-bottom:18px;
+    }
+
+    .footer-note{
+      margin-top:14px;
+      color:#64748b;
+      font-size:.94rem;
+    }
+
+    @keyframes fadeIn{
+      from{opacity:0; transform:translateY(8px)}
+      to{opacity:1; transform:translateY(0)}
+    }
+
+    @keyframes popIn{
+      from{opacity:0; transform:scale(.7)}
+      to{opacity:1; transform:scale(1)}
+    }
+
+    @media (max-width: 1120px){
+      .hero{grid-template-columns:1fr}
+      .topbar{grid-template-columns:1fr 1fr}
+      .game-layout{grid-template-columns:1fr}
+      .results-final{grid-template-columns:repeat(2,1fr)}
+      .balance-status{grid-template-columns:1fr}
+    }
+
+    @media (max-width: 760px){
+      .mode-grid,
+      .info-grid,
+      .results-final{
+        grid-template-columns:1fr;
+      }
+      .topbar{grid-template-columns:1fr}
+      .app{padding:12px 8px 20px}
+      .screen{padding:8px}
+      .card{padding:18px}
+      .panel{padding:14px}
+      .balance-beam{width:340px}
+      .plate{width:138px; min-height:96px; padding:10px}
+      .balance-wrap{height:360px}
+      .balance-base{width:150px}
+      .tile{min-width:42px; height:42px; font-size:.95rem}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section id="startScreen" class="screen">
+      <div class="card hero">
+        <div>
+          <h1 class="title">Neri Balance Ultimate</h1>
+          <p class="subtitle">
+            Aprende a despejar ecuaciones usando una balanza gigante. Elige versión, completa su tutorial y despeja manteniendo siempre el equilibrio.
+          </p>
+
+          <div class="pill-row">
+            <span class="pill">⚖️ Balanza visual</span>
+            <span class="pill">🎓 Tutorial por versión</span>
+            <span class="pill">🧠 4 modos progresivos</span>
+            <span class="pill">✨ Animaciones modernas</span>
+          </div>
+
+          <div class="mode-grid">
+            <button class="mode-btn mode-select" data-version="v1">
+              <h3>V1 · Iniciación</h3>
+              <p>Ecuaciones tipo <strong>x + a = b</strong> y <strong>x - a = b</strong>. Ideal para empezar.</p>
+            </button>
+
+            <button class="mode-btn mode-select" data-version="v2">
+              <h3>V2 · Coeficientes</h3>
+              <p>Incluye <strong>ax = b</strong> y <strong>ax + b = c</strong>. Ya hay más de un paso útil.</p>
+            </button>
+
+            <button class="mode-btn mode-select" data-version="v3">
+              <h3>V3 · Intermedio</h3>
+              <p>Mezcla <strong>ax - b = c</strong>, <strong>x/a = b</strong> y otras variantes equivalentes.</p>
+            </button>
+
+            <button class="mode-btn mode-select" data-version="v4">
+              <h3>V4 · Reto total</h3>
+              <p>Retos mixtos más completos, más pasos y decisiones menos obvias.</p>
+            </button>
+          </div>
+        </div>
+
+        <div class="info-grid">
+          <div class="mini">
+            <span class="emoji">⚖️</span>
+            <h3>Idea clave</h3>
+            <p>Todo lo que haces en un lado debes repetirlo en el otro para conservar la igualdad.</p>
+          </div>
+          <div class="mini">
+            <span class="emoji">🧱</span>
+            <h3>Objetos visuales</h3>
+            <p>La x aparece como ficha especial, los números como bloques y algunas operaciones como acciones visuales.</p>
+          </div>
+          <div class="mini">
+            <span class="emoji">🎯</span>
+            <h3>Meta</h3>
+            <p>Dejar la x sola para descubrir su valor exacto sin romper el equilibrio.</p>
+          </div>
+          <div class="mini">
+            <span class="emoji">🚀</span>
+            <h3>Progresión</h3>
+            <p>Cada versión añade nuevos tipos de ecuaciones y nuevos tutoriales propios.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tutorialScreen" class="screen hidden">
+      <div class="topbar">
+        <div class="panel main-info">
+          <span class="label">Tutorial</span>
+          <div id="tutorialTitle" class="value">Tutorial de versión</div>
+          <div id="tutorialSub" class="sub">Aprende paso a paso antes de empezar a jugar.</div>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Versión</span>
+          <span id="tutorialVersionValue" class="value">V1</span>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Paso</span>
+          <span id="tutorialStepValue" class="value">1/3</span>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Objetivo</span>
+          <span class="value">Aislar x</span>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Estado</span>
+          <span id="tutorialStatusValue" class="value">Equilibrio</span>
+        </div>
+      </div>
+
+      <div class="game-layout">
+        <div class="arena">
+          <div class="equation-banner">
+            <span class="eq-label">Ecuación del tutorial</span>
+            <div id="tutorialEquation" class="eq-value">x + 3 = 8</div>
+          </div>
+
+          <div class="balance-zone">
+            <div class="balance-wrap">
+              <div class="balance-base"></div>
+              <div class="balance-pillar"></div>
+              <div id="tutorialBeam" class="balance-beam">
+                <div class="beam-center"></div>
+              </div>
+
+              <div id="tutorialLeftRope" class="rope"></div>
+              <div id="tutorialRightRope" class="rope"></div>
+
+              <div id="tutorialLeftPlate" class="plate">
+                <div class="plate-title">Lado izquierdo</div>
+                <div id="tutorialLeftItems" class="plate-items"></div>
+              </div>
+
+              <div id="tutorialRightPlate" class="plate">
+                <div class="plate-title">Lado derecho</div>
+                <div id="tutorialRightItems" class="plate-items"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="balance-status">
+            <div class="status-card">
+              <span class="k">Acción del tutorial</span>
+              <span id="tutorialActionText" class="v">Quitar 3</span>
+            </div>
+            <div class="status-card">
+              <span class="k">Qué haces a ambos lados</span>
+              <span id="tutorialMirrorText" class="v">−3</span>
+            </div>
+            <div class="status-card">
+              <span class="k">Resultado actual</span>
+              <span id="tutorialResultText" class="v">x = 5</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="side">
+          <div id="tutorialFeedback" class="feedback neutral">
+            <h3>Empieza el tutorial</h3>
+            <p>Vamos a ver cómo se despeja paso a paso manteniendo siempre la balanza en equilibrio.</p>
+          </div>
+
+          <div class="panel">
+            <strong>Pasos guiados</strong>
+            <div id="tutorialSteps" class="step-list"></div>
+
+            <div class="btn-row">
+              <button id="tutorialPrevBtn" class="btn secondary">Paso anterior</button>
+              <button id="tutorialNextBtn" class="btn primary">Siguiente paso</button>
+            </div>
+          </div>
+
+          <div class="panel legend">
+            <strong>Idea importante</strong>
+            <ul>
+              <li>Despejar significa aplicar operaciones equivalentes a ambos lados.</li>
+              <li>La balanza no se rompe porque el cambio se hace de forma simétrica.</li>
+              <li>La meta es que la x quede sola.</li>
+            </ul>
+
+            <div class="btn-row">
+              <button id="tutorialMenuBtn" class="btn secondary">Menú principal</button>
+              <button id="tutorialPlayBtn" class="btn primary">Ir a jugar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen hidden">
+      <div class="topbar">
+        <div class="panel main-info">
+          <span class="label">Reto actual</span>
+          <div id="challengeTitle" class="value">Despeja la x</div>
+          <div id="challengeSub" class="sub">Haz la misma operación en ambos lados hasta dejar la x sola.</div>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Versión</span>
+          <span id="versionValue" class="value">V1</span>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Reto</span>
+          <span id="roundValue" class="value">1/6</span>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Puntuación</span>
+          <span id="scoreValue" class="value">1000</span>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Errores</span>
+          <span id="errorsValue" class="value">0</span>
+        </div>
+      </div>
+
+      <div class="game-layout">
+        <div class="arena">
+          <div class="equation-banner">
+            <span class="eq-label">Ecuación visible</span>
+            <div id="equationText" class="eq-value">x + 3 = 8</div>
+          </div>
+
+          <div class="balance-zone">
+            <div class="balance-wrap">
+              <div class="balance-base"></div>
+              <div class="balance-pillar"></div>
+              <div id="gameBeam" class="balance-beam">
+                <div class="beam-center"></div>
+              </div>
+
+              <div id="gameLeftRope" class="rope"></div>
+              <div id="gameRightRope" class="rope"></div>
+
+              <div id="gameLeftPlate" class="plate">
+                <div class="plate-title">Lado izquierdo</div>
+                <div id="gameLeftItems" class="plate-items"></div>
+              </div>
+
+              <div id="gameRightPlate" class="plate">
+                <div class="plate-title">Lado derecho</div>
+                <div id="gameRightItems" class="plate-items"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="balance-status">
+            <div class="status-card">
+              <span class="k">Meta del reto</span>
+              <span id="goalText" class="v">Dejar x sola</span>
+            </div>
+            <div class="status-card">
+              <span class="k">Última acción</span>
+              <span id="actionText" class="v">Sin movimientos</span>
+            </div>
+            <div class="status-card">
+              <span class="k">Resultado actual</span>
+              <span id="resultText" class="v">x + 3 = 8</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="side">
+          <div class="panel">
+            <strong>Acciones disponibles</strong>
+            <div class="actions-grid">
+              <button class="action-btn" data-action="subConst">
+                Restar la constante en ambos lados
+                <small>Sirve para cancelar un <strong>+n</strong> junto a la x.</small>
+              </button>
+
+              <button class="action-btn" data-action="addConst">
+                Sumar la constante en ambos lados
+                <small>Sirve para cancelar un <strong>−n</strong> junto a la x.</small>
+              </button>
+
+              <button class="action-btn" data-action="divCoeff">
+                Dividir entre el coeficiente
+                <small>Útil cuando tienes <strong>ax = b</strong>.</small>
+              </button>
+
+              <button class="action-btn" data-action="mulCoeff">
+                Multiplicar por el coeficiente
+                <small>Se usa en ecuaciones con división de la x.</small>
+              </button>
+            </div>
+
+            <div class="btn-row">
+              <button id="checkGoalBtn" class="btn primary">Comprobar</button>
+              <button id="newRoundBtn" class="btn secondary">Nuevo reto</button>
+            </div>
+          </div>
+
+          <div id="feedbackBox" class="feedback neutral">
+            <h3>Preparado</h3>
+            <p>Observa la ecuación de la balanza y elige una acción que mantenga el equilibrio.</p>
+          </div>
+
+          <div class="panel legend">
+            <strong>Reglas de la balanza</strong>
+            <ul>
+              <li>Siempre debes hacer la misma operación en ambos lados.</li>
+              <li>El equilibrio visual se mantiene porque el cambio se aplica de forma simétrica.</li>
+              <li>Solo ganas cuando la x queda sola.</li>
+            </ul>
+
+            <div class="btn-row">
+              <button id="gameMenuBtn" class="btn secondary">Menú principal</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="endScreen" class="screen hidden">
+      <div class="card final-wrap">
+        <div id="medalBox" class="medal">🏆</div>
+        <h2 class="final-title">Sesión completada</h2>
+        <p id="finalMessage" class="final-sub">Buen trabajo despejando.</p>
+        <div id="rankBadge" class="rank">⚖️ Balance master</div>
+
+        <div class="results-final">
+          <div class="result-box">
+            <span class="k">Versión</span>
+            <span id="finalVersion" class="v">V1</span>
+          </div>
+          <div class="result-box">
+            <span class="k">Puntuación final</span>
+            <span id="finalScore" class="v">0</span>
+          </div>
+          <div class="result-box">
+            <span class="k">Retos resueltos</span>
+            <span id="finalSolved" class="v">0</span>
+          </div>
+          <div class="result-box">
+            <span class="k">Errores</span>
+            <span id="finalErrors" class="v">0</span>
+          </div>
+        </div>
+
+        <div class="btn-row" style="justify-content:center">
+          <button id="restartBtn" class="btn primary">Jugar otra vez</button>
+          <button id="finalMenuBtn" class="btn secondary">Volver al menú principal</button>
+        </div>
+
+        <p class="footer-note">Despejar consiste en conservar el equilibrio mientras vas aislando la incógnita.</p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /**********************************************************************
+     * CONFIGURACIÓN
+     **********************************************************************/
+    const TOTAL_ROUNDS = 6;
+    const START_SCORE = 1000;
+    const ERROR_PENALTY = 40;
+
+    const VERSION_INFO = {
+      v1: {
+        label: "V1",
+        title: "V1 · Iniciación",
+        subtitle: "Ecuaciones básicas para empezar a despejar.",
+        tutorial: [
+          {
+            equation: { type:"linear", a:1, b:3, c:8, solution:5 },
+            action: "Observar la ecuación",
+            mirror: "La balanza ya está equilibrada",
+            result: "x + 3 = 8",
+            text: "Empezamos con x + 3 = 8. Ambos lados representan lo mismo."
+          },
+          {
+            equation: { type:"linear", a:1, b:0, c:5, solution:5 },
+            action: "Restar 3 al lado izquierdo",
+            mirror: "Restar 3 al lado derecho",
+            result: "x = 5",
+            text: "Para quitar el +3 que acompaña a la x, restamos 3 a ambos lados."
+          },
+          {
+            equation: { type:"linear", a:1, b:0, c:5, solution:5 },
+            action: "x ya está sola",
+            mirror: "No hace falta hacer más",
+            result: "x = 5",
+            text: "Listo: la x ha quedado aislada y ya sabemos cuánto vale."
+          }
+        ]
+      },
+      v2: {
+        label: "V2",
+        title: "V2 · Coeficientes",
+        subtitle: "Empiezan a aparecer coeficientes y dos pasos de despeje.",
+        tutorial: [
+          {
+            equation: { type:"linear", a:3, b:6, c:18, solution:4 },
+            action: "Observar la ecuación",
+            mirror: "Primero hay que quitar el +6",
+            result: "3x + 6 = 18",
+            text: "En 3x + 6 = 18, primero quitamos la constante para dejar 3x solo."
+          },
+          {
+            equation: { type:"linear", a:3, b:0, c:12, solution:4 },
+            action: "Restar 6",
+            mirror: "Restar 6",
+            result: "3x = 12",
+            text: "Al restar 6 a ambos lados, desaparece el término constante."
+          },
+          {
+            equation: { type:"linear", a:1, b:0, c:4, solution:4 },
+            action: "Dividir entre 3",
+            mirror: "Dividir entre 3",
+            result: "x = 4",
+            text: "Ahora dividimos entre 3 a ambos lados y la x queda sola."
+          }
+        ]
+      },
+      v3: {
+        label: "V3",
+        title: "V3 · Intermedio",
+        subtitle: "Incluye signos negativos y ecuaciones con división de la x.",
+        tutorial: [
+          {
+            equation: { type:"linear", a:2, b:-5, c:9, solution:7 },
+            action: "Observar la ecuación",
+            mirror: "Hay que cancelar el −5",
+            result: "2x - 5 = 9",
+            text: "Cuando aparece una resta junto a la x, la cancelamos sumando."
+          },
+          {
+            equation: { type:"linear", a:2, b:0, c:14, solution:7 },
+            action: "Sumar 5",
+            mirror: "Sumar 5",
+            result: "2x = 14",
+            text: "Al sumar 5 a ambos lados, el −5 desaparece."
+          },
+          {
+            equation: { type:"linear", a:1, b:0, c:7, solution:7 },
+            action: "Dividir entre 2",
+            mirror: "Dividir entre 2",
+            result: "x = 7",
+            text: "Ya solo queda quitar el coeficiente de la x."
+          }
+        ]
+      },
+      v4: {
+        label: "V4",
+        title: "V4 · Reto total",
+        subtitle: "Retos mixtos con más decisiones y más pasos posibles.",
+        tutorial: [
+          {
+            equation: { type:"divide", denom:4, c:3, solution:12 },
+            action: "Observar la ecuación",
+            mirror: "La x está dividida entre 4",
+            result: "x / 4 = 3",
+            text: "Aquí no hay que dividir, sino multiplicar ambos lados por 4."
+          },
+          {
+            equation: { type:"linear", a:1, b:0, c:12, solution:12 },
+            action: "Multiplicar por 4",
+            mirror: "Multiplicar por 4",
+            result: "x = 12",
+            text: "La división desaparece porque multiplicamos por el mismo número en ambos lados."
+          },
+          {
+            equation: { type:"linear", a:1, b:0, c:12, solution:12 },
+            action: "x ya está sola",
+            mirror: "Equilibrio mantenido",
+            result: "x = 12",
+            text: "Ese es el patrón correcto para ecuaciones con x dividida."
+          }
+        ]
+      }
+    };
+
+    /**********************************************************************
+     * ESTADO
+     **********************************************************************/
+    const state = {
+      version: "v1",
+      round: 1,
+      score: START_SCORE,
+      errors: 0,
+      solved: 0,
+      tutorialStep: 0,
+      currentEquation: null,
+      lastAction: "Sin movimientos"
+    };
+
+    /**********************************************************************
+     * DOM
+     **********************************************************************/
+    const startScreen = document.getElementById("startScreen");
+    const tutorialScreen = document.getElementById("tutorialScreen");
+    const gameScreen = document.getElementById("gameScreen");
+    const endScreen = document.getElementById("endScreen");
+
+    const tutorialTitle = document.getElementById("tutorialTitle");
+    const tutorialSub = document.getElementById("tutorialSub");
+    const tutorialVersionValue = document.getElementById("tutorialVersionValue");
+    const tutorialStepValue = document.getElementById("tutorialStepValue");
+    const tutorialStatusValue = document.getElementById("tutorialStatusValue");
+    const tutorialEquation = document.getElementById("tutorialEquation");
+    const tutorialActionText = document.getElementById("tutorialActionText");
+    const tutorialMirrorText = document.getElementById("tutorialMirrorText");
+    const tutorialResultText = document.getElementById("tutorialResultText");
+    const tutorialFeedback = document.getElementById("tutorialFeedback");
+    const tutorialSteps = document.getElementById("tutorialSteps");
+    const tutorialPrevBtn = document.getElementById("tutorialPrevBtn");
+    const tutorialNextBtn = document.getElementById("tutorialNextBtn");
+    const tutorialMenuBtn = document.getElementById("tutorialMenuBtn");
+    const tutorialPlayBtn = document.getElementById("tutorialPlayBtn");
+
+    const tutorialBeam = document.getElementById("tutorialBeam");
+    const tutorialLeftRope = document.getElementById("tutorialLeftRope");
+    const tutorialRightRope = document.getElementById("tutorialRightRope");
+    const tutorialLeftPlate = document.getElementById("tutorialLeftPlate");
+    const tutorialRightPlate = document.getElementById("tutorialRightPlate");
+    const tutorialLeftItems = document.getElementById("tutorialLeftItems");
+    const tutorialRightItems = document.getElementById("tutorialRightItems");
+
+    const challengeTitle = document.getElementById("challengeTitle");
+    const challengeSub = document.getElementById("challengeSub");
+    const versionValue = document.getElementById("versionValue");
+    const roundValue = document.getElementById("roundValue");
+    const scoreValue = document.getElementById("scoreValue");
+    const errorsValue = document.getElementById("errorsValue");
+
+    const equationText = document.getElementById("equationText");
+    const goalText = document.getElementById("goalText");
+    const actionText = document.getElementById("actionText");
+    const resultText = document.getElementById("resultText");
+
+    const gameBeam = document.getElementById("gameBeam");
+    const gameLeftRope = document.getElementById("gameLeftRope");
+    const gameRightRope = document.getElementById("gameRightRope");
+    const gameLeftPlate = document.getElementById("gameLeftPlate");
+    const gameRightPlate = document.getElementById("gameRightPlate");
+    const gameLeftItems = document.getElementById("gameLeftItems");
+    const gameRightItems = document.getElementById("gameRightItems");
+
+    const feedbackBox = document.getElementById("feedbackBox");
+    const checkGoalBtn = document.getElementById("checkGoalBtn");
+    const newRoundBtn = document.getElementById("newRoundBtn");
+    const gameMenuBtn = document.getElementById("gameMenuBtn");
+
+    const finalVersion = document.getElementById("finalVersion");
+    const finalMessage = document.getElementById("finalMessage");
+    const finalScore = document.getElementById("finalScore");
+    const finalSolved = document.getElementById("finalSolved");
+    const finalErrors = document.getElementById("finalErrors");
+    const medalBox = document.getElementById("medalBox");
+    const rankBadge = document.getElementById("rankBadge");
+    const restartBtn = document.getElementById("restartBtn");
+    const finalMenuBtn = document.getElementById("finalMenuBtn");
+
+    /**********************************************************************
+     * UTILIDADES
+     **********************************************************************/
+    function showScreen(screen){
+      startScreen.classList.add("hidden");
+      tutorialScreen.classList.add("hidden");
+      gameScreen.classList.add("hidden");
+      endScreen.classList.add("hidden");
+      screen.classList.remove("hidden");
+    }
+
+    function setFeedback(el, type, title, text){
+      el.className = `feedback ${type}`;
+      el.innerHTML = `<h3>${title}</h3><p>${text}</p>`;
+    }
+
+    function randInt(min, max){
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function pick(arr){
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function equationToText(eq){
+      if(eq.type === "divide"){
+        return `x / ${eq.denom} = ${eq.c}`;
+      }
+
+      const leftX = eq.a === 1 ? "x" : `${eq.a}x`;
+      let left = "";
+
+      if(eq.a !== 0){
+        left = leftX;
+        if(eq.b > 0) left += ` + ${eq.b}`;
+        if(eq.b < 0) left += ` - ${Math.abs(eq.b)}`;
+      } else {
+        left = `${eq.b}`;
+      }
+
+      return `${left} = ${eq.c}`;
+    }
+
+    function isSolved(eq){
+      return eq.type === "linear" && eq.a === 1 && eq.b === 0;
+    }
+
+    function renderItems(container, eq, side){
+      container.innerHTML = "";
+
+      if(side === "left"){
+        if(eq.type === "divide"){
+          const xTile = document.createElement("div");
+          xTile.className = "tile x";
+          xTile.textContent = "x";
+          container.appendChild(xTile);
+
+          const divTile = document.createElement("div");
+          divTile.className = "tile div";
+          divTile.textContent = `÷ ${eq.denom}`;
+          container.appendChild(divTile);
+          return;
+        }
+
+        if(eq.a !== 0){
+          const tile = document.createElement("div");
+          tile.className = "tile x";
+          tile.textContent = eq.a === 1 ? "x" : `${eq.a}x`;
+          container.appendChild(tile);
+        }
+
+        if(eq.b !== 0){
+          const tile = document.createElement("div");
+          tile.className = "tile num";
+          tile.textContent = eq.b > 0 ? `+${eq.b}` : `-${Math.abs(eq.b)}`;
+          container.appendChild(tile);
+        }
+
+        if(eq.a === 0 && eq.b === 0){
+          const tile = document.createElement("div");
+          tile.className = "tile num";
+          tile.textContent = "0";
+          container.appendChild(tile);
+        }
+      } else {
+        const tile = document.createElement("div");
+        tile.className = "tile num";
+        tile.textContent = `${eq.c}`;
+        container.appendChild(tile);
+      }
+    }
+
+    function updateBalanceVisual(beam, leftRope, rightRope, leftPlate, rightPlate, leftItemsEl, rightItemsEl, eq){
+      renderItems(leftItemsEl, eq, "left");
+      renderItems(rightItemsEl, eq, "right");
+
+      beam.style.transform = `translateX(-50%) rotate(0deg)`;
+
+      const centerX = leftPlate.parentElement.clientWidth / 2;
+      const beamY = 198;
+      const leftX = centerX - 220;
+      const rightX = centerX + 220;
+      const plateY = 238;
+
+      leftRope.style.left = `${leftX}px`;
+      leftRope.style.top = `${beamY}px`;
+      leftRope.style.height = `${plateY - beamY}px`;
+
+      rightRope.style.left = `${rightX}px`;
+      rightRope.style.top = `${beamY}px`;
+      rightRope.style.height = `${plateY - beamY}px`;
+
+      leftPlate.style.left = `${leftX - 116}px`;
+      leftPlate.style.top = `${plateY}px`;
+
+      rightPlate.style.left = `${rightX - 116}px`;
+      rightPlate.style.top = `${plateY}px`;
+    }
+
+    /**********************************************************************
+     * GENERADORES POR VERSIÓN
+     **********************************************************************/
+    function generateEquation(version){
+      if(version === "v1"){
+        const type = pick(["plus","minus"]);
+        const xValue = randInt(2, 9);
+        const b = randInt(1, 9);
+        if(type === "plus"){
+          return { type:"linear", a:1, b, c:xValue + b, solution:xValue };
+        }
+        return { type:"linear", a:1, b:-b, c:xValue - b, solution:xValue };
+      }
+
+      if(version === "v2"){
+        const type = pick(["ax", "axPlus"]);
+        const a = pick([2,3,4]);
+        const xValue = randInt(2, 9);
+
+        if(type === "ax"){
+          return { type:"linear", a, b:0, c:a * xValue, solution:xValue };
+        }
+
+        const b = randInt(1, 9);
+        return { type:"linear", a, b, c:a * xValue + b, solution:xValue };
+      }
+
+      if(version === "v3"){
+        const type = pick(["axMinus", "axPlus", "xDiv"]);
+        const xValue = randInt(2, 12);
+
+        if(type === "xDiv"){
+          const denom = pick([2,3,4]);
+          const adjusted = denom * randInt(2, 9);
+          return { type:"divide", denom, c:adjusted / denom, solution:adjusted };
+        }
+
+        const a = pick([2,3,4,5]);
+        const b = randInt(1, 10);
+
+        if(type === "axMinus"){
+          return { type:"linear", a, b:-b, c:a * xValue - b, solution:xValue };
+        }
+
+        return { type:"linear", a, b, c:a * xValue + b, solution:xValue };
+      }
+
+      const type = pick(["axPlus", "axMinus", "xDiv", "ax"]);
+      const xValue = randInt(2, 12);
+
+      if(type === "xDiv"){
+        const denom = pick([2,3,4,5]);
+        const base = denom * randInt(2, 10);
+        return { type:"divide", denom, c:base / denom, solution:base };
+      }
+
+      if(type === "ax"){
+        const a = pick([2,3,4,5,6]);
+        return { type:"linear", a, b:0, c:a * xValue, solution:xValue };
+      }
+
+      const a = pick([2,3,4,5,6]);
+      const b = randInt(1, 12);
+
+      if(type === "axMinus"){
+        return { type:"linear", a, b:-b, c:a * xValue - b, solution:xValue };
+      }
+
+      return { type:"linear", a, b, c:a * xValue + b, solution:xValue };
+    }
+
+    /**********************************************************************
+     * TUTORIAL
+     **********************************************************************/
+    function openTutorial(version){
+      state.version = version;
+      state.tutorialStep = 0;
+      renderTutorial();
+      showScreen(tutorialScreen);
+    }
+
+    function renderTutorial(){
+      const info = VERSION_INFO[state.version];
+      const step = info.tutorial[state.tutorialStep];
+
+      tutorialTitle.textContent = `${info.title} · Tutorial`;
+      tutorialSub.textContent = info.subtitle;
+      tutorialVersionValue.textContent = info.label;
+      tutorialStepValue.textContent = `${state.tutorialStep + 1}/${info.tutorial.length}`;
+      tutorialStatusValue.textContent = state.tutorialStep === info.tutorial.length - 1 ? "x aislada" : "Equilibrio";
+      tutorialEquation.textContent = equationToText(step.equation);
+      tutorialActionText.textContent = step.action;
+      tutorialMirrorText.textContent = step.mirror;
+      tutorialResultText.textContent = step.result;
+
+      tutorialSteps.innerHTML = info.tutorial.map((s, i) => `
+        <div class="step-item" style="${i === state.tutorialStep ? 'border:2px solid #93c5fd;background:#eff6ff;' : ''}">
+          <strong>Paso ${i + 1}.</strong> ${s.text}
+        </div>
+      `).join("");
+
+      setFeedback(
+        tutorialFeedback,
+        state.tutorialStep === info.tutorial.length - 1 ? "good" : "neutral",
+        state.tutorialStep === info.tutorial.length - 1 ? "Tutorial completado" : "Paso guiado",
+        step.text
+      );
+
+      updateBalanceVisual(
+        tutorialBeam,
+        tutorialLeftRope,
+        tutorialRightRope,
+        tutorialLeftPlate,
+        tutorialRightPlate,
+        tutorialLeftItems,
+        tutorialRightItems,
+        step.equation
+      );
+
+      tutorialPrevBtn.disabled = state.tutorialStep === 0;
+      tutorialNextBtn.textContent = state.tutorialStep === info.tutorial.length - 1 ? "Terminar tutorial" : "Siguiente paso";
+    }
+
+    /**********************************************************************
+     * JUEGO
+     **********************************************************************/
+    function updateGameHud(){
+      const info = VERSION_INFO[state.version];
+      challengeTitle.textContent = `Despeja la x · ${info.title}`;
+      challengeSub.textContent = info.subtitle;
+      versionValue.textContent = info.label;
+      roundValue.textContent = `${state.round}/${TOTAL_ROUNDS}`;
+      scoreValue.textContent = state.score;
+      errorsValue.textContent = state.errors;
+
+      equationText.textContent = equationToText(state.currentEquation);
+      goalText.textContent = "Dejar x sola";
+      actionText.textContent = state.lastAction;
+      resultText.textContent = equationToText(state.currentEquation);
+
+      updateBalanceVisual(
+        gameBeam,
+        gameLeftRope,
+        gameRightRope,
+        gameLeftPlate,
+        gameRightPlate,
+        gameLeftItems,
+        gameRightItems,
+        state.currentEquation
+      );
+    }
+
+    function startGame(){
+      state.round = 1;
+      state.score = START_SCORE;
+      state.errors = 0;
+      state.solved = 0;
+      state.currentEquation = generateEquation(state.version);
+      state.lastAction = "Sin movimientos";
+
+      updateGameHud();
+      setFeedback(
+        feedbackBox,
+        "neutral",
+        "Empieza a despejar",
+        "Observa la ecuación de la balanza y elige una acción que mantenga el equilibrio."
+      );
+      showScreen(gameScreen);
+    }
+
+    function startNewRound(){
+      if(state.round >= TOTAL_ROUNDS){
+        finishGame();
+        return;
+      }
+
+      state.round++;
+      state.currentEquation = generateEquation(state.version);
+      state.lastAction = "Sin movimientos";
+      updateGameHud();
+      setFeedback(
+        feedbackBox,
+        "neutral",
+        "Nuevo reto",
+        "Nueva ecuación lista. Vuelve a aislar la x manteniendo el equilibrio."
+      );
+    }
+
+    function applyAction(action){
+      const eq = state.currentEquation;
+      let changed = false;
+      let title = "";
+      let text = "";
+      let type = "neutral";
+
+      if(eq.type === "linear"){
+        if(action === "subConst"){
+          if(eq.b > 0){
+            state.lastAction = `Restar ${eq.b} a ambos lados`;
+            eq.c -= eq.b;
+            eq.b = 0;
+            changed = true;
+            title = "Buen movimiento";
+            text = "Has quitado la constante positiva que acompañaba a la x.";
+            type = "good";
+          } else {
+            registerError("Esa resta no es la mejor opción ahora. Fíjate en el signo del término que acompaña a la x.");
+            return;
+          }
+        }
+
+        if(action === "addConst"){
+          if(eq.b < 0){
+            state.lastAction = `Sumar ${Math.abs(eq.b)} a ambos lados`;
+            eq.c += Math.abs(eq.b);
+            eq.b = 0;
+            changed = true;
+            title = "Buen movimiento";
+            text = "Has eliminado una constante negativa sumando lo mismo en ambos lados.";
+            type = "good";
+          } else {
+            registerError("Esa suma no es la mejor opción ahora. Solo compensa cuando la x tiene una resta al lado.");
+            return;
+          }
+        }
+
+        if(action === "divCoeff"){
+          if(eq.b === 0 && eq.a > 1 && eq.c % eq.a === 0){
+            state.lastAction = `Dividir entre ${eq.a} en ambos lados`;
+            eq.c = eq.c / eq.a;
+            eq.a = 1;
+            changed = true;
+            title = "Buen movimiento";
+            text = "Has quitado el coeficiente dividiendo en ambos lados.";
+            type = "good";
+          } else {
+            registerError("Todavía no conviene dividir. Primero deja sola la parte con x salvo por su coeficiente.");
+            return;
+          }
+        }
+
+        if(action === "mulCoeff"){
+          registerError("Multiplicar por el coeficiente no ayuda aquí. Piensa qué operación elimina lo que acompaña a la x.");
+          return;
+        }
+      }
+
+      if(eq.type === "divide"){
+        if(action === "mulCoeff"){
+          state.lastAction = `Multiplicar por ${eq.denom} en ambos lados`;
+          eq.type = "linear";
+          eq.a = 1;
+          eq.b = 0;
+          eq.c = eq.c * eq.denom;
+          changed = true;
+          title = "Buen movimiento";
+          text = "Has eliminado la división multiplicando por el mismo número en ambos lados.";
+          type = "good";
+        } else {
+          registerError("En una ecuación como x/a = b, la acción clave es multiplicar por a en ambos lados.");
+          return;
+        }
+      }
+
+      if(changed){
+        updateGameHud();
+        setFeedback(feedbackBox, type, title, text);
+
+        if(isSolved(eq)){
+          state.solved++;
+          state.score += 120;
+          updateGameHud();
+          setFeedback(
+            feedbackBox,
+            "good",
+            "¡x aislada!",
+            `Perfecto. Has despejado correctamente: ${equationToText(eq)}.`
+          );
+        }
+      }
+    }
+
+    function registerError(message){
+      state.errors++;
+      state.score = Math.max(0, state.score - ERROR_PENALTY);
+      updateGameHud();
+      setFeedback(feedbackBox, "bad", "Paso incorrecto", message);
+    }
+
+    function checkGoal(){
+      if(isSolved(state.currentEquation)){
+        if(state.round >= TOTAL_ROUNDS){
+          finishGame();
+        } else {
+          setFeedback(
+            feedbackBox,
+            "good",
+            "Reto completado",
+            "La x ya está aislada. Pulsa “Nuevo reto” para continuar."
+          );
+        }
+      } else {
+        setFeedback(
+          feedbackBox,
+          "warn",
+          "Todavía no está despejada",
+          "La balanza sigue equilibrada, pero la x aún no está sola. Sigue operando a ambos lados."
+        );
+      }
+    }
+
+    function finishGame(){
+      finalVersion.textContent = VERSION_INFO[state.version].label;
+      finalScore.textContent = state.score;
+      finalSolved.textContent = state.solved;
+      finalErrors.textContent = state.errors;
+
+      let message = "";
+      let rank = "";
+      let medal = "";
+
+      if(state.score < 500){
+        message = "Sigue practicando. Ya entiendes la idea general de la balanza, pero toca afinar los pasos.";
+        rank = "🟠 Sigue practicando";
+        medal = "📘";
+      } else if(state.score < 850){
+        message = "Vas bien. Mantienes el equilibrio y vas comprendiendo cómo aislar la incógnita.";
+        rank = "🔵 Vas bien";
+        medal = "🥈";
+      } else if(state.score < 1100){
+        message = "Buen trabajo. Has despejado varias ecuaciones con bastante seguridad.";
+        rank = "🟣 Buen trabajo";
+        medal = "🥇";
+      } else {
+        message = "¡Reto superado con éxito! Has dominado el equilibrio y el despeje.";
+        rank = "🏆 Balance master";
+        medal = "👑";
+      }
+
+      finalMessage.textContent = `${message} Has jugado en ${VERSION_INFO[state.version].title}.`;
+      rankBadge.textContent = rank;
+      medalBox.textContent = medal;
+
+      showScreen(endScreen);
+    }
+
+    /**********************************************************************
+     * EVENTOS
+     **********************************************************************/
+    document.querySelectorAll(".mode-select").forEach(btn => {
+      btn.addEventListener("click", () => openTutorial(btn.dataset.version));
+    });
+
+    tutorialPrevBtn.addEventListener("click", () => {
+      if(state.tutorialStep > 0){
+        state.tutorialStep--;
+        renderTutorial();
+      }
+    });
+
+    tutorialNextBtn.addEventListener("click", () => {
+      const steps = VERSION_INFO[state.version].tutorial.length;
+      if(state.tutorialStep < steps - 1){
+        state.tutorialStep++;
+        renderTutorial();
+      } else {
+        startGame();
+      }
+    });
+
+    tutorialMenuBtn.addEventListener("click", () => showScreen(startScreen));
+    tutorialPlayBtn.addEventListener("click", startGame);
+
+    document.querySelectorAll(".action-btn").forEach(btn => {
+      btn.addEventListener("click", () => applyAction(btn.dataset.action));
+    });
+
+    checkGoalBtn.addEventListener("click", checkGoal);
+    newRoundBtn.addEventListener("click", startNewRound);
+    gameMenuBtn.addEventListener("click", () => showScreen(startScreen));
+    restartBtn.addEventListener("click", () => openTutorial(state.version));
+    finalMenuBtn.addEventListener("click", () => showScreen(startScreen));
+
+    window.addEventListener("resize", () => {
+      if(!tutorialScreen.classList.contains("hidden")){
+        renderTutorial();
+      }
+      if(!gameScreen.classList.contains("hidden") && state.currentEquation){
+        updateGameHud();
+      }
+    });
+
+    showScreen(startScreen);
+  </script>
+</body>
+</html>
