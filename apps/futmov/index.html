@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FUTMOV</title>
+  <style>
+    :root{
+      --bg1:#08111f;
+      --bg2:#142742;
+      --panel:#ffffff;
+      --panel-soft:#f8fbff;
+      --text:#10213a;
+      --muted:#64748b;
+      --primary:#2563eb;
+      --primary2:#7c3aed;
+      --accent:#06b6d4;
+      --good:#16a34a;
+      --bad:#dc2626;
+      --warn:#f59e0b;
+      --gold:#f59e0b;
+      --shadow:0 18px 40px rgba(8,17,32,.24);
+      --radius:24px;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(124,58,237,.22), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(6,182,212,.16), transparent 34%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow-x:hidden;
+    }
+
+    .app{
+      max-width:1260px;
+      margin:0 auto;
+      padding:24px 16px 34px;
+    }
+
+    .screen{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(10px);
+      border-radius:28px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      animation:fadeIn .35s ease;
+    }
+
+    .hidden{display:none !important}
+
+    .card{
+      background:linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:28px;
+      border:1px solid rgba(16,33,58,.06);
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.06fr .94fr;
+      gap:18px;
+      align-items:stretch;
+    }
+
+    .title{
+      margin:0 0 10px;
+      font-size:clamp(2.2rem, 4vw, 3.6rem);
+      line-height:1.02;
+      letter-spacing:-.04em;
+      font-weight:900;
+      color:#0f172a;
+    }
+
+    .subtitle{
+      margin:0 0 18px;
+      color:#334155;
+      line-height:1.5;
+      font-size:1.08rem;
+      max-width:62ch;
+    }
+
+    .pill-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin:14px 0 24px;
+    }
+
+    .pill{
+      padding:10px 14px;
+      border-radius:999px;
+      background:#eef2ff;
+      border:1px solid #dbe3ff;
+      color:#3730a3;
+      font-weight:800;
+      font-size:.94rem;
+    }
+
+    .mode-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:14px;
+      margin-top:16px;
+    }
+
+    .mode-btn{
+      border:none;
+      border-radius:22px;
+      padding:20px 18px;
+      text-align:left;
+      cursor:pointer;
+      background:linear-gradient(180deg, #ffffff, #f8fafc);
+      border:2px solid #e2e8f0;
+      color:#0f172a;
+      box-shadow:0 10px 22px rgba(15,23,42,.06);
+      min-height:132px;
+      transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .mode-btn:hover{
+      transform:translateY(-2px);
+      border-color:#a5b4fc;
+      box-shadow:0 14px 24px rgba(79,70,229,.14);
+    }
+
+    .mode-btn h3{
+      margin:0 0 8px;
+      font-size:1.08rem;
+      font-weight:900;
+    }
+
+    .mode-btn p{
+      margin:0;
+      color:#475569;
+      line-height:1.42;
+      font-size:.95rem;
+    }
+
+    .info-grid{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:14px;
+      height:100%;
+    }
+
+    .mini{
+      background:linear-gradient(180deg, #eff6ff, #ffffff);
+      border-radius:20px;
+      padding:18px;
+      border:1px solid #dbeafe;
+      min-height:122px;
+    }
+
+    .mini .emoji{
+      font-size:1.7rem;
+      margin-bottom:8px;
+      display:block;
+    }
+
+    .mini h3{
+      margin:0 0 6px;
+      font-size:1rem;
+      color:#0f172a;
+    }
+
+    .mini p{
+      margin:0;
+      color:#475569;
+      line-height:1.35;
+      font-size:.95rem;
+    }
+
+    .game-top{
+      display:grid;
+      grid-template-columns:1.2fr repeat(4, auto);
+      gap:14px;
+      margin-bottom:16px;
+      align-items:stretch;
+    }
+
+    .panel{
+      background:linear-gradient(180deg, #ffffff, #f8fbff);
+      border-radius:20px;
+      border:1px solid rgba(16,33,58,.08);
+      box-shadow:var(--shadow);
+      padding:16px 18px;
+    }
+
+    .main-info .label,
+    .stat .label{
+      font-size:.82rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      color:var(--muted);
+      font-weight:800;
+      display:block;
+      margin-bottom:8px;
+    }
+
+    .main-info .value{
+      font-size:1.22rem;
+      font-weight:900;
+      color:#0f172a;
+      margin-bottom:6px;
+    }
+
+    .main-info .sub{
+      color:#475569;
+      line-height:1.4;
+      font-size:.95rem;
+    }
+
+    .stat{
+      text-align:center;
+      min-width:116px;
+    }
+
+    .stat .value{
+      font-size:1.46rem;
+      font-weight:900;
+      color:#0f172a;
+    }
+
+    .game-layout{
+      display:grid;
+      grid-template-columns:1fr 340px;
+      gap:16px;
+    }
+
+    .arena{
+      position:relative;
+      overflow:hidden;
+      border-radius:24px;
+      min-height:700px;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,.08), transparent 26%),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02)),
+        repeating-linear-gradient(
+          90deg,
+          rgba(255,255,255,.03) 0 80px,
+          rgba(255,255,255,.00) 80px 160px
+        ),
+        linear-gradient(180deg, #15803d, #166534);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:var(--shadow);
+    }
+
+    .arena::before{
+      content:"";
+      position:absolute;
+      inset:18px;
+      border:2px solid rgba(220,252,231,.38);
+      border-radius:16px;
+      pointer-events:none;
+    }
+
+    .half-line{
+      position:absolute;
+      top:18px;
+      bottom:18px;
+      left:50%;
+      width:2px;
+      transform:translateX(-50%);
+      background:rgba(220,252,231,.32);
+      pointer-events:none;
+    }
+
+    .circle{
+      position:absolute;
+      width:140px;
+      height:140px;
+      left:50%;
+      top:50%;
+      transform:translate(-50%, -50%);
+      border-radius:50%;
+      border:2px solid rgba(220,252,231,.32);
+      pointer-events:none;
+    }
+
+    .goal{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      width:44%;
+      height:110px;
+      border:2px solid rgba(220,252,231,.30);
+      pointer-events:none;
+    }
+
+    .goal.top{
+      top:18px;
+      border-bottom:none;
+      border-radius:0 0 14px 14px;
+    }
+
+    .goal.bottom{
+      bottom:18px;
+      border-top:none;
+      border-radius:14px 14px 0 0;
+    }
+
+    .scoreboard{
+      position:absolute;
+      top:26px;
+      left:50%;
+      transform:translateX(-50%);
+      width:min(92%, 720px);
+      background:rgba(8,17,32,.55);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(8px);
+      border-radius:24px;
+      padding:16px 18px;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:18px;
+      box-shadow:0 12px 24px rgba(0,0,0,.18);
+      z-index:3;
+    }
+
+    .team-box{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+    }
+
+    .team-name{
+      font-weight:800;
+      font-size:.95rem;
+      letter-spacing:.02em;
+      color:#dbeafe;
+    }
+
+    .team-score{
+      font-weight:900;
+      font-size:2.5rem;
+      line-height:1;
+    }
+
+    .vs-box{
+      text-align:center;
+    }
+
+    .vs-main{
+      font-size:1rem;
+      font-weight:900;
+      color:#f8fafc;
+      margin-bottom:4px;
+    }
+
+    .vs-sub{
+      font-size:.82rem;
+      color:#cbd5e1;
+      font-weight:700;
+    }
+
+    .turn-banner{
+      position:absolute;
+      top:128px;
+      left:50%;
+      transform:translateX(-50%);
+      z-index:3;
+      background:rgba(255,255,255,.95);
+      color:#0f172a;
+      border-radius:999px;
+      padding:12px 18px;
+      font-weight:900;
+      box-shadow:0 10px 20px rgba(0,0,0,.12);
+      border:1px solid rgba(15,23,42,.06);
+    }
+
+    .phase-chip{
+      position:absolute;
+      top:178px;
+      left:50%;
+      transform:translateX(-50%);
+      z-index:3;
+      background:linear-gradient(135deg, #f59e0b, #ef4444);
+      color:#fff;
+      border-radius:999px;
+      padding:10px 16px;
+      font-weight:900;
+      box-shadow:0 10px 20px rgba(239,68,68,.22);
+      display:none;
+    }
+
+    .phase-chip.show{display:block}
+
+    .center-panel{
+      position:absolute;
+      left:50%;
+      top:53%;
+      transform:translate(-50%, -50%);
+      width:min(92%, 720px);
+      z-index:2;
+      display:grid;
+      gap:20px;
+      justify-items:center;
+    }
+
+    .chrono-shell{
+      width:min(100%, 620px);
+      border-radius:28px;
+      padding:22px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,.08)),
+        rgba(8,17,32,.42);
+      border:1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(10px);
+      box-shadow:0 18px 36px rgba(0,0,0,.18);
+    }
+
+    .chrono-label{
+      text-align:center;
+      font-size:.9rem;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      color:#cbd5e1;
+      font-weight:800;
+      margin-bottom:12px;
+    }
+
+    .chrono{
+      text-align:center;
+      font-size:clamp(3.2rem, 7vw, 6rem);
+      line-height:1;
+      font-weight:900;
+      letter-spacing:.03em;
+      color:#fff;
+      text-shadow:0 10px 20px rgba(0,0,0,.22);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .centi{
+      color:#fef08a;
+    }
+
+    .shot-btn{
+      border:none;
+      border-radius:24px;
+      padding:22px 28px;
+      font-size:1.16rem;
+      font-weight:900;
+      cursor:pointer;
+      color:#fff;
+      background:linear-gradient(135deg, #2563eb, #7c3aed);
+      box-shadow:0 16px 28px rgba(79,70,229,.26);
+      min-width:280px;
+      transition:transform .18s ease, filter .18s ease, box-shadow .18s ease;
+    }
+
+    .shot-btn:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.03);
+    }
+
+    .shot-btn:active{
+      transform:scale(.98);
+    }
+
+    .shot-btn.running{
+      background:linear-gradient(135deg, #ef4444, #f59e0b);
+      box-shadow:0 16px 28px rgba(239,68,68,.25);
+    }
+
+    .result-card{
+      width:min(100%, 620px);
+      background:rgba(255,255,255,.96);
+      border-radius:24px;
+      padding:18px;
+      box-shadow:0 16px 30px rgba(0,0,0,.12);
+      display:grid;
+      gap:8px;
+      justify-items:center;
+      text-align:center;
+    }
+
+    .result-card h3{
+      margin:0;
+      font-size:1.4rem;
+      font-weight:900;
+    }
+
+    .result-card p{
+      margin:0;
+      color:#475569;
+      line-height:1.45;
+      font-weight:700;
+    }
+
+    .result-good h3{ color:var(--good); }
+    .result-bad h3{ color:var(--bad); }
+    .result-warn h3{ color:var(--warn); }
+    .result-neutral h3{ color:#1d4ed8; }
+
+    .side{
+      display:grid;
+      gap:14px;
+      align-content:start;
+    }
+
+    .history-list{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+      max-height:380px;
+      overflow:auto;
+      padding-right:4px;
+    }
+
+    .history-item{
+      background:linear-gradient(180deg, #ffffff, #f8fafc);
+      border:1px solid #e2e8f0;
+      border-radius:16px;
+      padding:12px 14px;
+    }
+
+    .history-top{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      font-weight:900;
+      color:#0f172a;
+      margin-bottom:4px;
+      font-size:.95rem;
+    }
+
+    .history-sub{
+      color:#475569;
+      line-height:1.38;
+      font-size:.9rem;
+      font-weight:700;
+    }
+
+    .history-empty{
+      color:#64748b;
+      font-weight:700;
+      line-height:1.4;
+    }
+
+    .rules{
+      color:#475569;
+      font-size:.95rem;
+      line-height:1.45;
+    }
+
+    .rules ul{
+      margin:10px 0 0;
+      padding-left:18px;
+    }
+
+    .btn-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .btn{
+      border:none;
+      border-radius:18px;
+      padding:14px 18px;
+      font-size:1rem;
+      font-weight:900;
+      cursor:pointer;
+      transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    }
+
+    .btn:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.03);
+    }
+
+    .btn.primary{
+      color:#fff;
+      background:linear-gradient(135deg, var(--primary), var(--primary2));
+      box-shadow:0 14px 28px rgba(79,70,229,.28);
+    }
+
+    .btn.secondary{
+      color:#0f172a;
+      background:linear-gradient(180deg, #ffffff, #f8fafc);
+      border:2px solid #e2e8f0;
+      box-shadow:0 10px 20px rgba(15,23,42,.06);
+    }
+
+    .final-wrap{
+      text-align:center;
+    }
+
+    .medal{
+      width:140px;
+      height:140px;
+      margin:0 auto 18px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      font-size:4rem;
+      background:linear-gradient(180deg, #fff7ed, #ffffff);
+      border:6px solid rgba(255,255,255,.85);
+      box-shadow:var(--shadow);
+    }
+
+    .final-title{
+      margin:0 0 10px;
+      font-size:clamp(2rem, 4vw, 2.8rem);
+      font-weight:900;
+      color:#0f172a;
+    }
+
+    .final-sub{
+      margin:0 auto 22px;
+      max-width:58ch;
+      color:#475569;
+      line-height:1.5;
+      font-size:1.06rem;
+    }
+
+    .results-final{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:14px;
+      margin:24px 0 26px;
+    }
+
+    .result-box{
+      background:linear-gradient(180deg, #ffffff, #f8fafc);
+      border-radius:20px;
+      padding:18px;
+      border:1px solid #e2e8f0;
+      box-shadow:0 10px 20px rgba(15,23,42,.06);
+    }
+
+    .result-box .k{
+      display:block;
+      color:#64748b;
+      font-size:.82rem;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+
+    .result-box .v{
+      font-size:1.45rem;
+      font-weight:900;
+      color:#0f172a;
+    }
+
+    .rank{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 18px;
+      border-radius:999px;
+      background:#eef2ff;
+      color:#3730a3;
+      font-weight:900;
+      margin-bottom:18px;
+    }
+
+    .footer-note{
+      margin-top:14px;
+      color:#64748b;
+      font-size:.94rem;
+    }
+
+    @keyframes fadeIn{
+      from{opacity:0; transform:translateY(8px)}
+      to{opacity:1; transform:translateY(0)}
+    }
+
+    @media (max-width: 1080px){
+      .hero{grid-template-columns:1fr}
+      .game-top{grid-template-columns:1fr 1fr}
+      .game-layout{grid-template-columns:1fr}
+      .results-final{grid-template-columns:repeat(2,1fr)}
+      .arena{min-height:760px}
+    }
+
+    @media (max-width: 760px){
+      .mode-grid,
+      .info-grid,
+      .results-final{
+        grid-template-columns:1fr;
+      }
+      .game-top{grid-template-columns:1fr}
+      .app{padding:12px 8px 20px}
+      .screen{padding:8px}
+      .card{padding:18px}
+      .panel{padding:14px}
+      .arena{min-height:700px}
+      .scoreboard{
+        grid-template-columns:1fr auto 1fr;
+        gap:10px;
+        padding:14px 12px;
+      }
+      .team-score{font-size:2.1rem}
+      .turn-banner{top:118px; width:min(90%, 340px); text-align:center}
+      .phase-chip{top:174px; width:min(90%, 300px); text-align:center}
+      .center-panel{top:57%}
+      .shot-btn{min-width:0; width:min(92%, 340px)}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section id="startScreen" class="screen">
+      <div class="card hero">
+        <div>
+          <h1 class="title">FUTMOV</h1>
+          <p class="subtitle">
+            El juego de reflejos que inventasteis mezclando fútbol y cronómetro. Para el tiempo en las centésimas perfectas y convierte tiros, penaltis y faltas en goles.
+          </p>
+
+          <div class="pill-row">
+            <span class="pill">⚽ Juego por turnos</span>
+            <span class="pill">⏱️ Cronómetro a centésimas</span>
+            <span class="pill">🥅 Gol, penalti y falta</span>
+            <span class="pill">✨ Visual premium</span>
+          </div>
+
+          <div class="mode-grid">
+            <button class="mode-btn" data-mode="ten">
+              <h3>🏆 Modo a 10 goles</h3>
+              <p>Gana quien llegue antes a 10 goles. Ideal para partidas completas y competitivas.</p>
+            </button>
+
+            <button class="mode-btn" data-mode="infinite">
+              <h3>♾️ Modo infinito</h3>
+              <p>Juega sin límite. Perfecto para piques, tandas largas o intentar récords personales.</p>
+            </button>
+          </div>
+        </div>
+
+        <div class="info-grid">
+          <div class="mini">
+            <span class="emoji">🎯</span>
+            <h3>Gol directo</h3>
+            <p>Si paras el cronómetro en .00, marcas gol automáticamente.</p>
+          </div>
+          <div class="mini">
+            <span class="emoji">⚪</span>
+            <h3>Penalti</h3>
+            <p>Si cae en .01, .02 o .03, tienes un tiro extra. Si termina en centésima par, es gol.</p>
+          </div>
+          <div class="mini">
+            <span class="emoji">🟡</span>
+            <h3>Falta</h3>
+            <p>Si cae en .97, .98 o .99, hay falta. Debes acertar 3 centésimas pares seguidas para marcar.</p>
+          </div>
+          <div class="mini">
+            <span class="emoji">🔁</span>
+            <h3>Turnos alternos</h3>
+            <p>Cada jugador tiene su disparo por turno, incluyendo las tiradas extra de penalti y falta.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen hidden">
+      <div class="game-top">
+        <div class="panel main-info">
+          <span class="label">Partida actual</span>
+          <div id="modeTitle" class="value">Modo a 10 goles</div>
+          <div id="modeSub" class="sub">Pulsa el botón para iniciar el cronómetro y vuelve a pulsar para detenerlo.</div>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Turno</span>
+          <span id="turnValue" class="value">Jugador 1</span>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Fase</span>
+          <span id="phaseValue" class="value">Tiro normal</span>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Tiros</span>
+          <span id="shotsValue" class="value">0</span>
+        </div>
+
+        <div class="panel stat">
+          <span class="label">Duración</span>
+          <span id="durationValue" class="value">00,00</span>
+        </div>
+      </div>
+
+      <div class="game-layout">
+        <div class="arena">
+          <div class="half-line"></div>
+          <div class="circle"></div>
+          <div class="goal top"></div>
+          <div class="goal bottom"></div>
+
+          <div class="scoreboard">
+            <div class="team-box">
+              <div class="team-name">Jugador 1</div>
+              <div id="score1" class="team-score">0</div>
+            </div>
+            <div class="vs-box">
+              <div class="vs-main">FUTMOV</div>
+              <div id="goalTargetText" class="vs-sub">Primero en llegar a 10</div>
+            </div>
+            <div class="team-box">
+              <div class="team-name">Jugador 2</div>
+              <div id="score2" class="team-score">0</div>
+            </div>
+          </div>
+
+          <div id="turnBanner" class="turn-banner">Turno de Jugador 1</div>
+          <div id="phaseChip" class="phase-chip">Penalti</div>
+
+          <div class="center-panel">
+            <div class="chrono-shell">
+              <div class="chrono-label">Cronómetro Futmov</div>
+              <div id="chrono" class="chrono">00:<span class="centi">00</span></div>
+            </div>
+
+            <button id="shotBtn" class="shot-btn">Iniciar disparo</button>
+
+            <div id="resultCard" class="result-card result-neutral">
+              <h3>Listo para empezar</h3>
+              <p>Pulsa una vez para poner en marcha el cronómetro y otra vez para detenerlo.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="side">
+          <div class="panel">
+            <strong>Historial del partido</strong>
+            <div id="historyList" class="history-list">
+              <div class="history-empty">Todavía no hay jugadas. Empieza el primer turno.</div>
+            </div>
+          </div>
+
+          <div class="panel rules">
+            <strong>Reglas Futmov</strong>
+            <ul>
+              <li><strong>.00</strong> = gol directo.</li>
+              <li><strong>.01, .02, .03</strong> = penalti.</li>
+              <li>En penalti, una nueva parada: <strong>par = gol</strong>, <strong>impar = fallo</strong>.</li>
+              <li><strong>.97, .98, .99</strong> = falta.</li>
+              <li>En falta, debes sacar <strong>3 centésimas pares seguidas</strong> para marcar.</li>
+            </ul>
+
+            <div class="btn-row">
+              <button id="menuBtn" class="btn secondary">Menú principal</button>
+              <button id="endBtn" class="btn secondary">Terminar partida</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="endScreen" class="screen hidden">
+      <div class="card final-wrap">
+        <div id="medalBox" class="medal">🏆</div>
+        <h2 class="final-title">Partido terminado</h2>
+        <p id="finalMessage" class="final-sub">Partidazo.</p>
+        <div id="rankBadge" class="rank">🏟️ Futmov legendario</div>
+
+        <div class="results-final">
+          <div class="result-box">
+            <span class="k">Jugador 1</span>
+            <span id="finalScore1" class="v">0</span>
+          </div>
+          <div class="result-box">
+            <span class="k">Jugador 2</span>
+            <span id="finalScore2" class="v">0</span>
+          </div>
+          <div class="result-box">
+            <span class="k">Tiros totales</span>
+            <span id="finalShots" class="v">0</span>
+          </div>
+          <div class="result-box">
+            <span class="k">Modo</span>
+            <span id="finalMode" class="v">-</span>
+          </div>
+        </div>
+
+        <div class="btn-row" style="justify-content:center">
+          <button id="restartBtn" class="btn primary">Jugar otra vez</button>
+          <button id="backToMenuBtn" class="btn secondary">Volver al menú principal</button>
+        </div>
+
+        <p class="footer-note">Futmov: fútbol, móvil y centésimas de segundo.</p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    /**********************************************************************
+     * ESTADO GLOBAL
+     **********************************************************************/
+    const state = {
+      mode: "ten",
+      running: false,
+      chronoRunning: false,
+      startMs: 0,
+      elapsedMs: 0,
+      rafId: null,
+      currentPlayer: 1,
+      scores: { 1: 0, 2: 0 },
+      shots: 0,
+      phase: "normal", // normal | penalty | freeKick
+      freeKickProgress: 0,
+      history: [],
+      winner: null,
+      finished: false
+    };
+
+    /**********************************************************************
+     * DOM
+     **********************************************************************/
+    const startScreen = document.getElementById("startScreen");
+    const gameScreen = document.getElementById("gameScreen");
+    const endScreen = document.getElementById("endScreen");
+
+    const modeTitle = document.getElementById("modeTitle");
+    const modeSub = document.getElementById("modeSub");
+    const turnValue = document.getElementById("turnValue");
+    const phaseValue = document.getElementById("phaseValue");
+    const shotsValue = document.getElementById("shotsValue");
+    const durationValue = document.getElementById("durationValue");
+
+    const score1 = document.getElementById("score1");
+    const score2 = document.getElementById("score2");
+    const goalTargetText = document.getElementById("goalTargetText");
+    const turnBanner = document.getElementById("turnBanner");
+    const phaseChip = document.getElementById("phaseChip");
+
+    const chrono = document.getElementById("chrono");
+    const shotBtn = document.getElementById("shotBtn");
+    const resultCard = document.getElementById("resultCard");
+    const historyList = document.getElementById("historyList");
+
+    const menuBtn = document.getElementById("menuBtn");
+    const endBtn = document.getElementById("endBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const backToMenuBtn = document.getElementById("backToMenuBtn");
+
+    const finalMessage = document.getElementById("finalMessage");
+    const finalScore1 = document.getElementById("finalScore1");
+    const finalScore2 = document.getElementById("finalScore2");
+    const finalShots = document.getElementById("finalShots");
+    const finalMode = document.getElementById("finalMode");
+    const medalBox = document.getElementById("medalBox");
+    const rankBadge = document.getElementById("rankBadge");
+
+    /**********************************************************************
+     * UTILIDADES
+     **********************************************************************/
+    function showScreen(screen){
+      startScreen.classList.add("hidden");
+      gameScreen.classList.add("hidden");
+      endScreen.classList.add("hidden");
+      screen.classList.remove("hidden");
+    }
+
+    function pad2(n){
+      return String(n).padStart(2, "0");
+    }
+
+    function formatElapsed(ms){
+      const totalCentis = Math.floor(ms / 10);
+      const seconds = Math.floor(totalCentis / 100) % 60;
+      const centis = totalCentis % 100;
+      return {
+        seconds,
+        centis,
+        text: `${pad2(seconds)}:<span class="centi">${pad2(centis)}</span>`,
+        plain: `${pad2(seconds)},${pad2(centis)}`
+      };
+    }
+
+    function isEven(n){
+      return n % 2 === 0;
+    }
+
+    function currentModeName(){
+      return state.mode === "ten" ? "Modo a 10 goles" : "Modo infinito";
+    }
+
+    function currentPlayerName(){
+      return `Jugador ${state.currentPlayer}`;
+    }
+
+    function otherPlayer(){
+      return state.currentPlayer === 1 ? 2 : 1;
+    }
+
+    /**********************************************************************
+     * CRONÓMETRO
+     **********************************************************************/
+    function updateChrono(){
+      if(!state.chronoRunning) return;
+      state.elapsedMs = performance.now() - state.startMs;
+      chrono.innerHTML = formatElapsed(state.elapsedMs).text;
+      state.rafId = requestAnimationFrame(updateChrono);
+    }
+
+    function startChrono(){
+      state.chronoRunning = true;
+      state.startMs = performance.now();
+      state.elapsedMs = 0;
+      shotBtn.textContent = "Detener disparo";
+      shotBtn.classList.add("running");
+      state.rafId = requestAnimationFrame(updateChrono);
+    }
+
+    function stopChrono(){
+      if(!state.chronoRunning) return null;
+      cancelAnimationFrame(state.rafId);
+      state.chronoRunning = false;
+      state.elapsedMs = performance.now() - state.startMs;
+      const data = formatElapsed(state.elapsedMs);
+      chrono.innerHTML = data.text;
+      durationValue.textContent = data.plain;
+      shotBtn.textContent = phaseButtonText();
+      shotBtn.classList.remove("running");
+      return data;
+    }
+
+    function resetChronoVisual(){
+      chrono.innerHTML = `00:<span class="centi">00</span>`;
+      durationValue.textContent = "00,00";
+    }
+
+    /**********************************************************************
+     * HUD Y PANTALLA
+     **********************************************************************/
+    function phaseLabel(){
+      if(state.phase === "normal") return "Tiro normal";
+      if(state.phase === "penalty") return "Penalti";
+      return `Falta ${state.freeKickProgress}/3`;
+    }
+
+    function phaseButtonText(){
+      if(state.phase === "normal") return "Iniciar disparo";
+      if(state.phase === "penalty") return "Lanzar penalti";
+      return `Lanzar falta (${state.freeKickProgress}/3)`;
+    }
+
+    function updateHUD(){
+      modeTitle.textContent = currentModeName();
+      modeSub.textContent = state.mode === "ten"
+        ? "Gana quien llegue primero a 10 goles."
+        : "Partida abierta sin límite de goles. Puedes terminar cuando quieras.";
+      turnValue.textContent = currentPlayerName();
+      phaseValue.textContent = phaseLabel();
+      shotsValue.textContent = state.shots;
+      score1.textContent = state.scores[1];
+      score2.textContent = state.scores[2];
+      goalTargetText.textContent = state.mode === "ten" ? "Primero en llegar a 10" : "Modo infinito";
+      turnBanner.textContent = `Turno de ${currentPlayerName()}`;
+
+      if(state.phase === "normal"){
+        phaseChip.classList.remove("show");
+      } else if(state.phase === "penalty"){
+        phaseChip.textContent = "Penalti";
+        phaseChip.classList.add("show");
+      } else {
+        phaseChip.textContent = `Falta · ${state.freeKickProgress}/3 pares`;
+        phaseChip.classList.add("show");
+      }
+
+      shotBtn.textContent = state.chronoRunning ? "Detener disparo" : phaseButtonText();
+    }
+
+    function setResult(type, title, text){
+      resultCard.className = `result-card ${type}`;
+      resultCard.innerHTML = `<h3>${title}</h3><p>${text}</p>`;
+    }
+
+    /**********************************************************************
+     * HISTORIAL
+     **********************************************************************/
+    function addHistory(title, subtitle){
+      state.history.unshift({ title, subtitle });
+      renderHistory();
+    }
+
+    function renderHistory(){
+      if(state.history.length === 0){
+        historyList.innerHTML = `<div class="history-empty">Todavía no hay jugadas. Empieza el primer turno.</div>`;
+        return;
+      }
+
+      historyList.innerHTML = state.history.map(item => `
+        <div class="history-item">
+          <div class="history-top">
+            <span>${item.title}</span>
+          </div>
+          <div class="history-sub">${item.subtitle}</div>
+        </div>
+      `).join("");
+    }
+
+    /**********************************************************************
+     * LÓGICA DEL JUEGO
+     **********************************************************************/
+    function scoreGoal(player){
+      state.scores[player]++;
+    }
+
+    function nextTurn(){
+      state.phase = "normal";
+      state.freeKickProgress = 0;
+      state.currentPlayer = otherPlayer();
+      updateHUD();
+      resetChronoVisual();
+    }
+
+    function checkWinner(){
+      if(state.mode === "ten"){
+        if(state.scores[1] >= 10){
+          state.winner = 1;
+          finishGame();
+          return true;
+        }
+        if(state.scores[2] >= 10){
+          state.winner = 2;
+          finishGame();
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function resolveNormalShot(centi, rawText){
+      if(centi === 0){
+        scoreGoal(state.currentPlayer);
+        setResult("result-good", "¡Gol!", `${currentPlayerName()} ha clavado el .00 y marca directamente.`);
+        addHistory(`${currentPlayerName()} · GOL directo`, `Cronómetro detenido en ${rawText}.00. Gol automático.`);
+        if(!checkWinner()) nextTurn();
+        return;
+      }
+
+      if([1,2,3].includes(centi)){
+        state.phase = "penalty";
+        setResult("result-warn", "¡Penalti!", `${currentPlayerName()} ha caído en .${pad2(centi)}. Tiene una tirada extra: par = gol, impar = fallo.`);
+        addHistory(`${currentPlayerName()} · Penalti`, `Cronómetro detenido en ${rawText}.${pad2(centi)}. Se concede penalti.`);
+        updateHUD();
+        resetChronoVisual();
+        return;
+      }
+
+      if([97,98,99].includes(centi)){
+        state.phase = "freeKick";
+        state.freeKickProgress = 0;
+        setResult("result-warn", "¡Falta!", `${currentPlayerName()} ha caído en .${pad2(centi)}. Necesita 3 centésimas pares seguidas para marcar.`);
+        addHistory(`${currentPlayerName()} · Falta`, `Cronómetro detenido en ${rawText}.${pad2(centi)}. Empieza la secuencia de falta.`);
+        updateHUD();
+        resetChronoVisual();
+        return;
+      }
+
+      setResult("result-bad", "Fuera", `${currentPlayerName()} se queda en .${pad2(centi)}. No hay gol.`);
+      addHistory(`${currentPlayerName()} · Fallo`, `Cronómetro detenido en ${rawText}.${pad2(centi)}. El tiro no entra.`);
+      nextTurn();
+    }
+
+    function resolvePenalty(centi, rawText){
+      if(isEven(centi)){
+        scoreGoal(state.currentPlayer);
+        setResult("result-good", "¡Gol de penalti!", `${currentPlayerName()} saca una centésima par (.${pad2(centi)}) y transforma el penalti.`);
+        addHistory(`${currentPlayerName()} · Gol de penalti`, `Parada en ${rawText}.${pad2(centi)}. Centésima par: gol.`);
+        if(!checkWinner()) nextTurn();
+      } else {
+        setResult("result-bad", "Penalti fallado", `${currentPlayerName()} saca una centésima impar (.${pad2(centi)}) y falla el penalti.`);
+        addHistory(`${currentPlayerName()} · Penalti fallado`, `Parada en ${rawText}.${pad2(centi)}. Centésima impar: fallo.`);
+        nextTurn();
+      }
+    }
+
+    function resolveFreeKick(centi, rawText){
+      if(isEven(centi)){
+        state.freeKickProgress++;
+        if(state.freeKickProgress >= 3){
+          scoreGoal(state.currentPlayer);
+          setResult("result-good", "¡Gol de falta!", `${currentPlayerName()} consigue tres centésimas pares seguidas y marca de falta.`);
+          addHistory(`${currentPlayerName()} · Gol de falta`, `Secuencia completada con una parada en ${rawText}.${pad2(centi)}. Tercera par consecutiva.`);
+          if(!checkWinner()) nextTurn();
+        } else {
+          setResult("result-neutral", "Sigue la falta", `${currentPlayerName()} ha sacado una centésima par (.${pad2(centi)}). Lleva ${state.freeKickProgress}/3.`);
+          addHistory(`${currentPlayerName()} · Falta en curso`, `Parada en ${rawText}.${pad2(centi)}. Par correcta: ${state.freeKickProgress}/3.`);
+          updateHUD();
+          resetChronoVisual();
+        }
+      } else {
+        setResult("result-bad", "Falta fallada", `${currentPlayerName()} saca una centésima impar (.${pad2(centi)}). La secuencia se rompe y no hay gol.`);
+        addHistory(`${currentPlayerName()} · Falta fallada`, `Parada en ${rawText}.${pad2(centi)}. Impar: se rompe la secuencia.`);
+        nextTurn();
+      }
+    }
+
+    function processStop(data){
+      const centi = data.centis;
+      const rawSeconds = pad2(data.seconds);
+      state.shots++;
+      shotsValue.textContent = state.shots;
+
+      if(state.phase === "normal"){
+        resolveNormalShot(centi, rawSeconds);
+      } else if(state.phase === "penalty"){
+        resolvePenalty(centi, rawSeconds);
+      } else {
+        resolveFreeKick(centi, rawSeconds);
+      }
+
+      updateHUD();
+    }
+
+    /**********************************************************************
+     * PARTIDA
+     **********************************************************************/
+    function startGame(mode){
+      state.mode = mode;
+      state.running = true;
+      state.chronoRunning = false;
+      state.startMs = 0;
+      state.elapsedMs = 0;
+      state.currentPlayer = 1;
+      state.scores = { 1: 0, 2: 0 };
+      state.shots = 0;
+      state.phase = "normal";
+      state.freeKickProgress = 0;
+      state.history = [];
+      state.winner = null;
+      state.finished = false;
+
+      renderHistory();
+      resetChronoVisual();
+      updateHUD();
+      setResult("result-neutral", "Listo para empezar", "Pulsa una vez para poner en marcha el cronómetro y otra vez para detenerlo.");
+      showScreen(gameScreen);
+    }
+
+    function finishGame(){
+      state.finished = true;
+      state.running = false;
+      if(state.chronoRunning){
+        cancelAnimationFrame(state.rafId);
+        state.chronoRunning = false;
+      }
+
+      finalScore1.textContent = state.scores[1];
+      finalScore2.textContent = state.scores[2];
+      finalShots.textContent = state.shots;
+      finalMode.textContent = currentModeName();
+
+      let message = "";
+      let rank = "";
+      let medal = "🏆";
+
+      if(state.mode === "ten"){
+        if(state.winner){
+          message = `${state.winner === 1 ? "Jugador 1" : "Jugador 2"} gana el partido de Futmov llegando a 10 goles.`;
+        } else {
+          message = "Partido terminado antes de que alguien llegara a 10 goles.";
+        }
+      } else {
+        if(state.scores[1] > state.scores[2]){
+          message = "Jugador 1 termina por delante en el modo infinito.";
+        } else if(state.scores[2] > state.scores[1]){
+          message = "Jugador 2 termina por delante en el modo infinito.";
+        } else {
+          message = "El modo infinito termina en empate. Puro equilibrio Futmov.";
+          medal = "🤝";
+        }
+      }
+
+      if(state.shots <= 12){
+        rank = "⚡ Reflejos de élite";
+      } else if(state.shots <= 20){
+        rank = "🎯 Buen pulso";
+      } else {
+        rank = "🏟️ Futmov legendario";
+      }
+
+      finalMessage.textContent = message;
+      rankBadge.textContent = rank;
+      medalBox.textContent = medal;
+
+      showScreen(endScreen);
+    }
+
+    function backToMenu(){
+      if(state.chronoRunning){
+        cancelAnimationFrame(state.rafId);
+        state.chronoRunning = false;
+      }
+      showScreen(startScreen);
+    }
+
+    /**********************************************************************
+     * EVENTOS
+     **********************************************************************/
+    document.querySelectorAll(".mode-btn").forEach(btn => {
+      btn.addEventListener("click", () => startGame(btn.dataset.mode));
+    });
+
+    shotBtn.addEventListener("click", () => {
+      if(!state.running) return;
+
+      if(!state.chronoRunning){
+        startChrono();
+      } else {
+        const data = stopChrono();
+        processStop(data);
+      }
+    });
+
+    menuBtn.addEventListener("click", backToMenu);
+    endBtn.addEventListener("click", finishGame);
+    restartBtn.addEventListener("click", () => startGame(state.mode));
+    backToMenuBtn.addEventListener("click", backToMenu);
+
+    window.addEventListener("keydown", (e) => {
+      if(gameScreen.classList.contains("hidden")) return;
+      if(e.code === "Space" || e.key === "Enter"){
+        e.preventDefault();
+        shotBtn.click();
+      }
+    });
+
+    /**********************************************************************
+     * INICIO
+     **********************************************************************/
+    showScreen(startScreen);
+  </script>
+</body>
+</html>
