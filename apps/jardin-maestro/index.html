@@ -1,0 +1,2061 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Guardianes del Jardín</title>
+<style>
+  :root{
+    --bg1:#183128;
+    --bg2:#2a4e3d;
+    --panel:rgba(14,24,20,.82);
+    --panel-2:rgba(255,255,255,.09);
+    --line:rgba(255,255,255,.12);
+    --text:#eef7f0;
+    --muted:#bfd6c5;
+    --good:#68d67c;
+    --warn:#ffd56a;
+    --bad:#ff7d7d;
+    --accent:#7be0ff;
+    --soil:#6f4b2e;
+    --soil-dark:#563923;
+    --path:#baa47b;
+    --water:#58a8ff;
+  }
+
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at top, #325941 0%, #183128 48%, #0f2018 100%);
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    color:var(--text);
+  }
+
+  #app{
+    width:100%;
+    height:100%;
+    position:relative;
+    overflow:hidden;
+  }
+
+  canvas{
+    width:100%;
+    height:100%;
+    display:block;
+    touch-action:none;
+  }
+
+  .overlay{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+  }
+
+  .topHud{
+    position:absolute;
+    left:12px;
+    right:12px;
+    top:12px;
+    display:grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap:10px;
+    z-index:5;
+    pointer-events:none;
+  }
+
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:18px;
+    box-shadow:0 14px 30px rgba(0,0,0,.25);
+    backdrop-filter: blur(10px);
+    pointer-events:auto;
+  }
+
+  .statusPanel{
+    padding:10px 12px;
+  }
+
+  .statusRow{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 14px;
+    align-items:center;
+    font-size:14px;
+  }
+
+  .chip{
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    padding:6px 10px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+
+  .chip strong{ color:#fff; }
+
+  .missionPanel{
+    padding:10px 12px;
+  }
+
+  .missionTitle{
+    font-size:13px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:8px;
+  }
+
+  .missionList{
+    display:grid;
+    gap:6px;
+    font-size:13px;
+  }
+
+  .missionItem{
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+    background:rgba(255,255,255,.05);
+    border-radius:12px;
+    padding:7px 10px;
+    border:1px solid rgba(255,255,255,.06);
+  }
+
+  .missionItem.done{
+    outline:1px solid rgba(104,214,124,.35);
+    background:rgba(104,214,124,.13);
+  }
+
+  .bottomBar{
+    position:absolute;
+    left:12px;
+    right:12px;
+    bottom:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:12px;
+    z-index:6;
+    pointer-events:none;
+  }
+
+  .toolsPanel{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:center;
+    padding:10px;
+    max-width:min(760px, 100%);
+    pointer-events:auto;
+  }
+
+  .toolBtn{
+    border:none;
+    background:rgba(255,255,255,.09);
+    color:var(--text);
+    border:1px solid var(--line);
+    border-radius:14px;
+    min-width:78px;
+    padding:10px 10px 9px;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+    transition:transform .12s ease, background .12s ease, border-color .12s ease;
+  }
+  .toolBtn:hover{ transform:translateY(-2px); }
+  .toolBtn.active{
+    background:rgba(123,224,255,.18);
+    border-color:rgba(123,224,255,.45);
+    box-shadow:0 0 0 1px rgba(123,224,255,.2) inset;
+  }
+  .toolBtn .n{
+    display:block;
+    font-size:10px;
+    color:var(--muted);
+    font-weight:600;
+    margin-top:2px;
+  }
+
+  .hintBox{
+    padding:10px 12px;
+    min-width:220px;
+    max-width:340px;
+    pointer-events:auto;
+  }
+  .hintTitle{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--muted);
+    margin-bottom:6px;
+  }
+  .hintText{
+    font-size:13px;
+    line-height:1.35;
+    min-height:34px;
+  }
+
+  .mobileControls{
+    position:absolute;
+    left:12px;
+    right:12px;
+    bottom:88px;
+    display:none;
+    justify-content:space-between;
+    align-items:flex-end;
+    z-index:7;
+    pointer-events:none;
+  }
+
+  .dpad, .actionCluster{
+    pointer-events:auto;
+    user-select:none;
+  }
+
+  .dpad{
+    width:170px;
+    height:170px;
+    position:relative;
+  }
+
+  .padBtn{
+    position:absolute;
+    width:56px;
+    height:56px;
+    border:none;
+    border-radius:18px;
+    background:rgba(20,31,26,.76);
+    color:#fff;
+    font-size:24px;
+    border:1px solid rgba(255,255,255,.14);
+    box-shadow:0 8px 18px rgba(0,0,0,.28);
+    touch-action:none;
+  }
+  .padBtn:active, .padBtn.on{
+    transform:scale(.96);
+    background:rgba(123,224,255,.22);
+  }
+  .up{ left:57px; top:0; }
+  .down{ left:57px; bottom:0; }
+  .left{ left:0; top:57px; }
+  .right{ right:0; top:57px; }
+
+  .actionCluster{
+    display:grid;
+    grid-template-columns: 72px 72px;
+    gap:10px;
+  }
+
+  .actionBtn{
+    width:72px;
+    height:72px;
+    border:none;
+    border-radius:22px;
+    background:rgba(20,31,26,.8);
+    color:#fff;
+    border:1px solid rgba(255,255,255,.14);
+    box-shadow:0 8px 18px rgba(0,0,0,.28);
+    font-size:12px;
+    font-weight:800;
+    touch-action:none;
+  }
+  .actionBtn:active{
+    transform:scale(.96);
+    background:rgba(123,224,255,.24);
+  }
+  .actionBtn.main{
+    background:rgba(104,214,124,.2);
+  }
+
+  .screen{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:20;
+    background:
+      radial-gradient(circle at 50% 20%, rgba(102,179,122,.16), transparent 35%),
+      linear-gradient(180deg, rgba(7,14,11,.42), rgba(7,14,11,.78));
+    padding:18px;
+  }
+
+  .card{
+    width:min(900px, 100%);
+    background:rgba(9,18,14,.88);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:28px;
+    box-shadow:0 30px 80px rgba(0,0,0,.45);
+    padding:24px;
+    backdrop-filter: blur(12px);
+  }
+
+  .title{
+    font-size:clamp(28px, 5vw, 54px);
+    line-height:1;
+    margin:0 0 10px;
+    letter-spacing:.02em;
+  }
+
+  .subtitle{
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.5;
+    max-width:780px;
+  }
+
+  .featureGrid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:12px;
+    margin:20px 0 18px;
+  }
+
+  .feature{
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;
+    padding:14px;
+  }
+
+  .feature h3{
+    margin:0 0 8px;
+    font-size:15px;
+  }
+
+  .feature p{
+    margin:0;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.45;
+  }
+
+  .ctaRow{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:20px;
+  }
+
+  .bigBtn{
+    border:none;
+    border-radius:16px;
+    padding:14px 18px;
+    font-size:15px;
+    font-weight:800;
+    cursor:pointer;
+    background:linear-gradient(180deg, #8cf29f, #4bbd67);
+    color:#102617;
+    box-shadow:0 10px 24px rgba(75,189,103,.3);
+  }
+
+  .ghostBtn{
+    border:none;
+    border-radius:16px;
+    padding:14px 18px;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+    color:var(--text);
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);
+  }
+
+  .smallGuide{
+    margin-top:18px;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.55;
+  }
+
+  .toastWrap{
+    position:absolute;
+    top:90px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:15;
+    display:grid;
+    gap:8px;
+    pointer-events:none;
+  }
+
+  .toast{
+    background:rgba(11,18,14,.92);
+    border:1px solid rgba(255,255,255,.12);
+    color:#fff;
+    padding:10px 14px;
+    border-radius:14px;
+    box-shadow:0 14px 26px rgba(0,0,0,.3);
+    animation: toastIn .28s ease, toastOut .35s ease 2.9s forwards;
+    font-size:13px;
+    max-width:min(88vw, 480px);
+  }
+  @keyframes toastIn{
+    from{ opacity:0; transform:translateY(-8px) scale(.98); }
+    to{ opacity:1; transform:translateY(0) scale(1); }
+  }
+  @keyframes toastOut{
+    to{ opacity:0; transform:translateY(-10px) scale(.98); }
+  }
+
+  .hidden{ display:none !important; }
+
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:16px;
+  }
+
+  .legend span{
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:999px;
+    padding:6px 10px;
+    font-size:12px;
+    color:var(--muted);
+  }
+
+  @media (max-width: 980px){
+    .topHud{
+      grid-template-columns: 1fr;
+    }
+    .featureGrid{
+      grid-template-columns:1fr;
+    }
+  }
+
+  @media (max-width: 820px), (pointer:coarse){
+    .mobileControls{ display:flex; }
+    .bottomBar{
+      flex-direction:column-reverse;
+      align-items:stretch;
+      gap:10px;
+    }
+    .hintBox{
+      max-width:none;
+      min-width:0;
+    }
+    .toolsPanel{
+      justify-content:flex-start;
+      overflow-x:auto;
+      flex-wrap:nowrap;
+      scrollbar-width:none;
+    }
+    .toolsPanel::-webkit-scrollbar{ display:none; }
+    .toolBtn{
+      min-width:84px;
+      flex:0 0 auto;
+    }
+    .statusRow{
+      font-size:13px;
+    }
+    .missionList{
+      font-size:12px;
+    }
+  }
+
+  @media (max-width: 520px){
+    .card{ padding:18px; border-radius:22px; }
+    .subtitle{ font-size:14px; }
+    .dpad{ width:150px; height:150px; }
+    .padBtn{ width:50px; height:50px; }
+    .up{ left:50px; }
+    .down{ left:50px; }
+    .left{ top:50px; }
+    .right{ top:50px; }
+    .actionCluster{ grid-template-columns: 66px 66px; }
+    .actionBtn{ width:66px; height:66px; border-radius:20px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="game"></canvas>
+
+  <div class="overlay">
+    <div class="topHud">
+      <div class="panel statusPanel">
+        <div class="statusRow" id="statusRow"></div>
+      </div>
+      <div class="panel missionPanel">
+        <div class="missionTitle">Objetivos de la jornada</div>
+        <div class="missionList" id="missionList"></div>
+      </div>
+    </div>
+
+    <div class="toastWrap" id="toastWrap"></div>
+
+    <div class="mobileControls" id="mobileControls">
+      <div class="dpad">
+        <button class="padBtn up" data-dir="up">▲</button>
+        <button class="padBtn left" data-dir="left">◀</button>
+        <button class="padBtn right" data-dir="right">▶</button>
+        <button class="padBtn down" data-dir="down">▼</button>
+      </div>
+      <div class="actionCluster">
+        <button class="actionBtn" id="toolCycleBtn">TOOL</button>
+        <button class="actionBtn main" id="actionBtn">ACCIÓN</button>
+        <button class="actionBtn" id="inspectBtn">INFO</button>
+        <button class="actionBtn" id="pauseBtn">PAUSA</button>
+      </div>
+    </div>
+
+    <div class="bottomBar">
+      <div class="panel toolsPanel" id="toolsPanel"></div>
+      <div class="panel hintBox">
+        <div class="hintTitle">Zona / pista</div>
+        <div class="hintText" id="hintText">Muévete y revisa las parcelas. Cambia de herramienta y actúa cerca de la planta adecuada.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen" id="startScreen">
+    <div class="card">
+      <h1 class="title">Guardianes del Jardín</h1>
+      <div class="subtitle">
+        Simulación educativa cenital de implantación y mantenimiento de jardines. Recorre el terreno,
+        detecta necesidades reales, riega con criterio, controla plagas, fertiliza sin abusar y supera
+        jornadas cada vez más exigentes.
+      </div>
+
+      <div class="featureGrid">
+        <div class="feature">
+          <h3>🌿 Mantenimiento real</h3>
+          <p>La humedad, la salud, el crecimiento, las malas hierbas y las plagas cambian con el tiempo y con el clima.</p>
+        </div>
+        <div class="feature">
+          <h3>☀️ Clima dinámico</h3>
+          <p>Sol, lluvia, nubes y calor afectan al jardín. No se juega igual en una jornada fresca que en una ola de calor.</p>
+        </div>
+        <div class="feature">
+          <h3>🧰 Acción y gestión</h3>
+          <p>No hay quiz. Aprendes tomando decisiones de manejo mientras te mueves por el mapa y priorizas parcelas.</p>
+        </div>
+      </div>
+
+      <div class="ctaRow">
+        <button class="bigBtn" id="startBtn">Comenzar jornada</button>
+        <button class="ghostBtn" id="resetSaveBtn">Borrar progreso guardado</button>
+      </div>
+
+      <div class="legend">
+        <span>WASD / Flechas para mover</span>
+        <span>E o Espacio para actuar</span>
+        <span>1–6 para cambiar herramienta</span>
+        <span>Móvil con cruceta y botones</span>
+      </div>
+
+      <div class="smallGuide">
+        Consejo didáctico integrado: regar siempre no es la solución. El exceso de agua, el abuso de fertilizante
+        y la falta de tratamiento ante plagas perjudican el jardín. Observa antes de intervenir.
+      </div>
+    </div>
+  </div>
+
+  <div class="screen hidden" id="pauseScreen">
+    <div class="card" style="max-width:660px">
+      <h2 class="title" style="font-size:36px">Partida en pausa</h2>
+      <div class="subtitle">Revisa herramientas, objetivos y vuelve cuando quieras seguir cuidando el jardín.</div>
+      <div class="ctaRow">
+        <button class="bigBtn" id="resumeBtn">Continuar</button>
+        <button class="ghostBtn" id="saveBtn">Guardar ahora</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen hidden" id="dayScreen">
+    <div class="card" style="max-width:760px">
+      <h2 class="title" id="dayTitle" style="font-size:40px">Jornada superada</h2>
+      <div class="subtitle" id="daySummary"></div>
+      <div class="ctaRow">
+        <button class="bigBtn" id="nextDayBtn">Siguiente jornada</button>
+        <button class="ghostBtn" id="daySaveBtn">Guardar progreso</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const canvas = document.getElementById("game");
+  const ctx = canvas.getContext("2d");
+
+  const statusRow = document.getElementById("statusRow");
+  const missionList = document.getElementById("missionList");
+  const toolsPanel = document.getElementById("toolsPanel");
+  const hintText = document.getElementById("hintText");
+  const toastWrap = document.getElementById("toastWrap");
+
+  const startScreen = document.getElementById("startScreen");
+  const pauseScreen = document.getElementById("pauseScreen");
+  const dayScreen = document.getElementById("dayScreen");
+
+  const startBtn = document.getElementById("startBtn");
+  const resetSaveBtn = document.getElementById("resetSaveBtn");
+  const resumeBtn = document.getElementById("resumeBtn");
+  const saveBtn = document.getElementById("saveBtn");
+  const nextDayBtn = document.getElementById("nextDayBtn");
+  const daySaveBtn = document.getElementById("daySaveBtn");
+  const dayTitle = document.getElementById("dayTitle");
+  const daySummary = document.getElementById("daySummary");
+  const actionBtn = document.getElementById("actionBtn");
+  const pauseBtn = document.getElementById("pauseBtn");
+  const inspectBtn = document.getElementById("inspectBtn");
+  const toolCycleBtn = document.getElementById("toolCycleBtn");
+
+  const SAVE_KEY = "guardianes_jardin_save_v1";
+
+  const WORLD = {
+    width: 1600,
+    height: 1120,
+    tile: 80
+  };
+
+  const SPECIES = {
+    cesped: {
+      name: "Césped",
+      idealMoisture: [45, 72],
+      growthRate: 0.012,
+      color: "#79c86e",
+      icon: "▦",
+      heatTolerance: 0.45,
+      weedRisk: 0.55
+    },
+    rosal: {
+      name: "Rosal",
+      idealMoisture: [48, 68],
+      growthRate: 0.009,
+      color: "#d97ea4",
+      icon: "✿",
+      heatTolerance: 0.58,
+      weedRisk: 0.45
+    },
+    lavanda: {
+      name: "Lavanda",
+      idealMoisture: [32, 54],
+      growthRate: 0.008,
+      color: "#9f8cf4",
+      icon: "❉",
+      heatTolerance: 0.8,
+      weedRisk: 0.28
+    },
+    boj: {
+      name: "Boj",
+      idealMoisture: [40, 62],
+      growthRate: 0.007,
+      color: "#59b66b",
+      icon: "⬣",
+      heatTolerance: 0.62,
+      weedRisk: 0.35
+    }
+  };
+
+  const TOOLS = [
+    { key:"plant", label:"Plantar", emoji:"🌱", hotkey:"1" },
+    { key:"water", label:"Regar", emoji:"💧", hotkey:"2" },
+    { key:"fertilize", label:"Abonar", emoji:"🧪", hotkey:"3" },
+    { key:"pesticide", label:"Tratar", emoji:"🛡️", hotkey:"4" },
+    { key:"prune", label:"Podar", emoji:"✂️", hotkey:"5" },
+    { key:"weed", label:"Escardar", emoji:"🧹", hotkey:"6" }
+  ];
+
+  const WEATHER_TYPES = [
+    { type:"sunny", name:"Soleado", sky:"#90d5ff", evap:1.0, rain:0, heat:0.25 },
+    { type:"cloudy", name:"Nublado", sky:"#aac3d6", evap:0.72, rain:0, heat:0.08 },
+    { type:"rain", name:"Lluvia", sky:"#7ca0ba", evap:0.38, rain:1.1, heat:-0.02 },
+    { type:"heat", name:"Calor", sky:"#ffd18c", evap:1.45, rain:0, heat:0.55 }
+  ];
+
+  const game = {
+    running: false,
+    paused: false,
+    finishedDay: false,
+    day: 1,
+    time: 0,
+    dayLength: 330, // segundos aprox.
+    energy: 100,
+    waterTank: 100,
+    fertilizerTank: 100,
+    pesticideTank: 100,
+    score: 0,
+    perfectStreak: 0,
+    weatherIndex: 0,
+    weatherTime: 0,
+    weatherDuration: 35,
+    particles: [],
+    sparkles: [],
+    toasts: [],
+    plots: [],
+    decorations: [],
+    boundaries: [],
+    paths: [],
+    uiFlash: 0,
+    inspectedText: "",
+    missions: [],
+    lastAutoSave: 0
+  };
+
+  const player = {
+    x: 280,
+    y: 820,
+    w: 38,
+    h: 46,
+    speed: 215,
+    dirX: 0,
+    dirY: 1,
+    moving: false,
+    toolIndex: 1,
+    step: 0,
+    interactCooldown: 0,
+    inspectCooldown: 0
+  };
+
+  const input = {
+    up:false, down:false, left:false, right:false,
+    action:false,
+    inspect:false
+  };
+
+  const camera = { x:0, y:0, zoom:1 };
+
+  function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+  function lerp(a,b,t){ return a + (b-a)*t; }
+  function rand(min, max){ return Math.random()*(max-min)+min; }
+  function irand(min, max){ return Math.floor(rand(min, max+1)); }
+  function dist(ax, ay, bx, by){ return Math.hypot(ax-bx, ay-by); }
+  function choice(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  function getWeather(){
+    return WEATHER_TYPES[game.weatherIndex];
+  }
+
+  function createPlot(x, y, speciesKey, planted = true){
+    const species = SPECIES[speciesKey];
+    return {
+      x, y, w: 118, h: 118,
+      speciesKey,
+      planted,
+      health: planted ? rand(72, 94) : 0,
+      moisture: planted ? rand(40, 62) : rand(22, 40),
+      growth: planted ? rand(18, 52) : 0,
+      pests: planted ? rand(0, 16) : 0,
+      weeds: planted ? rand(0, 12) : rand(0, 18),
+      fertilizer: planted ? rand(8, 26) : 0,
+      stress: 0,
+      lastActionFlash: 0,
+      lastActionType: "",
+      shake: 0,
+      id: "p" + Math.random().toString(36).slice(2,9),
+      zoneName: "",
+      dead:false
+    };
+  }
+
+  function buildWorld(){
+    game.plots = [];
+    game.decorations = [];
+    game.boundaries = [];
+    game.paths = [];
+
+    const plotDefs = [
+      [380, 250, "cesped", true, "Pradera central"],
+      [540, 250, "rosal", true, "Rosales de acceso"],
+      [700, 250, "lavanda", true, "Banda aromática"],
+      [860, 250, "boj", true, "Seto ornamental"],
+      [380, 430, "lavanda", true, "Rincón seco"],
+      [540, 430, "boj", true, "Topiaria joven"],
+      [700, 430, "cesped", true, "Tapiz verde"],
+      [860, 430, "rosal", true, "Parterre floral"]
+    ];
+
+    for(const [x,y,species,planted,zone] of plotDefs){
+      const p = createPlot(x,y,species,planted);
+      p.zoneName = zone;
+      game.plots.push(p);
+    }
+
+    // caminos
+    game.paths.push({x:290,y:180,w:760,h:100});
+    game.paths.push({x:290,y:360,w:760,h:100});
+    game.paths.push({x:290,y:540,w:760,h:100});
+    game.paths.push({x:290,y:180,w:100,h:460});
+    game.paths.push({x:450,y:180,w:100,h:460});
+    game.paths.push({x:610,y:180,w:100,h:460});
+    game.paths.push({x:770,y:180,w:100,h:460});
+    game.paths.push({x:930,y:180,w:100,h:460});
+
+    // cobertizo
+    game.decorations.push({type:"shed", x:1140, y:180, w:240, h:200});
+    // compost
+    game.decorations.push({type:"compost", x:1120, y:450, w:130, h:110});
+    // deposito
+    game.decorations.push({type:"tank", x:1280, y:450, w:90, h:110});
+    // estanque
+    game.decorations.push({type:"pond", x:105, y:170, w:120, h:210});
+    // bancos/macizos
+    game.decorations.push({type:"bench", x:118, y:450, w:120, h:40});
+    game.decorations.push({type:"tree", x:1180, y:720, w:90, h:90});
+    game.decorations.push({type:"tree", x:1295, y:700, w:100, h:100});
+    game.decorations.push({type:"tree", x:145, y:720, w:110, h:110});
+    game.decorations.push({type:"tree", x:260, y:760, w:90, h:90});
+    game.decorations.push({type:"flowerbed", x:490, y:730, w:420, h:170});
+
+    // colisiones
+    game.boundaries = [
+      {x:-20,y:-20,w:WORLD.width+40,h:20},
+      {x:-20,y:WORLD.height,w:WORLD.width+40,h:20},
+      {x:-20,y:0,w:20,h:WORLD.height},
+      {x:WORLD.width,y:0,w:20,h:WORLD.height},
+      {x:1140,y:180,w:240,h:200},
+      {x:1120,y:450,w:130,h:110},
+      {x:1280,y:450,w:90,h:110},
+      {x:110,y:170,w:110,h:210},
+      {x:118,y:450,w:120,h:40},
+      {x:1180,y:730,w:90,h:70},
+      {x:1300,y:715,w:90,h:80},
+      {x:150,y:735,w:90,h:80},
+      {x:270,y:775,w:70,h:60},
+      {x:490,y:730,w:420,h:170}
+    ];
+
+    resetDayState(false);
+  }
+
+  function resetDayState(advanceDay){
+    if(advanceDay) game.day++;
+    game.finishedDay = false;
+    game.time = 0;
+    game.energy = clamp(100 - (game.day-1)*2, 70, 100);
+    game.waterTank = clamp(100 - (game.day-1)*1, 75, 100);
+    game.fertilizerTank = clamp(100 - (game.day-1)*2, 60, 100);
+    game.pesticideTank = clamp(100 - (game.day-1)*1.5, 65, 100);
+    game.score = 0;
+    game.perfectStreak = 0;
+    game.weatherIndex = (game.day-1) % WEATHER_TYPES.length;
+    game.weatherTime = 0;
+    game.weatherDuration = rand(26, 42);
+
+    player.x = 310;
+    player.y = 860;
+    player.toolIndex = 1;
+
+    // Ajuste inicial de parcelas por día
+    for(const p of game.plots){
+      const species = SPECIES[p.speciesKey];
+      p.planted = true;
+      p.dead = false;
+      p.growth = clamp(rand(18, 55) + game.day*3, 10, 96);
+      p.health = clamp(rand(68, 92) - game.day*1.2, 40, 98);
+      p.moisture = clamp(rand(35, 62) - game.day*1.3, 20, 80);
+      p.pests = clamp(rand(0, 10) + game.day*1.4, 0, 34);
+      p.weeds = clamp(rand(0, 12) + game.day*1.2 * species.weedRisk, 0, 35);
+      p.fertilizer = clamp(rand(4, 22), 0, 35);
+      p.stress = 0;
+      p.lastActionFlash = 0;
+      p.lastActionType = "";
+      p.shake = 0;
+    }
+
+    // Cada ciertos días, una parcela empieza vacía
+    if(game.day >= 2){
+      const emptyPlot = choice(game.plots);
+      emptyPlot.planted = false;
+      emptyPlot.growth = 0;
+      emptyPlot.health = 0;
+      emptyPlot.moisture = rand(22, 44);
+      emptyPlot.pests = 0;
+      emptyPlot.weeds = rand(3, 15);
+      emptyPlot.fertilizer = 0;
+    }
+
+    // Objetivos
+    const minHealthy = Math.min(7, 4 + game.day);
+    const requiredTreat = clamp(1 + Math.floor(game.day/2), 1, 4);
+    const requiredWeed = clamp(Math.floor(game.day/2), 0, 3);
+    const requiredPlant = game.day >= 2 ? 1 : 0;
+
+    game.missions = [
+      { id:"healthy", text:`Mantén ${minHealthy} parcelas con salud ≥ 75`, target:minHealthy, value:0, done:false },
+      { id:"pests", text:`Deja como máximo ${Math.max(1, 3-requiredTreat+1)} parcelas con plaga visible`, target:1, value:0, done:false },
+      { id:"actionsTreat", text:`Aplica al menos ${requiredTreat} tratamientos correctos`, target:requiredTreat, value:0, done:false },
+      { id:"actionsWeed", text:`Elimina malas hierbas ${requiredWeed} veces`, target:requiredWeed, value:0, done: requiredWeed===0 },
+      { id:"plant", text:`Repón ${requiredPlant} parcela${requiredPlant===1?"":"s"} vacía${requiredPlant===1?"":"s"}`, target:requiredPlant, value:0, done: requiredPlant===0 }
+    ];
+
+    updateHud();
+    showToast(`Día ${game.day}: revisa el jardín y completa la jornada.`);
+  }
+
+  function saveGame(){
+    const data = {
+      day: game.day,
+      plots: game.plots.map(p => ({
+        x:p.x,y:p.y,w:p.w,h:p.h,speciesKey:p.speciesKey,planted:p.planted,
+        health:p.health,moisture:p.moisture,growth:p.growth,pests:p.pests,
+        weeds:p.weeds,fertilizer:p.fertilizer,zoneName:p.zoneName,dead:p.dead
+      }))
+    };
+    localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+    showToast("Progreso guardado.");
+  }
+
+  function loadGame(){
+    try{
+      const raw = localStorage.getItem(SAVE_KEY);
+      if(!raw) return false;
+      const data = JSON.parse(raw);
+      if(!data || !Array.isArray(data.plots)) return false;
+      buildWorld();
+      game.day = Math.max(1, data.day || 1);
+      for(let i=0;i<Math.min(game.plots.length, data.plots.length);i++){
+        Object.assign(game.plots[i], data.plots[i]);
+      }
+      resetDayState(false);
+      return true;
+    }catch(err){
+      console.warn(err);
+      return false;
+    }
+  }
+
+  function clearSave(){
+    localStorage.removeItem(SAVE_KEY);
+    showToast("Progreso borrado.");
+  }
+
+  function showToast(msg){
+    const el = document.createElement("div");
+    el.className = "toast";
+    el.textContent = msg;
+    toastWrap.appendChild(el);
+    setTimeout(() => el.remove(), 3300);
+  }
+
+  function getTool(){
+    return TOOLS[player.toolIndex];
+  }
+
+  function initToolsUi(){
+    toolsPanel.innerHTML = "";
+    TOOLS.forEach((tool, index) => {
+      const btn = document.createElement("button");
+      btn.className = "toolBtn";
+      btn.innerHTML = `${tool.emoji} ${tool.label}<span class="n">${tool.hotkey}</span>`;
+      btn.addEventListener("click", () => {
+        player.toolIndex = index;
+        updateToolsUi();
+      });
+      toolsPanel.appendChild(btn);
+    });
+    updateToolsUi();
+  }
+
+  function updateToolsUi(){
+    [...toolsPanel.children].forEach((btn, i) => {
+      btn.classList.toggle("active", i === player.toolIndex);
+    });
+    toolCycleBtn.textContent = getTool().emoji + " " + getTool().label;
+  }
+
+  function updateHud(){
+    const weather = getWeather();
+    const timeLeft = Math.max(0, game.dayLength - game.time);
+    const healthy = game.plots.filter(p => p.planted && !p.dead && p.health >= 75).length;
+    const badPests = game.plots.filter(p => p.planted && p.pests >= 22).length;
+
+    statusRow.innerHTML = `
+      <div class="chip">Día <strong>${game.day}</strong></div>
+      <div class="chip">Clima <strong>${weather.name}</strong></div>
+      <div class="chip">Tiempo <strong>${Math.ceil(timeLeft)}s</strong></div>
+      <div class="chip">Agua <strong>${Math.round(game.waterTank)}%</strong></div>
+      <div class="chip">Abono <strong>${Math.round(game.fertilizerTank)}%</strong></div>
+      <div class="chip">Tratamiento <strong>${Math.round(game.pesticideTank)}%</strong></div>
+      <div class="chip">Energía <strong>${Math.round(game.energy)}%</strong></div>
+      <div class="chip">Parcelas sanas <strong>${healthy}/${game.plots.length}</strong></div>
+      <div class="chip">Plaga grave <strong>${badPests}</strong></div>
+    `;
+
+    for(const mission of game.missions){
+      if(mission.id === "healthy"){
+        mission.value = healthy;
+        mission.done = healthy >= mission.target;
+      }
+      if(mission.id === "pests"){
+        mission.value = badPests <= 1 ? 1 : 0;
+        mission.done = badPests <= 1;
+      }
+    }
+
+    missionList.innerHTML = "";
+    for(const mission of game.missions){
+      const div = document.createElement("div");
+      div.className = "missionItem" + (mission.done ? " done" : "");
+      div.innerHTML = `<span>${mission.text}</span><strong>${mission.done ? "✔" : `${mission.value}/${mission.target}`}</strong>`;
+      missionList.appendChild(div);
+    }
+  }
+
+  function allMissionsDone(){
+    return game.missions.every(m => m.done);
+  }
+
+  function findNearestPlot(maxDist=90){
+    let best = null;
+    let bestD = Infinity;
+    for(const p of game.plots){
+      const cx = p.x + p.w/2;
+      const cy = p.y + p.h/2;
+      const d = dist(player.x, player.y, cx, cy);
+      if(d < bestD && d <= maxDist){
+        best = p;
+        bestD = d;
+      }
+    }
+    return best;
+  }
+
+  function inspectNearestPlot(){
+    if(player.inspectCooldown > 0) return;
+    const p = findNearestPlot(110);
+    if(!p){
+      showToast("No hay ninguna parcela suficientemente cerca.");
+      player.inspectCooldown = .35;
+      return;
+    }
+
+    const sp = SPECIES[p.speciesKey];
+    const dryness = p.moisture < sp.idealMoisture[0] ? "seca" : p.moisture > sp.idealMoisture[1] ? "encharcada" : "bien hidratada";
+    const pestTxt = p.pests > 20 ? "plaga visible" : p.pests > 8 ? "riesgo de plaga" : "sin plaga aparente";
+    const weedTxt = p.weeds > 18 ? "malas hierbas altas" : p.weeds > 6 ? "algo de competencia" : "limpia";
+    const base = p.planted
+      ? `${sp.name}: salud ${Math.round(p.health)}, crecimiento ${Math.round(p.growth)}%, ${dryness}, ${pestTxt}, ${weedTxt}.`
+      : `Parcela vacía: suelo con humedad ${Math.round(p.moisture)} y malas hierbas ${Math.round(p.weeds)}. Conviene reponer planta.`;
+
+    game.inspectedText = `${p.zoneName}: ${base}`;
+    hintText.textContent = game.inspectedText;
+    showToast("Inspección actualizada.");
+    player.inspectCooldown = .35;
+  }
+
+  function useToolOnPlot(plot){
+    if(player.interactCooldown > 0 || game.energy <= 0){
+      if(game.energy <= 0) showToast("Sin energía. Termina la jornada o gestiona mejor tus acciones.");
+      return;
+    }
+
+    const tool = getTool();
+    const sp = SPECIES[plot.speciesKey];
+    let success = false;
+    let msg = "";
+
+    plot.shake = 0.18;
+    plot.lastActionFlash = 0.4;
+    plot.lastActionType = tool.key;
+
+    switch(tool.key){
+      case "plant":{
+        if(plot.planted){
+          msg = "Esa parcela ya tiene planta implantada.";
+        }else{
+          plot.planted = true;
+          plot.dead = false;
+          plot.health = 65;
+          plot.growth = 6;
+          plot.moisture = clamp(plot.moisture + 10, 0, 100);
+          plot.fertilizer = 8;
+          plot.pests = 0;
+          plot.weeds = clamp(plot.weeds - 8, 0, 100);
+          player.interactCooldown = 0.32;
+          game.energy -= 6;
+          success = true;
+          msg = `Has repuesto ${sp.name}.`;
+          addMissionProgress("plant", 1);
+          burstSparkles(plot.x + plot.w/2, plot.y + 34, "#8cf29f", 10);
+        }
+      } break;
+
+      case "water":{
+        if(game.waterTank < 5){
+          msg = "Depósito de agua demasiado bajo.";
+        }else if(!plot.planted){
+          plot.moisture = clamp(plot.moisture + 10, 0, 100);
+          game.waterTank -= 5;
+          game.energy -= 2;
+          success = true;
+          msg = "Has humedecido el suelo.";
+          sprayWater(plot.x + plot.w/2, plot.y + 20);
+        }else{
+          const beforeIdeal = within(plot.moisture, sp.idealMoisture[0], sp.idealMoisture[1]);
+          plot.moisture = clamp(plot.moisture + 18, 0, 100);
+          game.waterTank -= 6;
+          game.energy -= 2.5;
+          player.interactCooldown = 0.25;
+          sprayWater(plot.x + plot.w/2, plot.y + 10);
+          if(plot.moisture > 88){
+            plot.health = clamp(plot.health - 5, 0, 100);
+            msg = "Has regado en exceso. Riesgo de asfixia radicular.";
+          }else{
+            const afterIdeal = within(plot.moisture, sp.idealMoisture[0], sp.idealMoisture[1]);
+            if(!beforeIdeal && afterIdeal){
+              plot.health = clamp(plot.health + 5, 0, 100);
+              plot.growth = clamp(plot.growth + 3, 0, 100);
+              success = true;
+              msg = "Riego correcto: mejora el equilibrio hídrico.";
+            }else{
+              success = true;
+              msg = "Riego aplicado.";
+            }
+          }
+        }
+      } break;
+
+      case "fertilize":{
+        if(game.fertilizerTank < 6){
+          msg = "Queda poco fertilizante.";
+        }else if(!plot.planted){
+          msg = "No tiene sentido abonar una parcela sin plantar.";
+        }else{
+          plot.fertilizer = clamp(plot.fertilizer + 18, 0, 100);
+          game.fertilizerTank -= 7;
+          game.energy -= 3;
+          player.interactCooldown = 0.28;
+          if(plot.fertilizer > 75){
+            plot.health = clamp(plot.health - 8, 0, 100);
+            plot.stress += 10;
+            msg = "Exceso de abono: la planta se resiente.";
+            burstSparkles(plot.x + plot.w/2, plot.y + 40, "#ffb56b", 8);
+          }else{
+            plot.growth = clamp(plot.growth + 4, 0, 100);
+            plot.health = clamp(plot.health + 3, 0, 100);
+            success = true;
+            msg = "Abonado correcto: mejora el vigor.";
+            burstSparkles(plot.x + plot.w/2, plot.y + 40, "#b2ff90", 8);
+          }
+        }
+      } break;
+
+      case "pesticide":{
+        if(game.pesticideTank < 6){
+          msg = "Tratamiento fitosanitario insuficiente.";
+        }else if(!plot.planted){
+          msg = "No hay planta que tratar.";
+        }else{
+          game.pesticideTank -= 7;
+          game.energy -= 3;
+          player.interactCooldown = 0.3;
+          if(plot.pests > 8){
+            plot.pests = clamp(plot.pests - 24, 0, 100);
+            plot.health = clamp(plot.health + 4, 0, 100);
+            success = true;
+            msg = "Plaga controlada.";
+            addMissionProgress("actionsTreat", 1);
+            burstSparkles(plot.x + plot.w/2, plot.y + 40, "#7be0ff", 10);
+          }else{
+            plot.health = clamp(plot.health - 2, 0, 100);
+            msg = "Tratamiento innecesario. Conviene actuar con criterio.";
+          }
+        }
+      } break;
+
+      case "prune":{
+        if(!plot.planted){
+          msg = "Parcela vacía. Nada que podar.";
+        }else{
+          game.energy -= 3;
+          player.interactCooldown = 0.24;
+          if(plot.growth > 55 || plot.stress > 8){
+            plot.health = clamp(plot.health + 5, 0, 100);
+            plot.stress = clamp(plot.stress - 10, 0, 100);
+            success = true;
+            msg = "Poda de mantenimiento realizada.";
+            burstSparkles(plot.x + plot.w/2, plot.y + 26, "#c4ffd4", 8);
+          }else{
+            plot.health = clamp(plot.health - 1, 0, 100);
+            msg = "Poda poco necesaria en este momento.";
+          }
+        }
+      } break;
+
+      case "weed":{
+        game.energy -= 2.5;
+        player.interactCooldown = 0.22;
+        if(plot.weeds > 5){
+          plot.weeds = clamp(plot.weeds - 22, 0, 100);
+          plot.health = clamp(plot.health + (plot.planted ? 3 : 0), 0, 100);
+          success = true;
+          msg = "Malas hierbas eliminadas.";
+          addMissionProgress("actionsWeed", 1);
+          burstSparkles(plot.x + plot.w/2, plot.y + 38, "#d9ff75", 8);
+        }else{
+          msg = "La parcela ya está bastante limpia.";
+        }
+      } break;
+    }
+
+    game.energy = clamp(game.energy, 0, 100);
+    game.waterTank = clamp(game.waterTank, 0, 100);
+    game.fertilizerTank = clamp(game.fertilizerTank, 0, 100);
+    game.pesticideTank = clamp(game.pesticideTank, 0, 100);
+
+    if(success) game.score += 10;
+    if(msg) showToast(msg);
+    updateHud();
+  }
+
+  function addMissionProgress(id, amount){
+    const m = game.missions.find(x => x.id === id);
+    if(!m || m.done) return;
+    m.value = clamp(m.value + amount, 0, m.target);
+    m.done = m.value >= m.target;
+  }
+
+  function within(v, a, b){ return v >= a && v <= b; }
+
+  function updatePlots(dt){
+    const weather = getWeather();
+    const dayFactor = 1 + (game.day-1)*0.09;
+
+    for(const p of game.plots){
+      const sp = SPECIES[p.speciesKey];
+      p.lastActionFlash = Math.max(0, p.lastActionFlash - dt);
+      p.shake = Math.max(0, p.shake - dt*2.4);
+
+      // humedad
+      let evapBase = 2.9 * weather.evap * dayFactor * dt;
+      if(p.weeds > 16) evapBase += 0.7 * dt;
+      if(weather.type === "rain"){
+        p.moisture += weather.rain * 6.5 * dt;
+      }else{
+        p.moisture -= evapBase;
+      }
+
+      // malas hierbas y plagas
+      p.weeds += (0.55 + sp.weedRisk * 0.5 + game.day * 0.06) * dt;
+      if(p.planted && !p.dead){
+        const moistureBad = p.moisture < sp.idealMoisture[0]-8 || p.moisture > sp.idealMoisture[1]+10;
+        const heatStress = weather.heat > sp.heatTolerance ? (weather.heat - sp.heatTolerance) * 14 : 0;
+        if(moistureBad) p.pests += 0.9 * dt * dayFactor;
+        p.pests += (p.weeds > 18 ? 0.9 : 0.25) * dt * dayFactor;
+        p.stress += heatStress * dt;
+
+        // fertilizante se consume
+        p.fertilizer = clamp(p.fertilizer - (0.62 * dt), 0, 100);
+
+        // crecimiento
+        const inMoisture = within(p.moisture, sp.idealMoisture[0], sp.idealMoisture[1]);
+        const pestPenalty = p.pests * 0.024;
+        const weedPenalty = p.weeds * 0.017;
+        const fertBonus = p.fertilizer > 8 && p.fertilizer < 60 ? 0.5 : p.fertilizer >= 60 ? -0.4 : 0;
+        const growthGain = (sp.growthRate * 60) * dt * (inMoisture ? 1.2 : 0.45) + fertBonus * dt - pestPenalty*dt - weedPenalty*dt;
+        p.growth = clamp(p.growth + growthGain, 0, 100);
+
+        // salud
+        let healthDelta = 0;
+        if(p.moisture < sp.idealMoisture[0]-10) healthDelta -= 2.0 * dt;
+        if(p.moisture > sp.idealMoisture[1]+16) healthDelta -= 2.4 * dt;
+        if(within(p.moisture, sp.idealMoisture[0], sp.idealMoisture[1])) healthDelta += 0.55 * dt;
+        if(p.pests > 20) healthDelta -= 2.8 * dt;
+        if(p.weeds > 20) healthDelta -= 1.4 * dt;
+        if(p.fertilizer > 72) healthDelta -= 1.7 * dt;
+        if(p.fertilizer > 10 && p.fertilizer < 55) healthDelta += 0.25 * dt;
+        if(weather.type === "rain" && p.moisture > sp.idealMoisture[1]+10) healthDelta -= 1.2 * dt;
+        if(weather.type === "heat" && sp.heatTolerance < 0.6) healthDelta -= 1.4 * dt;
+
+        p.health = clamp(p.health + healthDelta, 0, 100);
+
+        if(p.health <= 1){
+          p.dead = true;
+          p.planted = false;
+          p.growth = 0;
+          p.pests = 0;
+          p.fertilizer = 0;
+          p.weeds = clamp(p.weeds + 8, 0, 100);
+        }
+      }else{
+        p.moisture = clamp(p.moisture, 0, 100);
+        p.weeds += 0.5 * dt;
+      }
+
+      p.moisture = clamp(p.moisture, 0, 100);
+      p.pests = clamp(p.pests, 0, 100);
+      p.weeds = clamp(p.weeds, 0, 100);
+      p.stress = clamp(p.stress, 0, 100);
+    }
+  }
+
+  function updateWeather(dt){
+    game.weatherTime += dt;
+    if(game.weatherTime >= game.weatherDuration){
+      game.weatherTime = 0;
+      const current = getWeather().type;
+      let options = WEATHER_TYPES.filter(w => w.type !== current);
+      if(game.day <= 2){
+        options = options.filter(w => w.type !== "heat");
+      }
+      game.weatherIndex = WEATHER_TYPES.indexOf(choice(options));
+      game.weatherDuration = rand(24, 40);
+      showToast(`Cambio de clima: ${getWeather().name}.`);
+    }
+  }
+
+  function updatePlayer(dt){
+    player.interactCooldown = Math.max(0, player.interactCooldown - dt);
+    player.inspectCooldown = Math.max(0, player.inspectCooldown - dt);
+
+    let ax = 0, ay = 0;
+    if(input.left) ax -= 1;
+    if(input.right) ax += 1;
+    if(input.up) ay -= 1;
+    if(input.down) ay += 1;
+
+    if(ax !== 0 || ay !== 0){
+      const len = Math.hypot(ax, ay) || 1;
+      ax /= len;
+      ay /= len;
+      player.dirX = ax;
+      player.dirY = ay;
+      player.moving = true;
+      player.step += dt * 9;
+    }else{
+      player.moving = false;
+    }
+
+    const speedFactor = game.energy < 18 ? 0.76 : 1;
+    let nx = player.x + ax * player.speed * dt * speedFactor;
+    let ny = player.y + ay * player.speed * dt * speedFactor;
+
+    // colisiones por separado
+    if(!collides(nx - player.w/2, player.y - player.h/2, player.w, player.h)) player.x = nx;
+    if(!collides(player.x - player.w/2, ny - player.h/2, player.w, player.h)) player.y = ny;
+
+    player.x = clamp(player.x, 28, WORLD.width - 28);
+    player.y = clamp(player.y, 28, WORLD.height - 28);
+
+    if(input.action){
+      const p = findNearestPlot(95);
+      if(p) useToolOnPlot(p);
+      else showToast("Acércate más a una parcela para actuar.");
+      input.action = false;
+    }
+
+    if(input.inspect){
+      inspectNearestPlot();
+      input.inspect = false;
+    }
+  }
+
+  function collides(x,y,w,h){
+    for(const b of game.boundaries){
+      if(x < b.x+b.w && x+w > b.x && y < b.y+b.h && y+h > b.y){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function burstSparkles(x, y, color, count=8){
+    for(let i=0;i<count;i++){
+      game.sparkles.push({
+        x,y,
+        vx: rand(-70,70),
+        vy: rand(-80,-20),
+        life: rand(.35,.7),
+        maxLife: 1,
+        color,
+        size: rand(2,4)
+      });
+    }
+  }
+
+  function sprayWater(x,y){
+    for(let i=0;i<16;i++){
+      game.particles.push({
+        kind:"water",
+        x:x + rand(-8,8),
+        y:y + rand(-6,6),
+        vx: rand(-55,55),
+        vy: rand(-130,-30),
+        g: 220,
+        life: rand(.4,.8),
+        maxLife: 1,
+        size: rand(2,5)
+      });
+    }
+  }
+
+  function updateParticles(dt){
+    for(let i=game.particles.length-1;i>=0;i--){
+      const p = game.particles[i];
+      p.life -= dt;
+      p.vy += p.g * dt;
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      if(p.life <= 0) game.particles.splice(i,1);
+    }
+    for(let i=game.sparkles.length-1;i>=0;i--){
+      const s = game.sparkles[i];
+      s.life -= dt;
+      s.vy += 100 * dt;
+      s.x += s.vx * dt;
+      s.y += s.vy * dt;
+      if(s.life <= 0) game.sparkles.splice(i,1);
+    }
+  }
+
+  function updateCamera(){
+    const baseW = canvas.width / camera.zoom;
+    const baseH = canvas.height / camera.zoom;
+    camera.x = clamp(player.x - baseW/2, 0, WORLD.width - baseW);
+    camera.y = clamp(player.y - baseH/2, 0, WORLD.height - baseH);
+  }
+
+  function resize(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = Math.round(rect.width * dpr);
+    canvas.height = Math.round(rect.height * dpr);
+
+    const isPortrait = window.innerHeight > window.innerWidth;
+    const coarse = matchMedia("(pointer:coarse)").matches;
+    camera.zoom = coarse
+      ? (isPortrait ? 1.15 : 1.32)
+      : 1.45;
+  }
+
+  function worldToScreen(x,y){
+    return {
+      x: (x - camera.x) * camera.zoom,
+      y: (y - camera.y) * camera.zoom
+    };
+  }
+
+  function drawRoundedRect(x,y,w,h,r,color,stroke){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r);
+    ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);
+    ctx.arcTo(x,y,x+w,y,r);
+    if(color){
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
+    if(stroke){
+      ctx.strokeStyle = stroke;
+      ctx.stroke();
+    }
+  }
+
+  function drawBackground(){
+    const weather = getWeather();
+
+    // cielo
+    const grad = ctx.createLinearGradient(0,0,0,canvas.height);
+    grad.addColorStop(0, weather.sky);
+    grad.addColorStop(1, "#d9f1e0");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    // suelo base
+    const a = worldToScreen(0,0);
+    const w = WORLD.width * camera.zoom;
+    const h = WORLD.height * camera.zoom;
+
+    ctx.fillStyle = "#88c57a";
+    ctx.fillRect(a.x, a.y, w, h);
+
+    // textura ligera
+    for(let gx = 0; gx < WORLD.width; gx += 42){
+      for(let gy = 0; gy < WORLD.height; gy += 42){
+        const p = worldToScreen(gx, gy);
+        const alpha = ((gx + gy) / 84) % 2 ? 0.038 : 0.02;
+        ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+        ctx.fillRect(p.x, p.y, 22*camera.zoom, 22*camera.zoom);
+      }
+    }
+
+    // caminos
+    for(const path of game.paths){
+      const p = worldToScreen(path.x, path.y);
+      drawRoundedRect(p.x,p.y,path.w*camera.zoom,path.h*camera.zoom,18*camera.zoom, "#c9b58b", "rgba(0,0,0,.07)");
+      ctx.fillStyle = "rgba(255,255,255,.08)";
+      for(let i=0;i<6;i++){
+        ctx.fillRect(p.x + (i*path.w/6)*camera.zoom, p.y + 10*camera.zoom, 10*camera.zoom, (path.h-20)*camera.zoom);
+      }
+    }
+
+    // decoraciones
+    for(const d of game.decorations){
+      const p = worldToScreen(d.x, d.y);
+      if(d.type === "shed"){
+        drawRoundedRect(p.x,p.y,d.w*camera.zoom,d.h*camera.zoom,16*camera.zoom,"#8a5a45","#5d3b2c");
+        ctx.fillStyle = "#704635";
+        ctx.fillRect(p.x+14*camera.zoom, p.y+50*camera.zoom, (d.w-28)*camera.zoom, (d.h-64)*camera.zoom);
+        ctx.fillStyle = "#5c3528";
+        ctx.beginPath();
+        ctx.moveTo(p.x-8*camera.zoom, p.y+32*camera.zoom);
+        ctx.lineTo(p.x+d.w*camera.zoom/2, p.y-22*camera.zoom);
+        ctx.lineTo(p.x+d.w*camera.zoom+8*camera.zoom, p.y+32*camera.zoom);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = "#c4a56e";
+        drawRoundedRect(p.x+92*camera.zoom,p.y+92*camera.zoom,54*camera.zoom,88*camera.zoom,8*camera.zoom,"#c4a56e");
+      }
+      if(d.type === "compost"){
+        drawRoundedRect(p.x,p.y,d.w*camera.zoom,d.h*camera.zoom,14*camera.zoom,"#7a5a35","#4d351f");
+        ctx.fillStyle = "#4e3b2a";
+        ctx.fillRect(p.x+10*camera.zoom,p.y+22*camera.zoom,(d.w-20)*camera.zoom,(d.h-32)*camera.zoom);
+        ctx.fillStyle = "#7ec46d";
+        for(let i=0;i<12;i++){
+          ctx.beginPath();
+          ctx.arc(p.x+rand(14,d.w-14)*camera.zoom, p.y+rand(28,d.h-20)*camera.zoom, rand(4,8)*camera.zoom, 0, Math.PI*2);
+          ctx.fill();
+        }
+      }
+      if(d.type === "tank"){
+        drawRoundedRect(p.x,p.y,d.w*camera.zoom,d.h*camera.zoom,18*camera.zoom,"#7fb8f6","#4f7fb3");
+        ctx.fillStyle = "rgba(255,255,255,.18)";
+        ctx.fillRect(p.x+12*camera.zoom,p.y+16*camera.zoom,(d.w-24)*camera.zoom,22*camera.zoom);
+      }
+      if(d.type === "pond"){
+        ctx.fillStyle = "#5faefb";
+        ctx.beginPath();
+        ctx.ellipse(p.x + d.w*camera.zoom/2, p.y + d.h*camera.zoom/2, d.w*camera.zoom/2, d.h*camera.zoom/2, 0, 0, Math.PI*2);
+        ctx.fill();
+        ctx.strokeStyle = "#c4e9ff";
+        ctx.lineWidth = 5*camera.zoom;
+        ctx.stroke();
+      }
+      if(d.type === "bench"){
+        drawRoundedRect(p.x,p.y,d.w*camera.zoom,d.h*camera.zoom,8*camera.zoom,"#85583c");
+        ctx.fillStyle = "#613e29";
+        ctx.fillRect(p.x+12*camera.zoom,p.y+6*camera.zoom,(d.w-24)*camera.zoom,10*camera.zoom);
+      }
+      if(d.type === "tree"){
+        ctx.fillStyle = "#6f4b2e";
+        ctx.fillRect(p.x + d.w*camera.zoom*.42, p.y + d.h*camera.zoom*.55, d.w*camera.zoom*.16, d.h*camera.zoom*.28);
+        ctx.fillStyle = "#3e8a4f";
+        ctx.beginPath();
+        ctx.arc(p.x + d.w*camera.zoom*.5, p.y + d.h*camera.zoom*.36, d.w*camera.zoom*.36, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = "rgba(255,255,255,.08)";
+        ctx.beginPath();
+        ctx.arc(p.x + d.w*camera.zoom*.42, p.y + d.h*camera.zoom*.26, d.w*camera.zoom*.12, 0, Math.PI*2);
+        ctx.fill();
+      }
+      if(d.type === "flowerbed"){
+        drawRoundedRect(p.x,p.y,d.w*camera.zoom,d.h*camera.zoom,22*camera.zoom,"#704930","#52331f");
+        ctx.fillStyle = "#4a3020";
+        ctx.fillRect(p.x+10*camera.zoom,p.y+10*camera.zoom,(d.w-20)*camera.zoom,(d.h-20)*camera.zoom);
+        for(let i=0;i<28;i++){
+          ctx.fillStyle = choice(["#ef7ca3","#ffd56c","#8edfff","#b699ff","#9cf27e"]);
+          ctx.beginPath();
+          ctx.arc(p.x + rand(18,d.w-18)*camera.zoom, p.y + rand(18,d.h-18)*camera.zoom, rand(4,8)*camera.zoom, 0, Math.PI*2);
+          ctx.fill();
+        }
+      }
+    }
+  }
+
+  function drawPlots(){
+    for(const p of game.plots){
+      const pos = worldToScreen(p.x, p.y);
+      const flash = p.lastActionFlash;
+      const shakeX = p.shake ? Math.sin(performance.now()*0.05) * 4 * p.shake * camera.zoom : 0;
+      const x = pos.x + shakeX;
+      const y = pos.y;
+
+      // borde exterior
+      drawRoundedRect(x,y,p.w*camera.zoom,p.h*camera.zoom,16*camera.zoom, "#7d5737", "#563923");
+
+      // suelo
+      ctx.fillStyle = p.planted ? "#6d482a" : "#5b3f29";
+      drawRoundedRect(x+8*camera.zoom,y+8*camera.zoom,(p.w-16)*camera.zoom,(p.h-16)*camera.zoom,12*camera.zoom, ctx.fillStyle);
+
+      // humedad visual del suelo
+      const moistAlpha = clamp(p.moisture / 100, 0, 1) * 0.42;
+      ctx.fillStyle = `rgba(88,168,255,${moistAlpha})`;
+      drawRoundedRect(x+10*camera.zoom,y+10*camera.zoom,(p.w-20)*camera.zoom,(p.h-20)*camera.zoom,10*camera.zoom, ctx.fillStyle);
+
+      if(p.planted){
+        const sp = SPECIES[p.speciesKey];
+        const plantX = x + p.w*camera.zoom/2;
+        const plantBaseY = y + p.h*camera.zoom*0.72;
+        const growthScale = 0.55 + p.growth/100*0.68;
+        const healthTint = p.health < 45 ? "#a99158" : sp.color;
+
+        // sombra
+        ctx.fillStyle = "rgba(0,0,0,.15)";
+        ctx.beginPath();
+        ctx.ellipse(plantX, plantBaseY + 10*camera.zoom, 20*camera.zoom*growthScale, 8*camera.zoom, 0, 0, Math.PI*2);
+        ctx.fill();
+
+        // tallo
+        ctx.strokeStyle = "#3f7b35";
+        ctx.lineWidth = 5 * camera.zoom * growthScale;
+        ctx.beginPath();
+        ctx.moveTo(plantX, plantBaseY);
+        ctx.lineTo(plantX, plantBaseY - 34*camera.zoom*growthScale);
+        ctx.stroke();
+
+        // hojas / masa vegetal
+        ctx.fillStyle = healthTint;
+        const crowns = 3 + Math.floor(p.growth / 28);
+        for(let i=0;i<crowns;i++){
+          const ox = Math.sin(i*2.2 + p.growth*0.05) * 12 * camera.zoom * growthScale;
+          const oy = -18*camera.zoom*growthScale - i*5*camera.zoom;
+          ctx.beginPath();
+          ctx.ellipse(plantX + ox, plantBaseY + oy, (16-i*1.1)*camera.zoom*growthScale, (12-i*0.8)*camera.zoom*growthScale, 0, 0, Math.PI*2);
+          ctx.fill();
+        }
+
+        // flor / icono
+        ctx.fillStyle = "#ffffff";
+        ctx.font = `${Math.max(14, 20*camera.zoom*growthScale)}px serif`;
+        ctx.textAlign = "center";
+        ctx.fillText(sp.icon, plantX, plantBaseY - 24*camera.zoom*growthScale);
+
+        // plaga
+        if(p.pests > 10){
+          const count = Math.min(5, 1 + Math.floor(p.pests/18));
+          for(let i=0;i<count;i++){
+            const bx = plantX + Math.sin(i*1.7 + performance.now()*0.004) * 18*camera.zoom;
+            const by = plantBaseY - 10*camera.zoom - i*8*camera.zoom;
+            ctx.fillStyle = p.pests > 22 ? "#ff7d7d" : "#ffd56a";
+            ctx.beginPath();
+            ctx.arc(bx, by, 4*camera.zoom, 0, Math.PI*2);
+            ctx.fill();
+          }
+        }
+
+        // malas hierbas
+        if(p.weeds > 7){
+          ctx.strokeStyle = "#a4db54";
+          ctx.lineWidth = 2.4*camera.zoom;
+          const weedCount = Math.min(6, 1 + Math.floor(p.weeds/8));
+          for(let i=0;i<weedCount;i++){
+            const wx = x + (18 + i*14) * camera.zoom;
+            const wy = y + (p.h-16) * camera.zoom;
+            ctx.beginPath();
+            ctx.moveTo(wx, wy);
+            ctx.lineTo(wx-4*camera.zoom, wy-12*camera.zoom);
+            ctx.lineTo(wx+1*camera.zoom, wy-8*camera.zoom);
+            ctx.lineTo(wx+4*camera.zoom, wy-15*camera.zoom);
+            ctx.stroke();
+          }
+        }
+      }else{
+        ctx.fillStyle = "#d8c28d";
+        ctx.font = `${18*camera.zoom}px sans-serif`;
+        ctx.textAlign = "center";
+        ctx.fillText("Parcela vacía", x + p.w*camera.zoom/2, y + p.h*camera.zoom/2);
+        if(p.weeds > 5){
+          ctx.strokeStyle = "#9bcf4d";
+          ctx.lineWidth = 2.2*camera.zoom;
+          for(let i=0;i<5;i++){
+            const wx = x + (20 + i*16) * camera.zoom;
+            const wy = y + (p.h-16) * camera.zoom;
+            ctx.beginPath();
+            ctx.moveTo(wx, wy);
+            ctx.lineTo(wx+2*camera.zoom, wy-14*camera.zoom);
+            ctx.lineTo(wx+5*camera.zoom, wy-8*camera.zoom);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // barras estado
+      drawMiniBar(x+10*camera.zoom, y+10*camera.zoom, 48*camera.zoom, 6*camera.zoom, p.health, "#68d67c", "rgba(0,0,0,.35)");
+      drawMiniBar(x+10*camera.zoom, y+20*camera.zoom, 48*camera.zoom, 6*camera.zoom, p.moisture, "#58a8ff", "rgba(0,0,0,.35)");
+
+      // borde de alerta
+      if(p.planted && (p.health < 45 || p.pests > 24 || p.moisture > 85 || p.moisture < 18)){
+        ctx.strokeStyle = `rgba(255,125,125,${0.5 + Math.sin(performance.now()*0.008)*0.15})`;
+        ctx.lineWidth = 4*camera.zoom;
+        drawRoundedRect(x+4*camera.zoom,y+4*camera.zoom,(p.w-8)*camera.zoom,(p.h-8)*camera.zoom,12*camera.zoom,null,ctx.strokeStyle);
+      }
+
+      // flash de acción
+      if(flash > 0){
+        ctx.fillStyle = `rgba(255,255,255,${flash*0.24})`;
+        drawRoundedRect(x+4*camera.zoom,y+4*camera.zoom,(p.w-8)*camera.zoom,(p.h-8)*camera.zoom,14*camera.zoom,ctx.fillStyle);
+      }
+
+      // nombre corto
+      ctx.fillStyle = "rgba(255,255,255,.85)";
+      ctx.font = `${11*camera.zoom}px sans-serif`;
+      ctx.textAlign = "left";
+      ctx.fillText(SPECIES[p.speciesKey].name, x+12*camera.zoom, y + (p.h-10)*camera.zoom);
+    }
+  }
+
+  function drawMiniBar(x,y,w,h,val,color,bg){
+    ctx.fillStyle = bg;
+    drawRoundedRect(x,y,w,h,h/2,bg);
+    ctx.fillStyle = color;
+    drawRoundedRect(x,y,w*clamp(val/100,0,1),h,h/2,color);
+  }
+
+  function drawPlayer(){
+    const s = worldToScreen(player.x, player.y);
+    const bob = player.moving ? Math.sin(player.step * 2) * 2.2 * camera.zoom : 0;
+    const x = s.x, y = s.y + bob;
+
+    // sombra
+    ctx.fillStyle = "rgba(0,0,0,.18)";
+    ctx.beginPath();
+    ctx.ellipse(x, y + 18*camera.zoom, 14*camera.zoom, 6*camera.zoom, 0, 0, Math.PI*2);
+    ctx.fill();
+
+    // cuerpo
+    ctx.fillStyle = "#2f6bd8";
+    drawRoundedRect(x-12*camera.zoom, y-4*camera.zoom, 24*camera.zoom, 26*camera.zoom, 8*camera.zoom, "#2f6bd8");
+    // piernas
+    ctx.fillStyle = "#203a72";
+    ctx.fillRect(x-9*camera.zoom, y+18*camera.zoom, 7*camera.zoom, 10*camera.zoom);
+    ctx.fillRect(x+2*camera.zoom, y+18*camera.zoom, 7*camera.zoom, 10*camera.zoom);
+    // cabeza
+    ctx.fillStyle = "#f0c49a";
+    ctx.beginPath();
+    ctx.arc(x, y-12*camera.zoom, 12*camera.zoom, 0, Math.PI*2);
+    ctx.fill();
+    // gorra
+    ctx.fillStyle = "#52b067";
+    ctx.beginPath();
+    ctx.arc(x, y-15*camera.zoom, 12*camera.zoom, Math.PI, 0);
+    ctx.fill();
+    ctx.fillRect(x-12*camera.zoom, y-15*camera.zoom, 24*camera.zoom, 5*camera.zoom);
+
+    // cara simple
+    ctx.fillStyle = "#1a1a1a";
+    const eyeShift = player.dirX < -0.2 ? -2 : player.dirX > 0.2 ? 2 : 0;
+    ctx.beginPath();
+    ctx.arc(x-4*camera.zoom + eyeShift, y-13*camera.zoom, 1.3*camera.zoom, 0, Math.PI*2);
+    ctx.arc(x+4*camera.zoom + eyeShift, y-13*camera.zoom, 1.3*camera.zoom, 0, Math.PI*2);
+    ctx.fill();
+
+    // herramienta equipada
+    ctx.font = `${16*camera.zoom}px sans-serif`;
+    ctx.textAlign = "center";
+    ctx.fillText(getTool().emoji, x + player.dirX*14*camera.zoom, y + player.dirY*6*camera.zoom - 28*camera.zoom);
+  }
+
+  function drawParticles(){
+    for(const p of game.particles){
+      const s = worldToScreen(p.x,p.y);
+      const a = clamp(p.life / p.maxLife, 0, 1);
+      if(p.kind === "water"){
+        ctx.fillStyle = `rgba(88,168,255,${a})`;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, p.size*camera.zoom, 0, Math.PI*2);
+        ctx.fill();
+      }
+    }
+    for(const s of game.sparkles){
+      const p = worldToScreen(s.x,s.y);
+      const a = clamp(s.life / s.maxLife, 0, 1);
+      ctx.fillStyle = hexToRgba(s.color, a);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, s.size*camera.zoom, 0, Math.PI*2);
+      ctx.fill();
+    }
+  }
+
+  function drawWeatherFx(){
+    const weather = getWeather();
+
+    if(weather.type === "rain"){
+      ctx.strokeStyle = "rgba(255,255,255,.45)";
+      ctx.lineWidth = 2;
+      for(let i=0;i<65;i++){
+        const x = ((i*123 + performance.now()*0.5) % (canvas.width + 120)) - 60;
+        const y = ((i*67 + performance.now()*0.9) % (canvas.height + 100)) - 50;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x-7, y+16);
+        ctx.stroke();
+      }
+    }
+
+    if(weather.type === "heat"){
+      ctx.strokeStyle = "rgba(255,214,106,.16)";
+      ctx.lineWidth = 2;
+      for(let i=0;i<6;i++){
+        const baseX = (canvas.width/6)*(i+.5);
+        ctx.beginPath();
+        for(let y=0;y<canvas.height;y+=20){
+          const x = baseX + Math.sin(y*0.03 + performance.now()*0.002 + i)*8;
+          if(y===0) ctx.moveTo(x,y);
+          else ctx.lineTo(x,y);
+        }
+        ctx.stroke();
+      }
+    }
+
+    // viñeta ligera
+    const g = ctx.createRadialGradient(canvas.width/2, canvas.height/2, canvas.height*.15, canvas.width/2, canvas.height/2, canvas.height*.7);
+    g.addColorStop(0, "rgba(0,0,0,0)");
+    g.addColorStop(1, "rgba(0,0,0,.14)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+  }
+
+  function drawTargetHint(){
+    const p = findNearestPlot(110);
+    if(!p) return;
+    const pos = worldToScreen(p.x + p.w/2, p.y - 8);
+    ctx.font = `${13*camera.zoom}px sans-serif`;
+    ctx.textAlign = "center";
+    ctx.fillStyle = "rgba(8,15,11,.82)";
+    drawRoundedRect(pos.x - 72*camera.zoom, pos.y - 16*camera.zoom, 144*camera.zoom, 28*camera.zoom, 12*camera.zoom, "rgba(8,15,11,.82)");
+    ctx.fillStyle = "#fff";
+    ctx.fillText(`Actuar: ${getTool().label}`, pos.x, pos.y + 3*camera.zoom);
+  }
+
+  function hexToRgba(hex, a){
+    const m = hex.replace("#","").match(/.{1,2}/g);
+    if(!m) return `rgba(255,255,255,${a})`;
+    const [r,g,b] = m.map(v => parseInt(v,16));
+    return `rgba(${r},${g},${b},${a})`;
+  }
+
+  function updateHintText(){
+    const p = findNearestPlot(110);
+    if(!p){
+      hintText.textContent = "Muévete entre las zonas. Inspecciona antes de actuar para decidir bien.";
+      return;
+    }
+    const sp = SPECIES[p.speciesKey];
+    let advice = `${p.zoneName}: `;
+    if(!p.planted){
+      advice += "parcela vacía. Conviene plantar si la jornada lo pide.";
+    }else if(p.pests > 20){
+      advice += `${sp.name} con plaga visible. Lo prioritario es tratar.`;
+    }else if(p.moisture < sp.idealMoisture[0]){
+      advice += `${sp.name} con déficit hídrico. Necesita riego.`;
+    }else if(p.moisture > sp.idealMoisture[1] + 12){
+      advice += `${sp.name} con exceso de agua. No riegues más.`;
+    }else if(p.weeds > 18){
+      advice += `${sp.name} compite con malas hierbas. Escardar ayuda.`;
+    }else if(p.fertilizer < 8 && p.growth < 70){
+      advice += `${sp.name} puede mejorar con abonado moderado.`;
+    }else{
+      advice += `${sp.name} en estado aceptable. Mantén vigilancia.`;
+    }
+    hintText.textContent = advice;
+  }
+
+  function updateGame(dt){
+    if(!game.running || game.paused || game.finishedDay) return;
+
+    game.time += dt;
+    updateWeather(dt);
+    updatePlayer(dt);
+    updatePlots(dt);
+    updateParticles(dt);
+    updateCamera();
+    updateHintText();
+
+    if(Math.floor(game.time * 2) % 2 === 0){
+      updateHud();
+    }
+
+    if(allMissionsDone()){
+      finishDay(true);
+      return;
+    }
+
+    if(game.time >= game.dayLength){
+      finishDay(allMissionsDone());
+      return;
+    }
+
+    if(performance.now() - game.lastAutoSave > 20000){
+      saveGame();
+      game.lastAutoSave = performance.now();
+    }
+  }
+
+  function finishDay(success){
+    game.finishedDay = true;
+    game.running = false;
+
+    const healthy = game.plots.filter(p => p.planted && !p.dead && p.health >= 75).length;
+    const averageHealth = game.plots.reduce((a,p)=>a+(p.planted?p.health:50),0) / game.plots.length;
+
+    dayTitle.textContent = success ? "Jornada superada" : "Fin de la jornada";
+    daySummary.textContent = success
+      ? `Buen trabajo. Has completado los objetivos del día ${game.day}. Estado medio del jardín: ${Math.round(averageHealth)} de salud y ${healthy} parcelas en buen estado. La siguiente jornada aumentará la exigencia climática y de mantenimiento.`
+      : `La jornada terminó antes de completar todos los objetivos. Salud media del jardín: ${Math.round(averageHealth)}. Revisa humedad, plagas y priorización de herramientas en el próximo intento.`;
+
+    dayScreen.classList.remove("hidden");
+    saveGame();
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    drawBackground();
+    drawPlots();
+    drawPlayer();
+    drawParticles();
+    drawTargetHint();
+    drawWeatherFx();
+  }
+
+  let last = performance.now();
+  function loop(now){
+    const dt = Math.min((now - last)/1000, 0.033);
+    last = now;
+    updateGame(dt);
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  function startGame(){
+    startScreen.classList.add("hidden");
+    pauseScreen.classList.add("hidden");
+    dayScreen.classList.add("hidden");
+    game.running = true;
+    game.paused = false;
+    game.finishedDay = false;
+    updateHud();
+    updateToolsUi();
+    resize();
+  }
+
+  function pauseGame(){
+    if(!game.running || game.finishedDay) return;
+    game.paused = true;
+    pauseScreen.classList.remove("hidden");
+  }
+
+  function resumeGame(){
+    game.paused = false;
+    pauseScreen.classList.add("hidden");
+  }
+
+  function nextDay(){
+    resetDayState(true);
+    startGame();
+  }
+
+  function keySet(code, pressed){
+    if(code === "ArrowUp" || code === "KeyW") input.up = pressed;
+    if(code === "ArrowDown" || code === "KeyS") input.down = pressed;
+    if(code === "ArrowLeft" || code === "KeyA") input.left = pressed;
+    if(code === "ArrowRight" || code === "KeyD") input.right = pressed;
+  }
+
+  window.addEventListener("keydown", (e) => {
+    if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space"].includes(e.code)) e.preventDefault();
+
+    if(e.code === "Escape"){
+      if(!startScreen.classList.contains("hidden") || !dayScreen.classList.contains("hidden")) return;
+      if(game.paused) resumeGame(); else pauseGame();
+      return;
+    }
+
+    if(e.code === "Space" || e.code === "KeyE"){
+      input.action = true;
+      return;
+    }
+
+    if(e.code === "KeyQ"){
+      input.inspect = true;
+      return;
+    }
+
+    const num = parseInt(e.key, 10);
+    if(num >= 1 && num <= 6){
+      player.toolIndex = num - 1;
+      updateToolsUi();
+      return;
+    }
+
+    keySet(e.code, true);
+  });
+
+  window.addEventListener("keyup", (e) => {
+    keySet(e.code, false);
+  });
+
+  function bindHoldButton(el, dir){
+    const down = (ev) => {
+      ev.preventDefault();
+      input[dir] = true;
+      el.classList.add("on");
+    };
+    const up = (ev) => {
+      ev.preventDefault();
+      input[dir] = false;
+      el.classList.remove("on");
+    };
+    el.addEventListener("pointerdown", down);
+    el.addEventListener("pointerup", up);
+    el.addEventListener("pointercancel", up);
+    el.addEventListener("pointerleave", up);
+  }
+
+  document.querySelectorAll(".padBtn").forEach(btn => {
+    bindHoldButton(btn, btn.dataset.dir);
+  });
+
+  actionBtn.addEventListener("pointerdown", (e) => { e.preventDefault(); input.action = true; });
+  inspectBtn.addEventListener("pointerdown", (e) => { e.preventDefault(); input.inspect = true; });
+  pauseBtn.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    if(game.paused) resumeGame(); else pauseGame();
+  });
+  toolCycleBtn.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    player.toolIndex = (player.toolIndex + 1) % TOOLS.length;
+    updateToolsUi();
+  });
+
+  startBtn.addEventListener("click", () => {
+    if(!loadGame()){
+      buildWorld();
+    }
+    startGame();
+  });
+
+  resetSaveBtn.addEventListener("click", () => {
+    clearSave();
+    buildWorld();
+  });
+
+  resumeBtn.addEventListener("click", resumeGame);
+  saveBtn.addEventListener("click", saveGame);
+  daySaveBtn.addEventListener("click", saveGame);
+  nextDayBtn.addEventListener("click", nextDay);
+
+  window.addEventListener("resize", resize);
+
+  canvas.addEventListener("pointerdown", (e) => {
+    // Toque sobre canvas: inspección rápida si no hay controles visibles pulsados
+    if(matchMedia("(pointer:coarse)").matches){
+      input.inspect = true;
+    }
+  });
+
+  function init(){
+    initToolsUi();
+    buildWorld();
+    resize();
+    updateHud();
+    requestAnimationFrame(loop);
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
