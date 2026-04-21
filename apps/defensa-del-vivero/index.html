@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Defensa del Vivero</title>
+  <style>
+    :root{
+      --bg1:#0f172a;
+      --bg2:#14532d;
+      --panel:#ffffff;
+      --panelSoft:#f7fcf8;
+      --text:#18324a;
+      --muted:#64748b;
+      --good:#16a34a;
+      --bad:#dc2626;
+      --warn:#f59e0b;
+      --blue:#0ea5e9;
+      --purple:#7c3aed;
+      --soil1:#8b5a2b;
+      --soil2:#6f451d;
+      --lane:#d6f0dc;
+      --grid:#b6dcc0;
+      --shadow:0 18px 48px rgba(0,0,0,.2);
+      --r:24px;
+    }
+
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;padding:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:var(--text)}
+    body{overflow-x:hidden}
+
+    .app{
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:14px;
+      position:relative;
+    }
+
+    .glow,.glow::before,.glow::after{
+      content:"";
+      position:fixed;
+      border-radius:50%;
+      filter:blur(48px);
+      pointer-events:none;
+      z-index:0;
+    }
+    .glow{
+      width:220px;height:220px;left:-50px;top:30px;background:rgba(34,197,94,.18);
+      animation:float 8s ease-in-out infinite;
+    }
+    .glow::before{
+      width:190px;height:190px;right:-60px;top:180px;background:rgba(14,165,233,.16);
+      animation:float 10s ease-in-out infinite reverse;
+    }
+    .glow::after{
+      width:220px;height:220px;left:46vw;bottom:-30px;background:rgba(124,58,237,.14);
+      animation:float 12s ease-in-out infinite;
+    }
+    @keyframes float{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-14px)}
+    }
+
+    .screen{
+      width:min(1240px,100%);
+      background:linear-gradient(180deg,#fff,#f5fbf7);
+      border-radius:30px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+      z-index:1;
+      display:none;
+      animation:pop .28s ease;
+    }
+    .screen.active{display:block}
+    @keyframes pop{
+      from{opacity:0;transform:translateY(8px) scale(.985)}
+      to{opacity:1;transform:none}
+    }
+
+    .hero{
+      padding:24px;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(34,197,94,.14), transparent 30%),
+        radial-gradient(circle at 85% 15%, rgba(14,165,233,.12), transparent 28%),
+        linear-gradient(135deg,#eefcf2,#f4fbff);
+    }
+
+    .titleRow{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .logo{
+      width:76px;height:76px;border-radius:22px;
+      display:grid;place-items:center;
+      font-size:42px;color:#fff;
+      background:linear-gradient(135deg,#16a34a,#0ea5e9);
+      box-shadow:0 12px 28px rgba(14,165,233,.25);
+      animation:bob 2.4s ease-in-out infinite;
+    }
+    @keyframes bob{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-5px)}
+    }
+
+    h1,h2,h3,h4,p{margin:0}
+    h1{font-size:clamp(1.8rem,4vw,3.1rem);line-height:1.02}
+    .subtitle{
+      margin-top:8px;
+      color:#416176;
+      font-weight:700;
+      font-size:clamp(.98rem,1.8vw,1.15rem);
+    }
+    .chips{
+      display:flex;gap:10px;flex-wrap:wrap;margin-top:18px
+    }
+    .chip{
+      background:#fff;border:1px solid #dceae2;border-radius:999px;padding:10px 14px;
+      font-weight:800;color:#1f3b45;box-shadow:0 6px 16px rgba(0,0,0,.05)
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1.04fr .96fr;
+      gap:18px;
+      margin-top:18px;
+    }
+
+    .card{
+      background:rgba(255,255,255,.94);
+      border:1px solid #e1ede5;
+      border-radius:var(--r);
+      padding:18px;
+      box-shadow:0 8px 24px rgba(0,0,0,.06);
+    }
+
+    .miniGrid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+      margin-top:14px;
+    }
+    .mini{
+      background:#f8fcf9;
+      border:1px solid #e2eee6;
+      border-radius:18px;
+      padding:12px;
+    }
+    .mini strong{display:block;margin-bottom:6px}
+    .mini span{color:var(--muted);font-size:.94rem}
+
+    .preview{
+      min-height:270px;
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+    }
+    .pv{
+      background:linear-gradient(180deg,#fff,#f7fbff);
+      border:1px solid #e4eef1;
+      border-radius:18px;
+      padding:12px;
+      position:relative;
+      overflow:hidden;
+    }
+    .pv h3{font-size:1rem;margin-bottom:8px}
+    .icons{display:flex;flex-wrap:wrap;gap:8px;font-size:1.65rem}
+    .spark{position:absolute;right:10px;top:8px;animation:twinkle 1.5s infinite}
+    @keyframes twinkle{
+      0%,100%{opacity:1;transform:scale(1)}
+      50%{opacity:.5;transform:scale(1.22)}
+    }
+
+    .cta{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+
+    button{
+      border:none;
+      border-radius:18px;
+      padding:14px 18px;
+      min-height:52px;
+      font-weight:900;
+      font-size:1rem;
+      cursor:pointer;
+      transition:.18s transform,.18s filter,.18s box-shadow;
+    }
+    button:hover{transform:translateY(-2px)}
+    button:active{transform:translateY(1px)}
+    .primary{
+      background:linear-gradient(135deg,#16a34a,#0ea5e9);
+      color:#fff;
+      box-shadow:0 10px 24px rgba(14,165,233,.23);
+    }
+    .secondary{
+      background:#fff;color:#15374f;border:2px solid #d9e8df;
+    }
+    .danger{
+      background:linear-gradient(135deg,#ef4444,#f97316);
+      color:#fff;
+    }
+    .small{
+      padding:10px 14px;
+      min-height:44px;
+      border-radius:14px;
+      font-size:.94rem;
+    }
+
+    .foot{
+      padding:0 24px 22px;
+      color:#667788;
+      font-weight:700;
+    }
+
+    .tiny{
+      font-size:.84rem;
+      color:#607284;
+      font-weight:700;
+    }
+
+    /* GAME */
+    .hud{
+      background:linear-gradient(135deg,#f2fff6,#eef7ff);
+      border-bottom:1px solid #e5f0ea;
+      padding:12px;
+      display:grid;
+      gap:12px;
+    }
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(7,1fr);
+      gap:10px;
+    }
+    .stat{
+      background:#fff;
+      border:1px solid #dce9e1;
+      border-radius:16px;
+      padding:10px 12px;
+      min-height:72px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:4px;
+    }
+    .stat .k{
+      font-size:.76rem;
+      color:#62778a;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.03em;
+    }
+    .stat .v{
+      font-size:1.12rem;
+      font-weight:900;
+    }
+
+    .mission{
+      color:#24485d;
+      font-weight:900;
+      display:grid;
+      gap:8px;
+    }
+    .bar{
+      height:16px;
+      border-radius:999px;
+      background:#e6eff1;
+      border:1px solid #d4e3e7;
+      overflow:hidden;
+    }
+    .bar > i{
+      display:block;
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,#22c55e,#0ea5e9,#7c3aed);
+      transition:width .22s ease;
+    }
+
+    .gameWrap{
+      padding:14px;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 340px;
+      gap:14px;
+      align-items:start;
+    }
+
+    .arenaCard,.sideCard{
+      background:linear-gradient(180deg,#fbfffc,#f6fcf8);
+      border:1px solid #e2eee7;
+      border-radius:24px;
+      padding:14px;
+      box-shadow:0 8px 24px rgba(0,0,0,.04);
+    }
+
+    .arenaHead,.sideHead{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .hint{
+      font-size:.93rem;
+      color:#5f7488;
+      font-weight:800;
+    }
+
+    .arena{
+      position:relative;
+      height:640px;
+      border-radius:22px;
+      overflow:hidden;
+      border:1px solid #d8e7de;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.02)),
+        linear-gradient(180deg,#dff6e4 0%, #c8ebd2 13%, #b6e0c4 100%);
+    }
+
+    .skyGlass{
+      position:absolute;left:0;right:0;top:0;height:84px;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.75),rgba(255,255,255,.2)),
+        repeating-linear-gradient(90deg,transparent 0 64px,rgba(255,255,255,.16) 64px 68px);
+      border-bottom:2px solid rgba(255,255,255,.4);
+      z-index:1;pointer-events:none;
+    }
+
+    .lane{
+      position:absolute;
+      left:0;right:0;
+      height:20%;
+      border-top:2px dashed rgba(255,255,255,.2);
+      border-bottom:2px dashed rgba(0,0,0,.03);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,0)),
+        repeating-linear-gradient(90deg, var(--soil1) 0 36px, var(--soil2) 36px 72px);
+      box-shadow:inset 0 0 0 9999px rgba(130,190,145,.18);
+    }
+    .lane:nth-child(2){top:84px}
+    .lane:nth-child(3){top:196px}
+    .lane:nth-child(4){top:308px}
+    .lane:nth-child(5){top:420px}
+    .lane:nth-child(6){top:532px}
+
+    .cells{
+      position:absolute;
+      inset:84px 0 0 0;
+      z-index:2;
+      display:grid;
+      grid-template-rows:repeat(5,1fr);
+      gap:0;
+      pointer-events:none;
+    }
+    .row{
+      display:grid;
+      grid-template-columns:repeat(9,1fr);
+      gap:0;
+    }
+    .cell{
+      border:1px dashed rgba(49,95,64,.2);
+      position:relative;
+      pointer-events:auto;
+      cursor:pointer;
+      transition:.15s background;
+    }
+    .cell:hover{background:rgba(255,255,255,.14)}
+    .cell.placeable::after{
+      content:"+";
+      position:absolute;
+      right:6px;top:5px;
+      width:22px;height:22px;border-radius:50%;
+      display:grid;place-items:center;
+      background:rgba(255,255,255,.75);
+      color:#17553e;font-weight:900;font-size:.95rem;
+      box-shadow:0 4px 10px rgba(0,0,0,.08);
+      opacity:.9;
+    }
+    .cell.selected{
+      box-shadow:inset 0 0 0 4px rgba(14,165,233,.35);
+      background:rgba(14,165,233,.12);
+    }
+
+    .base{
+      position:absolute;
+      right:8px;
+      top:84px;
+      bottom:0;
+      width:74px;
+      z-index:3;
+      pointer-events:none;
+    }
+    .baseLane{
+      position:absolute;
+      right:0;
+      width:68px;
+      height:92px;
+      border-radius:18px;
+      background:linear-gradient(180deg,#ffffff,#f8fff9);
+      border:2px solid #d9e8df;
+      display:grid;
+      place-items:center;
+      box-shadow:0 8px 18px rgba(0,0,0,.08);
+      font-size:2rem;
+    }
+    .baseLane:nth-child(1){top:94px}
+    .baseLane:nth-child(2){top:206px}
+    .baseLane:nth-child(3){top:318px}
+    .baseLane:nth-child(4){top:430px}
+    .baseLane:nth-child(5){top:542px}
+
+    .unit{
+      position:absolute;
+      width:62px;height:62px;
+      transform:translate(-50%,-50%);
+      border-radius:18px;
+      background:rgba(255,255,255,.95);
+      border:2px solid #dceadf;
+      box-shadow:0 10px 18px rgba(0,0,0,.12);
+      z-index:5;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:3px;
+      animation:popIn .2s ease;
+    }
+    @keyframes popIn{
+      from{opacity:0;transform:translate(-50%,-50%) scale(.8)}
+      to{opacity:1;transform:translate(-50%,-50%) scale(1)}
+    }
+    .unit .emoji{font-size:1.45rem;line-height:1}
+    .unit .miniTxt{font-size:.58rem;font-weight:900;color:#35556b}
+    .unit.ready{box-shadow:0 0 0 5px rgba(34,197,94,.13),0 10px 18px rgba(0,0,0,.12)}
+    .unit.cooling{opacity:.92}
+    .unit.hit{animation:unitPulse .22s ease}
+    @keyframes unitPulse{
+      0%,100%{transform:translate(-50%,-50%) scale(1)}
+      50%{transform:translate(-50%,-50%) scale(1.1)}
+    }
+
+    .enemy{
+      position:absolute;
+      width:58px;height:58px;
+      transform:translate(-50%,-50%);
+      border-radius:18px;
+      background:rgba(255,255,255,.95);
+      border:2px solid #f3d0d0;
+      box-shadow:0 10px 18px rgba(0,0,0,.12);
+      z-index:6;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:2px;
+    }
+    .enemy .emoji{font-size:1.4rem;line-height:1}
+    .enemy .hp{
+      width:38px;height:6px;border-radius:999px;background:#fee2e2;overflow:hidden;border:1px solid #fecaca
+    }
+    .enemy .hp > i{
+      display:block;height:100%;background:linear-gradient(90deg,#f59e0b,#ef4444);width:100%
+    }
+    .enemy.hit{animation:enemyHit .18s ease}
+    @keyframes enemyHit{
+      0%,100%{transform:translate(-50%,-50%) scale(1)}
+      50%{transform:translate(-50%,-50%) scale(1.08)}
+    }
+
+    .projectile{
+      position:absolute;
+      width:18px;height:18px;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      z-index:7;
+      display:grid;
+      place-items:center;
+      font-size:.85rem;
+      box-shadow:0 6px 10px rgba(0,0,0,.15);
+    }
+
+    .impactLayer,.particles{
+      position:absolute;inset:0;pointer-events:none;z-index:8;overflow:hidden
+    }
+    .particle{
+      position:absolute;font-size:1.1rem;animation:burst .75s ease forwards
+    }
+    @keyframes burst{
+      from{transform:translate(0,0) scale(.7);opacity:0}
+      20%{opacity:1}
+      to{transform:translate(var(--tx),var(--ty)) scale(1.25);opacity:0}
+    }
+
+    .flashGood,.flashBad{
+      position:absolute;inset:0;pointer-events:none;opacity:0;z-index:9
+    }
+    .flashGood.on{animation:flashG .25s ease}
+    .flashBad.on{animation:flashB .25s ease}
+    @keyframes flashG{
+      0%{opacity:0}20%{opacity:1;background:rgba(34,197,94,.16)}100%{opacity:0}
+    }
+    @keyframes flashB{
+      0%{opacity:0}20%{opacity:1;background:rgba(239,68,68,.16)}100%{opacity:0}
+    }
+
+    .palette,.tipsBox,.legend{
+      display:grid;gap:10px
+    }
+    .box{
+      background:#fff;border:1px solid #dce9e1;border-radius:18px;padding:12px
+    }
+
+    .selectedCard{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding:10px 12px;
+      border-radius:16px;
+      background:#eefcf2;
+      border:1px solid #d8efdf;
+      font-weight:900;
+      flex-wrap:wrap;
+    }
+
+    .paletteBtn{
+      display:grid;
+      grid-template-columns:50px 1fr auto;
+      gap:10px;
+      align-items:center;
+      text-align:left;
+      width:100%;
+      background:#fff;
+      border:2px solid #dde9e2;
+      border-radius:18px;
+      padding:10px 12px;
+      min-height:70px;
+    }
+    .paletteBtn.active{
+      border-color:#0ea5e9;
+      box-shadow:0 0 0 4px rgba(14,165,233,.12);
+      background:#f3fbff;
+    }
+    .paletteBtn .emoji{
+      width:46px;height:46px;border-radius:14px;display:grid;place-items:center;
+      background:linear-gradient(135deg,#f0fff4,#eef8ff);
+      border:1px solid #deebe1;
+      font-size:1.45rem;
+    }
+    .paletteBtn .name{
+      font-weight:900;color:#1d3c54;
+    }
+    .paletteBtn .desc{
+      font-size:.78rem;color:#63778a;font-weight:700;
+    }
+    .paletteBtn .cost{
+      background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;
+      border-radius:999px;padding:6px 9px;font-size:.76rem;font-weight:900
+    }
+
+    .legendRow{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap
+    }
+    .sw{
+      width:18px;height:18px;border-radius:6px;display:inline-block
+    }
+    .sw.good{background:#16a34a}
+    .sw.bad{background:#dc2626}
+    .sw.info{background:#0ea5e9}
+    .sw.warn{background:#f59e0b}
+
+    .mobileControls{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%) translateY(10px);
+      color:#fff;
+      padding:12px 16px;
+      border-radius:14px;
+      font-weight:900;
+      box-shadow:0 12px 24px rgba(0,0,0,.24);
+      opacity:0;
+      pointer-events:none;
+      transition:.25s;
+      z-index:40;
+      max-width:min(92vw,560px);
+      text-align:center;
+    }
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .toast.good{background:linear-gradient(135deg,#15803d,#16a34a)}
+    .toast.bad{background:linear-gradient(135deg,#b91c1c,#ef4444)}
+    .toast.info{background:linear-gradient(135deg,#1d4ed8,#0ea5e9)}
+
+    .resultGrid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      padding:20px;
+    }
+    .badgeBig{
+      width:104px;height:104px;border-radius:30px;display:grid;place-items:center;
+      background:linear-gradient(135deg,#16a34a,#0ea5e9);
+      font-size:56px;color:#fff;
+      box-shadow:0 16px 30px rgba(14,165,233,.24);
+      margin-bottom:12px;
+    }
+    .resList{display:grid;gap:10px;margin-top:14px}
+    .res{
+      background:#f8fcf9;border:1px solid #e1ede5;border-radius:16px;padding:12px 14px;
+      display:flex;justify-content:space-between;gap:10px;font-weight:900
+    }
+
+    @media (max-width:1080px){
+      .grid,.gameWrap,.resultGrid{grid-template-columns:1fr}
+      .stats{grid-template-columns:repeat(4,1fr)}
+    }
+    @media (max-width:720px){
+      .hero{padding:18px}
+      .screen{border-radius:24px}
+      .miniGrid{grid-template-columns:1fr}
+      .preview{grid-template-columns:1fr 1fr}
+      .stats{grid-template-columns:repeat(2,1fr)}
+      .arena{height:620px}
+      .mobileControls{grid-template-columns:1fr}
+      .cta{display:grid;grid-template-columns:1fr}
+      button{width:100%}
+      .paletteBtn{grid-template-columns:48px 1fr}
+      .paletteBtn .cost{grid-column:2}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="glow"></div>
+
+    <!-- INICIO -->
+    <section id="startScreen" class="screen active" aria-label="Pantalla inicial">
+      <div class="hero">
+        <div class="titleRow">
+          <div class="logo">🛡️🌱</div>
+          <div>
+            <h1>Defensa del Vivero</h1>
+            <p class="subtitle">Protege el material vegetal del vivero usando acciones correctas de calidad, manipulación y seguridad.</p>
+          </div>
+        </div>
+
+        <div class="chips">
+          <div class="chip">1.º FP Básica</div>
+          <div class="chip">Tower defense sencillo</div>
+          <div class="chip">Móvil + ordenador</div>
+          <div class="chip">Partidas de 8-10 min</div>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <h2>Cómo se juega</h2>
+            <div class="miniGrid">
+              <div class="mini">
+                <strong>Coloca defensas</strong>
+                <span>Usa recursos como revisión, sombra, drenaje, higiene y manipulación segura para frenar amenazas.</span>
+              </div>
+              <div class="mini">
+                <strong>Defiende por carriles</strong>
+                <span>Las amenazas avanzan hacia el vivero. Si llegan al final, el vivero pierde salud.</span>
+              </div>
+              <div class="mini">
+                <strong>Aprende decidiendo</strong>
+                <span>Cada defensa representa una práctica correcta del tema: calidad, cuidado, seguridad y prevención.</span>
+              </div>
+              <div class="mini">
+                <strong>Supera 4 oleadas grandes</strong>
+                <span>Cada fase aumenta la dificultad y aparecen más incidencias: plagas, sequía, exceso de riego, golpes y sol fuerte.</span>
+              </div>
+            </div>
+
+            <div class="cta">
+              <button class="primary" id="startBtn">Jugar ahora</button>
+              <button class="secondary" id="explainBtn">Ver objetivo</button>
+            </div>
+
+            <p class="tiny" style="margin-top:12px">
+              En móvil: elige una defensa y toca una casilla libre. En ordenador: igual, con clic.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="preview">
+              <div class="pv">
+                <span class="spark">✨</span>
+                <h3>Buenas defensas</h3>
+                <div class="icons">🔎 🌤️ 💧 🧤 🧹 🚚</div>
+              </div>
+              <div class="pv">
+                <span class="spark">⚠️</span>
+                <h3>Amenazas</h3>
+                <div class="icons">🐛 ☀️ 🌊 💥 🦠 🥵</div>
+              </div>
+              <div class="pv">
+                <span class="spark">🌱</span>
+                <h3>Qué practicas</h3>
+                <div class="icons">✅ 🏷️ 🌿 🪴</div>
+              </div>
+              <div class="pv">
+                <span class="spark">🏆</span>
+                <h3>Objetivo</h3>
+                <div class="icons">🛡️ 💰 ❤️ 📈</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="foot">
+        Objetivo: mantener vivo el vivero, gestionar monedas y colocar bien cada defensa para superar las 4 fases.
+      </div>
+    </section>
+
+    <!-- JUEGO -->
+    <section id="gameScreen" class="screen" aria-label="Pantalla de juego">
+      <div class="hud">
+        <div class="stats">
+          <div class="stat"><span class="k">Fase</span><span class="v" id="phaseValue">1/4</span></div>
+          <div class="stat"><span class="k">Oleada</span><span class="v" id="waveValue">1</span></div>
+          <div class="stat"><span class="k">Puntos</span><span class="v" id="scoreValue">0</span></div>
+          <div class="stat"><span class="k">Monedas</span><span class="v" id="coinsValue">90</span></div>
+          <div class="stat"><span class="k">Vivero</span><span class="v" id="baseHpValue">❤️❤️❤️❤️❤️</span></div>
+          <div class="stat"><span class="k">Amenazas</span><span class="v" id="enemyCountValue">0</span></div>
+          <div class="stat"><span class="k">Material sano</span><span class="v" id="savedValue">0</span></div>
+        </div>
+
+        <div class="mission">
+          <div id="missionText">Protege el vivero usando acciones correctas.</div>
+          <div class="bar"><i id="progressBar"></i></div>
+        </div>
+      </div>
+
+      <div class="gameWrap">
+        <div class="arenaCard">
+          <div class="arenaHead">
+            <h2>Zona de defensa</h2>
+            <div class="hint" id="arenaHint">Elige una defensa y tócala sobre una casilla libre.</div>
+          </div>
+
+          <div class="arena" id="arena">
+            <div class="skyGlass"></div>
+            <div class="lane"></div>
+            <div class="lane"></div>
+            <div class="lane"></div>
+            <div class="lane"></div>
+            <div class="lane"></div>
+
+            <div class="cells" id="cells"></div>
+
+            <div class="base" id="baseVisual">
+              <div class="baseLane">🌱</div>
+              <div class="baseLane">🪴</div>
+              <div class="baseLane">🌿</div>
+              <div class="baseLane">🌼</div>
+              <div class="baseLane">🌳</div>
+            </div>
+
+            <div class="impactLayer" id="impactLayer"></div>
+            <div class="particles" id="particles"></div>
+            <div class="flashGood" id="flashGood"></div>
+            <div class="flashBad" id="flashBad"></div>
+          </div>
+
+          <div class="mobileControls">
+            <button class="secondary small" id="startWaveBtn">Lanzar siguiente oleada</button>
+            <button class="danger small" id="restartBtn">Reiniciar partida</button>
+          </div>
+        </div>
+
+        <div class="sideCard">
+          <div class="sideHead">
+            <h2>Panel táctico</h2>
+            <button class="secondary small" id="helpBtn">Ayuda</button>
+          </div>
+
+          <div class="box">
+            <div class="selectedCard" id="selectedCard">🎯 Selecciona una defensa para colocarla</div>
+          </div>
+
+          <div class="box">
+            <strong style="display:block;margin-bottom:10px">Defensas disponibles</strong>
+            <div class="palette" id="palette"></div>
+          </div>
+
+          <div class="box">
+            <strong style="display:block;margin-bottom:10px">Leyenda</strong>
+            <div class="legend">
+              <div class="legendRow"><span class="sw good"></span><span>Defensas correctas del vivero</span></div>
+              <div class="legendRow"><span class="sw.bad sw bad"></span><span>Amenazas o problemas del material vegetal</span></div>
+              <div class="legendRow"><span class="sw info"></span><span>Puntos y monedas por buena gestión</span></div>
+              <div class="legendRow"><span class="sw warn"></span><span>Si una amenaza llega al final, daña el vivero</span></div>
+            </div>
+          </div>
+
+          <div class="box">
+            <strong style="display:block;margin-bottom:10px">Ideas clave</strong>
+            <div class="tipsBox" id="tipsBox"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL -->
+    <section id="endScreen" class="screen" aria-label="Pantalla final">
+      <div class="hero">
+        <div class="resultGrid">
+          <div class="card">
+            <div class="badgeBig" id="endBadge">🏆</div>
+            <h2 id="endTitle">¡Vivero protegido!</h2>
+            <p class="subtitle" id="endSubtitle">Has superado todas las oleadas y protegido el material vegetal.</p>
+
+            <div class="resList">
+              <div class="res"><span>Puntuación final</span><strong id="endScore">0</strong></div>
+              <div class="res"><span>Fase alcanzada</span><strong id="endPhase">1/4</strong></div>
+              <div class="res"><span>Material salvado</span><strong id="endSaved">0</strong></div>
+              <div class="res"><span>Amenazas detenidas</span><strong id="endDefeated">0</strong></div>
+              <div class="res"><span>Monedas finales</span><strong id="endCoins">0</strong></div>
+            </div>
+
+            <div class="cta" style="margin-top:16px">
+              <button class="primary" id="playAgainBtn">Jugar otra vez</button>
+              <button class="secondary" id="homeBtn">Volver al inicio</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Contenidos trabajados</h2>
+            <div class="miniGrid" style="margin-top:14px">
+              <div class="mini"><strong>Calidad</strong><span>Aspecto sano, buen color, raíces y tallos en buen estado.</span></div>
+              <div class="mini"><strong>Incidencias</strong><span>Plagas, sequía, exceso de riego, daños y enfermedades.</span></div>
+              <div class="mini"><strong>Manipulación</strong><span>No golpear, no exponer al sol en exceso, transportar con cuidado.</span></div>
+              <div class="mini"><strong>Seguridad e higiene</strong><span>Orden, limpieza, uso correcto de herramientas y guantes.</span></div>
+            </div>
+            <p class="tiny" style="margin-top:14px">Puedes repetir la partida para probar estrategias distintas y mejorar tu defensa.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <script>
+    // =========================================================
+    // DEFENSA DEL VIVERO
+    // Tower defense educativo en un único archivo HTML.
+    // =========================================================
+
+    const defenses = [
+      {
+        id: "revision",
+        name: "Revisión",
+        emoji: "🔎",
+        cost: 25,
+        range: 1.55,
+        cooldown: 0.95,
+        damage: 16,
+        projectile: "🔍",
+        desc: "Detecta y frena problemas del material vegetal."
+      },
+      {
+        id: "sombra",
+        name: "Sombra",
+        emoji: "🌤️",
+        cost: 30,
+        range: 1.3,
+        cooldown: 1.2,
+        damage: 22,
+        projectile: "☁️",
+        desc: "Protege frente a sol fuerte y estrés."
+      },
+      {
+        id: "drenaje",
+        name: "Drenaje",
+        emoji: "💧",
+        cost: 35,
+        range: 1.45,
+        cooldown: 1.45,
+        damage: 26,
+        projectile: "💦",
+        desc: "Corrige exceso de riego y humedad."
+      },
+      {
+        id: "guantes",
+        name: "Guantes",
+        emoji: "🧤",
+        cost: 20,
+        range: 1.05,
+        cooldown: 0.75,
+        damage: 11,
+        projectile: "🫳",
+        desc: "Reduce daños por mala manipulación."
+      },
+      {
+        id: "higiene",
+        name: "Higiene",
+        emoji: "🧹",
+        cost: 40,
+        range: 1.8,
+        cooldown: 1.6,
+        damage: 32,
+        projectile: "✨",
+        desc: "Contiene focos de suciedad y enfermedad."
+      },
+      {
+        id: "transporte",
+        name: "Cuidado",
+        emoji: "🚚",
+        cost: 45,
+        range: 1.65,
+        cooldown: 1.05,
+        damage: 18,
+        projectile: "📦",
+        desc: "Evita golpes y daños en el material."
+      }
+    ];
+
+    const phases = [
+      {
+        id: 1,
+        name: "Recepción del vivero",
+        waves: 3,
+        spawnGap: 1450,
+        mission: "Empiezan a llegar incidencias básicas al vivero. Coloca defensas y aprende a frenar amenazas simples.",
+        tips: [
+          "Un buen material vegetal presenta aspecto sano, buen color y raíces en buen estado.",
+          "Si una planta llega seca, rota o con manchas, puede no ser adecuada.",
+          "No todas las casillas deben llenarse: coloca defensas con criterio."
+        ],
+        enemies: [
+          { id:"plaga", emoji:"🐛", name:"Plaga", hp:34, speed:0.34, reward:14 },
+          { id:"golpe", emoji:"💥", name:"Golpe", hp:28, speed:0.4, reward:12 },
+          { id:"sequia", emoji:"🥵", name:"Sequía", hp:36, speed:0.3, reward:15 }
+        ],
+        wavePlan: [5, 7, 9]
+      },
+      {
+        id: 2,
+        name: "Control de calidad",
+        waves: 3,
+        spawnGap: 1280,
+        mission: "Aumentan las amenazas y el material requiere más atención para mantenerse sano.",
+        tips: [
+          "Hay que mantener la humedad adecuada, sin exceso ni sequedad extrema.",
+          "Las hojas sin daños graves y los tallos firmes son señales de calidad.",
+          "La revisión y la higiene son muy útiles en esta fase."
+        ],
+        enemies: [
+          { id:"plaga", emoji:"🐛", name:"Plaga", hp:42, speed:0.38, reward:14 },
+          { id:"exceso", emoji:"🌊", name:"Exceso riego", hp:48, speed:0.28, reward:16 },
+          { id:"sol", emoji:"☀️", name:"Sol fuerte", hp:40, speed:0.42, reward:15 },
+          { id:"golpe", emoji:"💥", name:"Golpe", hp:34, speed:0.45, reward:12 }
+        ],
+        wavePlan: [7, 9, 11]
+      },
+      {
+        id: 3,
+        name: "Manipulación segura",
+        waves: 3,
+        spawnGap: 1180,
+        mission: "Ahora debes defender también la manipulación correcta, el transporte y el cuidado del material.",
+        tips: [
+          "No hay que golpear plantas ni envases.",
+          "No se debe exponer mucho tiempo al sol al material delicado.",
+          "Hay que transportar con cuidado y evitar aplastar raíces, hojas o brotes."
+        ],
+        enemies: [
+          { id:"golpe", emoji:"📦", name:"Mal transporte", hp:46, speed:0.46, reward:15 },
+          { id:"sol", emoji:"☀️", name:"Exposición", hp:44, speed:0.44, reward:15 },
+          { id:"sequia", emoji:"🥵", name:"Sequía", hp:50, speed:0.36, reward:16 },
+          { id:"exceso", emoji:"🌊", name:"Exceso riego", hp:54, speed:0.33, reward:17 }
+        ],
+        wavePlan: [8, 10, 12]
+      },
+      {
+        id: 4,
+        name: "Seguridad total",
+        waves: 4,
+        spawnGap: 1060,
+        mission: "Última defensa: plagas, enfermedades y malas prácticas llegan a la vez. Mantén vivo el vivero.",
+        tips: [
+          "Trabajar de forma ordenada y mantener limpia la zona protege a la persona y al material.",
+          "Usar guantes y actuar con higiene mejora la seguridad.",
+          "En esta fase conviene combinar defensas y cubrir todos los carriles."
+        ],
+        enemies: [
+          { id:"plaga", emoji:"🐛", name:"Plaga", hp:56, speed:0.44, reward:15 },
+          { id:"enfermedad", emoji:"🦠", name:"Enfermedad", hp:68, speed:0.34, reward:20 },
+          { id:"exceso", emoji:"🌊", name:"Exceso riego", hp:60, speed:0.35, reward:18 },
+          { id:"sol", emoji:"☀️", name:"Sol fuerte", hp:54, speed:0.5, reward:16 },
+          { id:"golpe", emoji:"💥", name:"Golpe", hp:48, speed:0.52, reward:14 },
+          { id:"sequia", emoji:"🥵", name:"Sequía", hp:62, speed:0.38, reward:19 }
+        ],
+        wavePlan: [9, 12, 14, 16]
+      }
+    ];
+
+    const state = {
+      phaseIndex: 0,
+      waveIndex: 0,
+      score: 0,
+      coins: 90,
+      baseHp: 5,
+      saved: 0,
+      defeated: 0,
+      selectedDefenseId: null,
+      units: [],
+      enemies: [],
+      projectiles: [],
+      running: false,
+      spawnTimer: null,
+      rafId: null,
+      lastTs: 0,
+      waveActive: false,
+      toSpawn: 0,
+      spawnedInWave: 0
+    };
+
+    const grid = { rows:5, cols:9 };
+
+    const els = {
+      startScreen: document.getElementById("startScreen"),
+      gameScreen: document.getElementById("gameScreen"),
+      endScreen: document.getElementById("endScreen"),
+      phaseValue: document.getElementById("phaseValue"),
+      waveValue: document.getElementById("waveValue"),
+      scoreValue: document.getElementById("scoreValue"),
+      coinsValue: document.getElementById("coinsValue"),
+      baseHpValue: document.getElementById("baseHpValue"),
+      enemyCountValue: document.getElementById("enemyCountValue"),
+      savedValue: document.getElementById("savedValue"),
+      missionText: document.getElementById("missionText"),
+      progressBar: document.getElementById("progressBar"),
+      arenaHint: document.getElementById("arenaHint"),
+      cells: document.getElementById("cells"),
+      palette: document.getElementById("palette"),
+      selectedCard: document.getElementById("selectedCard"),
+      tipsBox: document.getElementById("tipsBox"),
+      impactLayer: document.getElementById("impactLayer"),
+      particles: document.getElementById("particles"),
+      flashGood: document.getElementById("flashGood"),
+      flashBad: document.getElementById("flashBad"),
+      toast: document.getElementById("toast"),
+      endBadge: document.getElementById("endBadge"),
+      endTitle: document.getElementById("endTitle"),
+      endSubtitle: document.getElementById("endSubtitle"),
+      endScore: document.getElementById("endScore"),
+      endPhase: document.getElementById("endPhase"),
+      endSaved: document.getElementById("endSaved"),
+      endDefeated: document.getElementById("endDefeated"),
+      endCoins: document.getElementById("endCoins")
+    };
+
+    function showScreen(name){
+      [els.startScreen, els.gameScreen, els.endScreen].forEach(s => s.classList.remove("active"));
+      if(name === "start") els.startScreen.classList.add("active");
+      if(name === "game") els.gameScreen.classList.add("active");
+      if(name === "end") els.endScreen.classList.add("active");
+    }
+
+    function resetGame(){
+      stopLoops();
+      state.phaseIndex = 0;
+      state.waveIndex = 0;
+      state.score = 0;
+      state.coins = 90;
+      state.baseHp = 5;
+      state.saved = 0;
+      state.defeated = 0;
+      state.selectedDefenseId = null;
+      state.units = [];
+      state.enemies = [];
+      state.projectiles = [];
+      state.lastTs = 0;
+      state.waveActive = false;
+      state.toSpawn = 0;
+      state.spawnedInWave = 0;
+      cleanupVisuals();
+    }
+
+    function cleanupVisuals(){
+      document.querySelectorAll(".unit,.enemy,.projectile").forEach(el => el.remove());
+    }
+
+    function startGame(){
+      resetGame();
+      showScreen("game");
+      buildGrid();
+      renderPalette();
+      startPhase(0);
+    }
+
+    function startPhase(index){
+      state.phaseIndex = index;
+      state.waveIndex = 0;
+      state.waveActive = false;
+      state.selectedDefenseId = defenses[0].id;
+      updateSelectedCard();
+      renderTips();
+      updateHUD();
+      startLoop();
+      showToast(`Fase ${phases[index].id}: ${phases[index].name}`, "info", 1400);
+    }
+
+    function startWave(){
+      if(state.waveActive) return;
+      const phase = phases[state.phaseIndex];
+      const count = phase.wavePlan[state.waveIndex];
+      if(count == null) return;
+
+      state.waveActive = true;
+      state.toSpawn = count;
+      state.spawnedInWave = 0;
+      showToast(`Oleada ${state.waveIndex + 1}: ${count} amenazas`, "info", 1100);
+
+      clearInterval(state.spawnTimer);
+      state.spawnTimer = setInterval(() => {
+        if(state.spawnedInWave >= state.toSpawn){
+          clearInterval(state.spawnTimer);
+          return;
+        }
+        spawnEnemy();
+        state.spawnedInWave++;
+      }, phase.spawnGap);
+
+      spawnEnemy();
+      state.spawnedInWave++;
+    }
+
+    function spawnEnemy(){
+      const phase = phases[state.phaseIndex];
+      const data = phase.enemies[Math.floor(Math.random() * phase.enemies.length)];
+      const row = Math.floor(Math.random() * grid.rows);
+      const x = cellCenter(row, grid.cols - 1).x + 18;
+      const y = cellCenter(row, 0).y;
+
+      const el = document.createElement("div");
+      el.className = "enemy";
+      el.innerHTML = `
+        <div class="emoji">${data.emoji}</div>
+        <div class="hp"><i></i></div>
+      `;
+      document.getElementById("arena").appendChild(el);
+
+      state.enemies.push({
+        id: uid(),
+        row,
+        x,
+        y,
+        hp: data.hp,
+        maxHp: data.hp,
+        speed: data.speed,
+        reward: data.reward,
+        data,
+        el
+      });
+    }
+
+    function buildGrid(){
+      els.cells.innerHTML = "";
+      for(let r=0;r<grid.rows;r++){
+        const row = document.createElement("div");
+        row.className = "row";
+        for(let c=0;c<grid.cols;c++){
+          const cell = document.createElement("div");
+          cell.className = "cell placeable";
+          cell.dataset.row = r;
+          cell.dataset.col = c;
+          cell.addEventListener("click", () => placeDefense(r,c,cell));
+          row.appendChild(cell);
+        }
+        els.cells.appendChild(row);
+      }
+    }
+
+    function renderPalette(){
+      els.palette.innerHTML = "";
+      defenses.forEach(def => {
+        const btn = document.createElement("button");
+        btn.className = "paletteBtn";
+        btn.dataset.id = def.id;
+        btn.innerHTML = `
+          <div class="emoji">${def.emoji}</div>
+          <div>
+            <div class="name">${def.name}</div>
+            <div class="desc">${def.desc}</div>
+          </div>
+          <div class="cost">${def.cost} 💰</div>
+        `;
+        btn.addEventListener("click", () => {
+          state.selectedDefenseId = def.id;
+          updateSelectedCard();
+          highlightPalette();
+        });
+        els.palette.appendChild(btn);
+      });
+      highlightPalette();
+    }
+
+    function highlightPalette(){
+      document.querySelectorAll(".paletteBtn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.id === state.selectedDefenseId);
+      });
+    }
+
+    function updateSelectedCard(){
+      const def = defenses.find(d => d.id === state.selectedDefenseId);
+      if(def){
+        els.selectedCard.textContent = `${def.emoji} ${def.name} seleccionada · Coste ${def.cost} · ${def.desc}`;
+      } else {
+        els.selectedCard.textContent = "🎯 Selecciona una defensa para colocarla";
+      }
+      highlightPalette();
+    }
+
+    function renderTips(){
+      const phase = phases[state.phaseIndex];
+      els.missionText.textContent = phase.mission;
+      els.arenaHint.textContent = "Elige una defensa y tócala sobre una casilla libre.";
+      els.tipsBox.innerHTML = "";
+      phase.tips.forEach(t => {
+        const line = document.createElement("div");
+        line.className = "tiny";
+        line.textContent = "• " + t;
+        els.tipsBox.appendChild(line);
+      });
+    }
+
+    function placeDefense(row,col,cell){
+      const def = defenses.find(d => d.id === state.selectedDefenseId);
+      if(!def){
+        showToast("Primero selecciona una defensa.", "info", 900);
+        return;
+      }
+      if(state.coins < def.cost){
+        showToast("No tienes suficientes monedas.", "bad", 900);
+        return;
+      }
+      if(state.units.some(u => u.row === row && u.col === col)){
+        showToast("Esa casilla ya está ocupada.", "bad", 900);
+        return;
+      }
+
+      state.coins -= def.cost;
+
+      const pos = cellCenter(row,col);
+      const el = document.createElement("div");
+      el.className = "unit ready";
+      el.style.left = pos.x + "px";
+      el.style.top = pos.y + "px";
+      el.innerHTML = `
+        <div class="emoji">${def.emoji}</div>
+        <div class="miniTxt">${def.name}</div>
+      `;
+      document.getElementById("arena").appendChild(el);
+
+      state.units.push({
+        id: uid(),
+        row,
+        col,
+        x: pos.x,
+        y: pos.y,
+        def,
+        cooldownLeft: 0,
+        el
+      });
+
+      flashCell(cell);
+      beep(620,.05);
+      updateHUD();
+      showToast(`${def.name} colocada`, "good", 700);
+    }
+
+    function flashCell(cell){
+      document.querySelectorAll(".cell").forEach(c => c.classList.remove("selected"));
+      cell.classList.add("selected");
+      setTimeout(() => cell.classList.remove("selected"), 500);
+    }
+
+    function startLoop(){
+      state.running = true;
+      cancelAnimationFrame(state.rafId);
+      state.rafId = requestAnimationFrame(loop);
+    }
+
+    function stopLoops(){
+      state.running = false;
+      clearInterval(state.spawnTimer);
+      cancelAnimationFrame(state.rafId);
+    }
+
+    function loop(ts){
+      if(!state.running) return;
+      const delta = state.lastTs ? (ts - state.lastTs) / 16.666 : 1;
+      state.lastTs = ts;
+
+      updateUnits(delta);
+      updateEnemies(delta);
+      updateProjectiles(delta);
+      checkWaveState();
+      updateHUD();
+
+      state.rafId = requestAnimationFrame(loop);
+    }
+
+    function updateUnits(delta){
+      state.units.forEach(unit => {
+        unit.cooldownLeft = Math.max(0, unit
