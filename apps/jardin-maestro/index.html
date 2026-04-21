@@ -497,10 +497,12 @@
     font-size:13px;
     max-width:min(88vw, 480px);
   }
+
   @keyframes toastIn{
     from{ opacity:0; transform:translateY(-8px) scale(.98); }
     to{ opacity:1; transform:translateY(0) scale(1); }
   }
+
   @keyframes toastOut{
     to{ opacity:0; transform:translateY(-10px) scale(.98); }
   }
@@ -689,6 +691,7 @@
         <span>WASD / Flechas para mover</span>
         <span>E o Espacio para actuar</span>
         <span>1–6 para cambiar herramienta</span>
+        <span>N para día siguiente</span>
         <span>Móvil con cruceta y botones</span>
       </div>
 
@@ -755,13 +758,12 @@
   const inspectQuickBtn = document.getElementById("inspectQuickBtn");
   const manualNextDayBtn = document.getElementById("manualNextDayBtn");
 
-  const SAVE_KEY = "guardianes_jardin_save_v2";
-  const SIM_SPEED = 0.22; // más de 4 veces más lento que la versión original
+  const SAVE_KEY = "guardianes_jardin_save_v3";
+  const SIM_SPEED = 0.22;
 
   const WORLD = {
     width: 1600,
-    height: 1120,
-    tile: 80
+    height: 1120
   };
 
   const SPECIES = {
@@ -834,21 +836,24 @@
     fertilizerTank: 100,
     pesticideTank: 100,
     score: 0,
-    perfectStreak: 0,
     weatherIndex: 0,
     weatherTime: 0,
     weatherDuration: 120,
     particles: [],
     sparkles: [],
-    toasts: [],
     plots: [],
     decorations: [],
     boundaries: [],
     paths: [],
-    uiFlash: 0,
-    inspectedText: "",
     missions: [],
-    lastAutoSave: 0
+    lastAutoSave: 0,
+    inspectedText: "",
+    plotBubble: {
+      visible: false,
+      x: 0,
+      y: 0,
+      text: ""
+    }
   };
 
   const player = {
@@ -987,7 +992,6 @@
     game.fertilizerTank = 100;
     game.pesticideTank = 100;
     game.score = 0;
-    game.perfectStreak = 0;
     game.weatherIndex = (game.day-1) % WEATHER_TYPES.length;
     game.weatherTime = 0;
     game.weatherDuration = rand(90, 140);
@@ -1000,13 +1004,13 @@
       const species = SPECIES[p.speciesKey];
       p.planted = true;
       p.dead = false;
-      p.growth = clamp(rand(20, 56) + game.day*2, 10, 96);
-      p.health = clamp(rand(70, 92) - game.day*.6, 45, 98);
-      p.moisture = clamp(rand(35, 62) - game.day*.8, 20, 80);
-      p.pests = clamp(rand(0, 10) + game.day*.8, 0, 34);
-      p.weeds = clamp(rand(0, 12) + game.day*.7 * species.weedRisk, 0, 35);
-      p.fertilizer = clamp(rand(4, 22), 0, 35);
-      p.stress = 0;
+      p.growth = clamp(rand(22, 58) + game.day*2, 10, 96);
+      p.health = clamp(rand(72, 92) - game.day*.5, 48, 98);
+      p.moisture = clamp(rand(38, 60) - game.day*.5, 22, 80);
+      p.pests = clamp(rand(0, 8) + game.day*.7, 0, 30);
+      p.weeds = clamp(rand(0, 10) + game.day*.6 * species.weedRisk, 0, 30);
+      p.fertilizer = clamp(rand(8, 22), 0, 35);
+      p.stress = rand(0, 10);
       p.lastActionFlash = 0;
       p.lastActionType = "";
       p.shake = 0;
@@ -1021,6 +1025,7 @@
       emptyPlot.pests = 0;
       emptyPlot.weeds = rand(3, 15);
       emptyPlot.fertilizer = 0;
+      emptyPlot.stress = 0;
     }
 
     const minHealthy = Math.min(4, 2 + Math.floor(game.day/2));
@@ -1038,7 +1043,7 @@
 
     updateHud();
     showToast(`Día ${game.day}: jornada preparada.`);
-    queueAdvice(`Empieza observando. En jardinería educativa no gana quien actúa más rápido, sino quien decide mejor qué necesita cada parcela.`, true);
+    queueAdvice(`Empieza observando. Ahora sí puedes compensar lluvia y calor con las acciones adecuadas.`, true);
   }
 
   function saveGame(){
@@ -1047,7 +1052,7 @@
       plots: game.plots.map(p => ({
         x:p.x,y:p.y,w:p.w,h:p.h,speciesKey:p.speciesKey,planted:p.planted,
         health:p.health,moisture:p.moisture,growth:p.growth,pests:p.pests,
-        weeds:p.weeds,fertilizer:p.fertilizer,zoneName:p.zoneName,dead:p.dead
+        weeds:p.weeds,fertilizer:p.fertilizer,zoneName:p.zoneName,dead:p.dead,stress:p.stress
       }))
     };
     localStorage.setItem(SAVE_KEY, JSON.stringify(data));
@@ -1099,7 +1104,7 @@
       btn.addEventListener("click", () => {
         player.toolIndex = index;
         updateToolsUi();
-        queueAdvice(`Herramienta activa: ${tool.label}. Úsala solo cuando la planta realmente lo necesite.`);
+        queueAdvice(`Herramienta activa: ${tool.label}. Úsala solo cuando la parcela lo pida.`);
       });
       toolsPanel.appendChild(btn);
     });
@@ -1170,6 +1175,32 @@
     return best;
   }
 
+  function getPlotGuidance(plot){
+    const sp = SPECIES[plot.speciesKey];
+    if(!plot.planted){
+      return "Parcela vacía: aquí puedes plantar para recuperar la zona.";
+    }
+    if(plot.pests > 20){
+      return "Plaga visible: prioriza TRATAR antes de otras acciones.";
+    }
+    if(plot.moisture > sp.idealMoisture[1] + 14){
+      return "Exceso de agua: evita regar. PODAR ayuda a airear y reducir el daño por humedad.";
+    }
+    if(plot.moisture < sp.idealMoisture[0] - 6){
+      return "Déficit hídrico: aquí REGAR sí es adecuado.";
+    }
+    if(plot.stress > 16){
+      return "Estrés alto: con calor, REGAR ayuda a refrescar y PODAR puede aliviar la carga de la planta.";
+    }
+    if(plot.weeds > 18){
+      return "Muchas malas hierbas: ESCARDAR reduce competencia por recursos.";
+    }
+    if(plot.fertilizer < 8 && plot.growth < 72){
+      return "Poco vigor: un abonado moderado puede mejorar crecimiento y salud.";
+    }
+    return "Estado bastante estable: vigila y evita intervenir de más.";
+  }
+
   function inspectNearestPlot(){
     if(player.inspectCooldown > 0) return;
     const p = findNearestPlot(120);
@@ -1185,26 +1216,12 @@
     const pestTxt = p.pests > 20 ? "plaga visible" : p.pests > 8 ? "riesgo de plaga" : "sin plaga aparente";
     const weedTxt = p.weeds > 18 ? "malas hierbas altas" : p.weeds > 6 ? "algo de competencia" : "limpia";
     const base = p.planted
-      ? `${sp.name}: salud ${Math.round(p.health)}, crecimiento ${Math.round(p.growth)}%, ${dryness}, ${pestTxt}, ${weedTxt}.`
+      ? `${sp.name}: salud ${Math.round(p.health)}, crecimiento ${Math.round(p.growth)}%, ${dryness}, ${pestTxt}, ${weedTxt}, estrés ${Math.round(p.stress)}.`
       : `Parcela vacía: suelo con humedad ${Math.round(p.moisture)} y malas hierbas ${Math.round(p.weeds)}. Conviene reponer planta.`;
 
     game.inspectedText = `${p.zoneName}: ${base}`;
     hintText.textContent = game.inspectedText;
-
-    if(!p.planted){
-      queueAdvice("Esta parcela está vacía. Si la jornada pide reponer, aquí sí tiene sentido plantar.");
-    }else if(p.pests > 20){
-      queueAdvice("Aquí la prioridad es tratar la plaga. Regar o abonar ahora no resuelve el problema principal.");
-    }else if(p.moisture < sp.idealMoisture[0]){
-      queueAdvice("La humedad está por debajo del rango ideal. Aquí regar sí sería una decisión adecuada.");
-    }else if(p.moisture > sp.idealMoisture[1] + 12){
-      queueAdvice("La planta va pasada de agua. El aprendizaje clave aquí es no regar más cuando ya hay exceso.");
-    }else if(p.weeds > 18){
-      queueAdvice("Las malas hierbas compiten por agua y nutrientes. Escardar mejora el manejo de la parcela.");
-    }else{
-      queueAdvice("El estado general es aceptable. En mantenimiento, a veces la mejor acción es vigilar y no intervenir de más.");
-    }
-
+    queueAdvice(getPlotGuidance(p), true);
     showToast("Inspección actualizada.");
     player.inspectCooldown = .35;
   }
@@ -1226,20 +1243,21 @@
       case "plant":{
         if(plot.planted){
           msg = "Esa parcela ya tiene planta implantada.";
-          advice = "Plantar encima de una parcela ya ocupada no es correcto. Primero detecta si la parcela está realmente vacía.";
+          advice = "Plantar encima de una parcela ya ocupada no es correcto.";
         }else{
           plot.planted = true;
           plot.dead = false;
           plot.health = 65;
           plot.growth = 6;
-          plot.moisture = clamp(plot.moisture + 10, 0, 100);
-          plot.fertilizer = 8;
+          plot.moisture = clamp(plot.moisture + 8, 0, 100);
+          plot.fertilizer = 10;
           plot.pests = 0;
           plot.weeds = clamp(plot.weeds - 8, 0, 100);
+          plot.stress = 4;
           player.interactCooldown = 0.32;
           success = true;
           msg = `Has repuesto ${sp.name}.`;
-          advice = "Buena decisión: reponer una parcela vacía restablece la continuidad del jardín y permite volver al mantenimiento.";
+          advice = "Buena decisión: reponer una parcela vacía devuelve funcionalidad al jardín.";
           addMissionProgress("plant", 1);
           burstSparkles(plot.x + plot.w/2, plot.y + 34, "#8cf29f", 10);
         }
@@ -1250,33 +1268,36 @@
           plot.moisture = clamp(plot.moisture + 10, 0, 100);
           success = true;
           msg = "Has humedecido el suelo.";
-          advice = "Aportar algo de agua al terreno puede facilitar la implantación futura, pero solo si no está ya demasiado húmedo.";
+          advice = "Mojar el suelo puede ayudar antes de una implantación, si no está ya pasado de agua.";
           sprayWater(plot.x + plot.w/2, plot.y + 20);
         }else{
           const beforeIdeal = within(plot.moisture, sp.idealMoisture[0], sp.idealMoisture[1]);
-          plot.moisture = clamp(plot.moisture + 18, 0, 100);
+          plot.moisture = clamp(plot.moisture + 16, 0, 100);
+          plot.stress = clamp(plot.stress - 7, 0, 100); // ahora el riego ayuda contra calor
           player.interactCooldown = 0.25;
           sprayWater(plot.x + plot.w/2, plot.y + 10);
-          if(plot.moisture > 88){
-            plot.health = clamp(plot.health - 5, 0, 100);
+
+          if(plot.moisture > 90){
+            plot.health = clamp(plot.health - 4, 0, 100);
             msg = "Has regado en exceso. Riesgo de asfixia radicular.";
-            advice = "Acción incorrecta: el exceso de agua desplaza el aire del suelo y perjudica las raíces.";
+            advice = "Acción incorrecta: aquí el agua sobraba. Cuando el suelo ya está muy húmedo, regar empeora.";
           }else{
             const afterIdeal = within(plot.moisture, sp.idealMoisture[0], sp.idealMoisture[1]);
             if(!beforeIdeal && afterIdeal){
-              plot.health = clamp(plot.health + 5, 0, 100);
+              plot.health = clamp(plot.health + 7, 0, 100);
               plot.growth = clamp(plot.growth + 3, 0, 100);
               success = true;
               msg = "Riego correcto: mejora el equilibrio hídrico.";
-              advice = "Acción correcta: has llevado la humedad al rango adecuado para esta especie.";
+              advice = "Acción correcta: has llevado la humedad a un rango favorable y además has reducido estrés.";
             }else if(plot.moisture < sp.idealMoisture[0]){
+              plot.health = clamp(plot.health + 3, 0, 100);
               success = true;
               msg = "Riego aplicado.";
-              advice = "Vas en buena dirección. Esta planta estaba algo seca y el riego ayuda a recuperarla.";
+              advice = "Vas bien: la planta estaba seca y el riego ayuda a recuperarla.";
             }else{
               success = true;
               msg = "Riego aplicado.";
-              advice = "Cuidado: no siempre regar suma. Conviene revisar el nivel de humedad antes de repetir.";
+              advice = "Cuidado: no siempre regar suma. Revisa si realmente hacía falta.";
             }
           }
         }
@@ -1285,22 +1306,22 @@
       case "fertilize":{
         if(!plot.planted){
           msg = "No tiene sentido abonar una parcela sin plantar.";
-          advice = "El abonado es útil cuando hay una planta establecida que pueda aprovechar los nutrientes.";
+          advice = "El abonado es útil cuando hay una planta establecida.";
         }else{
-          plot.fertilizer = clamp(plot.fertilizer + 18, 0, 100);
+          plot.fertilizer = clamp(plot.fertilizer + 16, 0, 100);
           player.interactCooldown = 0.28;
-          if(plot.fertilizer > 75){
-            plot.health = clamp(plot.health - 8, 0, 100);
-            plot.stress += 10;
+          if(plot.fertilizer > 76){
+            plot.health = clamp(plot.health - 7, 0, 100);
+            plot.stress = clamp(plot.stress + 8, 0, 100);
             msg = "Exceso de abono: la planta se resiente.";
-            advice = "Acción incorrecta: abonar demasiado puede quemar raíces o generar desequilibrios nutricionales.";
+            advice = "Acción incorrecta: demasiado abono puede perjudicar raíces y equilibrio nutritivo.";
             burstSparkles(plot.x + plot.w/2, plot.y + 40, "#ffb56b", 8);
           }else{
             plot.growth = clamp(plot.growth + 4, 0, 100);
-            plot.health = clamp(plot.health + 3, 0, 100);
+            plot.health = clamp(plot.health + 4, 0, 100);
             success = true;
             msg = "Abonado correcto: mejora el vigor.";
-            advice = "Acción correcta: un abonado moderado puede favorecer el crecimiento y el estado general.";
+            advice = "Acción correcta: un abonado moderado puede mejorar desarrollo y salud.";
             burstSparkles(plot.x + plot.w/2, plot.y + 40, "#b2ff90", 8);
           }
         }
@@ -1314,16 +1335,16 @@
           player.interactCooldown = 0.3;
           if(plot.pests > 8){
             plot.pests = clamp(plot.pests - 24, 0, 100);
-            plot.health = clamp(plot.health + 4, 0, 100);
+            plot.health = clamp(plot.health + 5, 0, 100);
             success = true;
             msg = "Plaga controlada.";
-            advice = "Acción correcta: has actuado sobre el problema real. Tratar a tiempo evita que la salud vegetal empeore.";
+            advice = "Acción correcta: has frenado un problema que roba vigor a la planta.";
             addMissionProgress("actionsTreat", 1);
             burstSparkles(plot.x + plot.w/2, plot.y + 40, "#7be0ff", 10);
           }else{
-            plot.health = clamp(plot.health - 2, 0, 100);
+            plot.health = clamp(plot.health - 1, 0, 100);
             msg = "Tratamiento innecesario. Conviene actuar con criterio.";
-            advice = "Aplicar tratamiento sin necesidad no es buen manejo. En jardinería profesional se interviene cuando hay indicios claros.";
+            advice = "Aplicar tratamiento sin necesidad no es buen manejo.";
           }
         }
       } break;
@@ -1331,21 +1352,39 @@
       case "prune":{
         if(!plot.planted){
           msg = "Parcela vacía. Nada que podar.";
-          advice = "La poda es una labor de mantenimiento sobre plantas implantadas, no sobre suelo desnudo.";
+          advice = "La poda es una labor sobre plantas implantadas.";
         }else{
           player.interactCooldown = 0.24;
-          if(plot.growth > 55 || plot.stress > 8){
+
+          const hadExcessWater = plot.moisture > sp.idealMoisture[1] + 12;
+          const hadStress = plot.stress > 10;
+          const neededShape = plot.growth > 55;
+
+          // nueva función: poda también ayuda a aireación y alivio térmico
+          plot.stress = clamp(plot.stress - 12, 0, 100);
+          if(hadExcessWater){
+            plot.moisture = clamp(plot.moisture - 10, 0, 100);
+            plot.health = clamp(plot.health + 6, 0, 100);
+            success = true;
+            msg = "Poda y aireación realizadas.";
+            advice = "Muy bien: aquí podar ayuda a aliviar el exceso de humedad y mejora la aireación del conjunto.";
+          }else if(hadStress){
             plot.health = clamp(plot.health + 5, 0, 100);
-            plot.stress = clamp(plot.stress - 10, 0, 100);
+            success = true;
+            msg = "Poda de alivio realizada.";
+            advice = "Buena intervención: una poda ligera reduce carga foliar y ayuda a soportar el calor.";
+          }else if(neededShape){
+            plot.health = clamp(plot.health + 4, 0, 100);
             success = true;
             msg = "Poda de mantenimiento realizada.";
-            advice = "Buena intervención: una poda ligera puede mejorar equilibrio, aireación y manejo de la planta.";
-            burstSparkles(plot.x + plot.w/2, plot.y + 26, "#c4ffd4", 8);
+            advice = "Buena intervención: mejora equilibrio, aireación y mantenimiento.";
           }else{
             plot.health = clamp(plot.health - 1, 0, 100);
             msg = "Poda poco necesaria en este momento.";
-            advice = "La poda no siempre toca. Podar sin motivo puede restar superficie útil y debilitar el ejemplar.";
+            advice = "La poda no siempre toca. Sin necesidad clara, puede restar superficie útil.";
           }
+
+          burstSparkles(plot.x + plot.w/2, plot.y + 26, "#c4ffd4", 8);
         }
       } break;
 
@@ -1353,15 +1392,15 @@
         player.interactCooldown = 0.22;
         if(plot.weeds > 5){
           plot.weeds = clamp(plot.weeds - 22, 0, 100);
-          plot.health = clamp(plot.health + (plot.planted ? 3 : 0), 0, 100);
+          plot.health = clamp(plot.health + (plot.planted ? 4 : 0), 0, 100);
           success = true;
           msg = "Malas hierbas eliminadas.";
-          advice = "Acción correcta: al eliminar competencia, la planta dispone de más agua, luz y nutrientes.";
+          advice = "Acción correcta: al reducir competencia, la parcela funciona mejor.";
           addMissionProgress("actionsWeed", 1);
           burstSparkles(plot.x + plot.w/2, plot.y + 38, "#d9ff75", 8);
         }else{
           msg = "La parcela ya está bastante limpia.";
-          advice = "No hacía falta insistir aquí. Conviene priorizar zonas con más competencia vegetal.";
+          advice = "No hacía falta insistir aquí. Prioriza parcelas con más competencia vegetal.";
         }
       } break;
     }
@@ -1389,43 +1428,78 @@
       p.lastActionFlash = Math.max(0, p.lastActionFlash - dt);
       p.shake = Math.max(0, p.shake - dt*2.4);
 
-      let evapBase = 2.9 * weather.evap * dayFactor * simDt;
-      if(p.weeds > 16) evapBase += 0.7 * simDt;
+      let evapBase = 2.4 * weather.evap * dayFactor * simDt;
+      if(p.weeds > 16) evapBase += 0.5 * simDt;
+
       if(weather.type === "rain"){
-        p.moisture += weather.rain * 6.5 * simDt;
+        p.moisture += weather.rain * 4.2 * simDt;
       }else{
         p.moisture -= evapBase;
       }
 
-      p.weeds += (0.55 + sp.weedRisk * 0.5 + game.day * 0.03) * simDt;
+      p.weeds += (0.38 + sp.weedRisk * 0.34 + game.day * 0.02) * simDt;
+
       if(p.planted && !p.dead){
-        const moistureBad = p.moisture < sp.idealMoisture[0]-8 || p.moisture > sp.idealMoisture[1]+10;
-        const heatStress = weather.heat > sp.heatTolerance ? (weather.heat - sp.heatTolerance) * 14 : 0;
-        if(moistureBad) p.pests += 0.9 * simDt * dayFactor;
-        p.pests += (p.weeds > 18 ? 0.9 : 0.25) * simDt * dayFactor;
+        const tooDry = p.moisture < sp.idealMoisture[0]-8;
+        const tooWet = p.moisture > sp.idealMoisture[1]+10;
+        const heatStress = weather.heat > sp.heatTolerance ? (weather.heat - sp.heatTolerance) * 10 : 0;
+
+        if(tooDry || tooWet) p.pests += 0.45 * simDt * dayFactor;
+        p.pests += (p.weeds > 18 ? 0.45 : 0.12) * simDt * dayFactor;
         p.stress += heatStress * simDt;
 
-        p.fertilizer = clamp(p.fertilizer - (0.62 * simDt), 0, 100);
+        p.fertilizer = clamp(p.fertilizer - (0.28 * simDt), 0, 100);
 
         const inMoisture = within(p.moisture, sp.idealMoisture[0], sp.idealMoisture[1]);
-        const pestPenalty = p.pests * 0.024;
-        const weedPenalty = p.weeds * 0.017;
-        const fertBonus = p.fertilizer > 8 && p.fertilizer < 60 ? 0.5 : p.fertilizer >= 60 ? -0.4 : 0;
-        const growthGain = (sp.growthRate * 60) * simDt * (inMoisture ? 1.2 : 0.45) + fertBonus * simDt - pestPenalty*simDt - weedPenalty*simDt;
+        const lowPests = p.pests < 10;
+        const lowWeeds = p.weeds < 12;
+        const balancedFert = p.fertilizer > 8 && p.fertilizer < 60;
+        const lowStress = p.stress < 12;
+
+        const pestPenalty = p.pests * 0.016;
+        const weedPenalty = p.weeds * 0.011;
+        const fertBonus = balancedFert ? 0.35 : p.fertilizer >= 70 ? -0.25 : 0;
+
+        const growthGain = (sp.growthRate * 54) * simDt * (inMoisture ? 1.15 : 0.55) + fertBonus * simDt - pestPenalty*simDt - weedPenalty*simDt;
         p.growth = clamp(p.growth + growthGain, 0, 100);
 
         let healthDelta = 0;
-        if(p.moisture < sp.idealMoisture[0]-10) healthDelta -= 2.0 * simDt;
-        if(p.moisture > sp.idealMoisture[1]+16) healthDelta -= 2.4 * simDt;
-        if(within(p.moisture, sp.idealMoisture[0], sp.idealMoisture[1])) healthDelta += 0.55 * simDt;
-        if(p.pests > 20) healthDelta -= 2.8 * simDt;
-        if(p.weeds > 20) healthDelta -= 1.4 * simDt;
-        if(p.fertilizer > 72) healthDelta -= 1.7 * simDt;
-        if(p.fertilizer > 10 && p.fertilizer < 55) healthDelta += 0.25 * simDt;
-        if(weather.type === "rain" && p.moisture > sp.idealMoisture[1]+10) healthDelta -= 1.2 * simDt;
-        if(weather.type === "heat" && sp.heatTolerance < 0.6) healthDelta -= 1.4 * simDt;
+
+        if(tooDry) healthDelta -= 0.9 * simDt;
+        if(tooWet) healthDelta -= 1.1 * simDt;
+        if(inMoisture) healthDelta += 1.05 * simDt;
+
+        if(p.pests > 20) healthDelta -= 1.35 * simDt;
+        else if(lowPests) healthDelta += 0.22 * simDt;
+
+        if(p.weeds > 20) healthDelta -= 0.8 * simDt;
+        else if(lowWeeds) healthDelta += 0.16 * simDt;
+
+        if(p.fertilizer > 72) healthDelta -= 0.9 * simDt;
+        else if(balancedFert) healthDelta += 0.24 * simDt;
+
+        if(weather.type === "rain" && tooWet){
+          healthDelta -= 0.5 * simDt;
+        }
+
+        if(weather.type === "heat" && sp.heatTolerance < 0.6){
+          healthDelta -= 0.7 * simDt;
+        }
+
+        if(lowStress) healthDelta += 0.36 * simDt;
+        else if(p.stress > 20) healthDelta -= 0.75 * simDt;
+
+        // bonus claro para recuperación completa
+        if(inMoisture && lowPests && lowWeeds && balancedFert && lowStress){
+          healthDelta += 0.95 * simDt;
+        }
 
         p.health = clamp(p.health + healthDelta, 0, 100);
+
+        // ligera recuperación natural del estrés fuera de calor
+        if(weather.type !== "heat"){
+          p.stress = clamp(p.stress - 0.45 * simDt, 0, 100);
+        }
 
         if(p.health <= 1){
           p.dead = true;
@@ -1434,11 +1508,11 @@
           p.pests = 0;
           p.fertilizer = 0;
           p.weeds = clamp(p.weeds + 8, 0, 100);
-          queueAdvice(`Una planta se ha perdido por manejo tardío o condiciones adversas. En mantenimiento, detectar a tiempo importa mucho.`, true);
+          queueAdvice(`Una planta se ha perdido por manejo tardío o condiciones adversas. Ahora al menos puedes mitigar mejor humedad y calor con tus acciones.`, true);
         }
       }else{
         p.moisture = clamp(p.moisture, 0, 100);
-        p.weeds += 0.5 * simDt;
+        p.weeds += 0.2 * simDt;
       }
 
       p.moisture = clamp(p.moisture, 0, 100);
@@ -1449,7 +1523,6 @@
   }
 
   function updateWeather(dt){
-    const simDt = dt * SIM_SPEED;
     game.weatherTime += dt;
     if(game.weatherTime >= game.weatherDuration){
       game.weatherTime = 0;
@@ -1464,13 +1537,13 @@
 
       const wt = getWeather().type;
       if(wt === "rain"){
-        queueAdvice("Con lluvia, no conviene seguir regando sin mirar la humedad: el agua ya la está aportando el clima.");
+        queueAdvice("Con lluvia, evita regar. Si alguna parcela se encharca, prueba a PODAR para airear y reducir el daño.");
       }else if(wt === "heat"){
-        queueAdvice("Con calor, la evaporación aumenta. Habrá que vigilar mejor las especies menos tolerantes al estrés térmico.");
+        queueAdvice("Con calor, vigila estrés y sequedad. REGAR refresca y PODAR puede aliviar la carga de la planta.");
       }else if(wt === "cloudy"){
         queueAdvice("Con tiempo nublado el jardín pierde humedad más lentamente. No hace falta precipitarse con el riego.");
       }else{
-        queueAdvice("Con tiempo soleado conviene vigilar la humedad, pero sin convertir el riego en una rutina automática.");
+        queueAdvice("Con tiempo soleado conviene vigilar la humedad, pero sin convertir el riego en un reflejo automático.");
       }
     }
   }
@@ -1520,6 +1593,20 @@
       inspectNearestPlot();
       input.inspect = false;
     }
+
+    updatePlotBubble();
+  }
+
+  function updatePlotBubble(){
+    const p = findNearestPlot(82);
+    if(!p){
+      game.plotBubble.visible = false;
+      return;
+    }
+    game.plotBubble.visible = true;
+    game.plotBubble.x = p.x + p.w/2;
+    game.plotBubble.y = p.y - 20;
+    game.plotBubble.text = getPlotGuidance(p);
   }
 
   function collides(x,y,w,h){
@@ -1831,7 +1918,7 @@
       drawMiniBar(x+10*camera.zoom, y+10*camera.zoom, 54*camera.zoom, 6*camera.zoom, p.health, "#68d67c", "rgba(0,0,0,.35)");
       drawMiniBar(x+10*camera.zoom, y+20*camera.zoom, 54*camera.zoom, 6*camera.zoom, p.moisture, "#58a8ff", "rgba(0,0,0,.35)");
 
-      if(p.planted && (p.health < 45 || p.pests > 24 || p.moisture > 85 || p.moisture < 18)){
+      if(p.planted && (p.health < 45 || p.pests > 24 || p.moisture > 85 || p.moisture < 18 || p.stress > 18)){
         ctx.strokeStyle = `rgba(255,125,125,${0.5 + Math.sin(performance.now()*0.008)*0.15})`;
         ctx.lineWidth = 4*camera.zoom;
         drawRoundedRect(x+4*camera.zoom,y+4*camera.zoom,(p.w-8)*camera.zoom,(p.h-8)*camera.zoom,12*camera.zoom,null,ctx.strokeStyle);
@@ -1962,6 +2049,68 @@
     ctx.fillText(`Actuar: ${getTool().label}`, pos.x, pos.y + 3*camera.zoom);
   }
 
+  function drawPlotBubble(){
+    if(!game.plotBubble.visible) return;
+    const p = worldToScreen(game.plotBubble.x, game.plotBubble.y);
+    const maxWidth = Math.min(canvas.width * 0.46, 420 * camera.zoom);
+    const padding = 12 * camera.zoom;
+    const lineHeight = 16 * camera.zoom;
+    const fontSize = Math.max(12, 13 * camera.zoom);
+
+    ctx.font = `${fontSize}px sans-serif`;
+    ctx.textAlign = "left";
+
+    const lines = wrapText(game.plotBubble.text, maxWidth - padding * 2);
+    const bubbleW = Math.min(maxWidth, measureMaxLine(lines) + padding * 2);
+    const bubbleH = lines.length * lineHeight + padding * 2;
+
+    let bx = p.x - bubbleW / 2;
+    let by = p.y - bubbleH - 18 * camera.zoom;
+
+    bx = clamp(bx, 10, canvas.width - bubbleW - 10);
+    by = clamp(by, 10, canvas.height - bubbleH - 20);
+
+    drawRoundedRect(bx, by, bubbleW, bubbleH, 16 * camera.zoom, "rgba(11,18,14,.92)", "rgba(255,255,255,.16)");
+
+    ctx.beginPath();
+    ctx.moveTo(p.x - 10 * camera.zoom, by + bubbleH);
+    ctx.lineTo(p.x + 10 * camera.zoom, by + bubbleH);
+    ctx.lineTo(p.x, by + bubbleH + 14 * camera.zoom);
+    ctx.closePath();
+    ctx.fillStyle = "rgba(11,18,14,.92)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,.16)";
+    ctx.stroke();
+
+    ctx.fillStyle = "#f4fbf6";
+    lines.forEach((line, i) => {
+      ctx.fillText(line, bx + padding, by + padding + lineHeight * (i + 0.8));
+    });
+  }
+
+  function wrapText(text, maxWidth){
+    const words = text.split(" ");
+    const lines = [];
+    let current = "";
+    for(const word of words){
+      const test = current ? current + " " + word : word;
+      if(ctx.measureText(test).width > maxWidth && current){
+        lines.push(current);
+        current = word;
+      }else{
+        current = test;
+      }
+    }
+    if(current) lines.push(current);
+    return lines;
+  }
+
+  function measureMaxLine(lines){
+    let m = 0;
+    for(const line of lines) m = Math.max(m, ctx.measureText(line).width);
+    return m;
+  }
+
   function hexToRgba(hex, a){
     const m = hex.replace("#","").match(/.{1,2}/g);
     if(!m) return `rgba(255,255,255,${a})`;
@@ -1981,10 +2130,12 @@
       advice += "parcela vacía. Conviene plantar si la jornada lo pide.";
     }else if(p.pests > 20){
       advice += `${sp.name} con plaga visible. Lo prioritario es tratar.`;
+    }else if(p.moisture > sp.idealMoisture[1] + 12){
+      advice += `${sp.name} con exceso de agua. Podar ayuda a airear.`;
     }else if(p.moisture < sp.idealMoisture[0]){
       advice += `${sp.name} con déficit hídrico. Necesita riego.`;
-    }else if(p.moisture > sp.idealMoisture[1] + 12){
-      advice += `${sp.name} con exceso de agua. No riegues más.`;
+    }else if(p.stress > 16){
+      advice += `${sp.name} con estrés alto. Riego y poda ligera pueden ayudar.`;
     }else if(p.weeds > 18){
       advice += `${sp.name} compite con malas hierbas. Escardar ayuda.`;
     }else if(p.fertilizer < 8 && p.growth < 70){
@@ -2035,8 +2186,8 @@
 
     dayTitle.textContent = success ? "Jornada superada" : "Fin de la jornada";
     daySummary.textContent = success
-      ? `Buen trabajo. Has completado los objetivos del día ${game.day}. Estado medio del jardín: ${Math.round(averageHealth)} de salud y ${healthy} parcelas en buen estado. La siguiente jornada aumentará la exigencia climática y de mantenimiento.`
-      : `La jornada terminó antes de completar todos los objetivos. Salud media del jardín: ${Math.round(averageHealth)}. Revisa humedad, plagas y priorización de herramientas en el próximo intento.`;
+      ? `Buen trabajo. Has completado los objetivos del día ${game.day}. Estado medio del jardín: ${Math.round(averageHealth)} de salud y ${healthy} parcelas en buen estado.`
+      : `La jornada terminó antes de completar todos los objetivos. Salud media del jardín: ${Math.round(averageHealth)}. Ahora la recuperación es más posible si equilibras humedad, plaga, malas hierbas, abonado y estrés.`;
 
     dayScreen.classList.remove("hidden");
     saveGame();
@@ -2049,6 +2200,7 @@
     drawPlayer();
     drawParticles();
     drawTargetHint();
+    drawPlotBubble();
     drawWeatherFx();
   }
 
@@ -2208,7 +2360,7 @@
     buildWorld();
     resize();
     updateHud();
-    queueAdvice("Consejo inicial: primero inspecciona. Después decide si hace falta regar, tratar, abonar, podar o simplemente no tocar.");
+    queueAdvice("Consejo inicial: ahora cada problema importante tiene respuesta. Exceso de agua: poda. Calor: riego y poda. Salud baja: equilibra todos los factores.");
     requestAnimationFrame(loop);
   }
 
