@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vivero Express - Material vegetal e identificación de plantas</title>
+  <style>
+    :root{
+      --bg1:#0f172a;
+      --bg2:#133b2f;
+      --panel:#ffffff;
+      --panel2:#f7fbf8;
+      --text:#132238;
+      --muted:#61758a;
+      --good:#16a34a;
+      --bad:#dc2626;
+      --warn:#f59e0b;
+      --accent:#0ea5e9;
+      --accent2:#22c55e;
+      --purple:#7c3aed;
+      --shadow:0 14px 40px rgba(0,0,0,.18);
+      --radius:22px;
+    }
+
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;padding:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:var(--text);min-height:100%}
+    body{overflow-x:hidden}
+
+    .app{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:14px;
+      position:relative;
+    }
+
+    .bg-deco,.bg-deco::before,.bg-deco::after{
+      content:"";
+      position:fixed;
+      inset:auto;
+      border-radius:50%;
+      filter:blur(40px);
+      pointer-events:none;
+      z-index:0;
+    }
+    .bg-deco{
+      width:220px;height:220px;left:-40px;top:40px;background:rgba(34,197,94,.18);
+      animation:floaty 8s ease-in-out infinite;
+    }
+    .bg-deco::before{
+      width:180px;height:180px;right:-40px;top:180px;background:rgba(14,165,233,.18);
+      animation:floaty 10s ease-in-out infinite reverse;
+    }
+    .bg-deco::after{
+      width:210px;height:210px;left:50vw;bottom:20px;background:rgba(124,58,237,.16);
+      animation:floaty 12s ease-in-out infinite;
+    }
+
+    @keyframes floaty{
+      0%,100%{transform:translateY(0) scale(1)}
+      50%{transform:translateY(-14px) scale(1.05)}
+    }
+
+    .screen{
+      width:min(1200px,100%);
+      background:linear-gradient(180deg,#ffffff,#f4faf6);
+      border-radius:30px;
+      box-shadow:var(--shadow);
+      position:relative;
+      z-index:1;
+      overflow:hidden;
+      display:none;
+    }
+    .screen.active{display:block;animation:pop .35s ease}
+    @keyframes pop{
+      from{opacity:0;transform:translateY(10px) scale(.98)}
+      to{opacity:1;transform:none}
+    }
+
+    .hero{
+      padding:24px;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(34,197,94,.16), transparent 30%),
+        radial-gradient(circle at 85% 15%, rgba(14,165,233,.14), transparent 26%),
+        linear-gradient(135deg,#eefbf1 0%, #f5fbff 100%);
+    }
+
+    .title{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .logo{
+      width:72px;height:72px;border-radius:20px;
+      display:grid;place-items:center;
+      font-size:40px;
+      background:linear-gradient(135deg,#22c55e,#0ea5e9);
+      color:#fff;
+      box-shadow:0 10px 24px rgba(14,165,233,.28);
+      animation:bounceSoft 2.6s infinite;
+    }
+    @keyframes bounceSoft{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-5px)}
+    }
+
+    h1,h2,h3,p{margin:0}
+    .hero h1{font-size:clamp(1.8rem,4vw,3rem);line-height:1.03}
+    .subtitle{
+      margin-top:10px;color:#35556b;font-weight:600;font-size:clamp(.95rem,2vw,1.1rem)
+    }
+    .pill-row{
+      display:flex;gap:10px;flex-wrap:wrap;margin-top:18px
+    }
+    .pill{
+      background:#fff;
+      border:1px solid #d9e7df;
+      color:#1f3c3f;
+      padding:10px 14px;
+      border-radius:999px;
+      font-weight:800;
+      font-size:.92rem;
+      box-shadow:0 5px 14px rgba(0,0,0,.05);
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:18px;
+      margin-top:18px;
+      align-items:stretch;
+    }
+
+    .card{
+      background:rgba(255,255,255,.9);
+      border:1px solid #e3efe7;
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:0 8px 24px rgba(0,0,0,.06);
+    }
+
+    .instructions{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+      margin-top:14px;
+    }
+    .mini{
+      background:#f8fcf9;
+      border:1px solid #e3efe7;
+      border-radius:16px;
+      padding:12px;
+    }
+    .mini strong{display:block;margin-bottom:6px}
+    .mini span{color:var(--muted);font-size:.95rem}
+
+    .cta-row{
+      display:flex;gap:12px;flex-wrap:wrap;margin-top:18px
+    }
+
+    button{
+      border:none;
+      border-radius:18px;
+      padding:14px 18px;
+      font-weight:900;
+      font-size:1rem;
+      cursor:pointer;
+      transition:.18s transform,.18s filter,.18s box-shadow;
+      min-height:52px;
+    }
+    button:hover{transform:translateY(-2px)}
+    button:active{transform:translateY(1px)}
+    .btn-primary{
+      background:linear-gradient(135deg,#16a34a,#0ea5e9);
+      color:#fff;
+      box-shadow:0 10px 22px rgba(14,165,233,.25);
+    }
+    .btn-secondary{
+      background:#fff;color:#16354f;border:2px solid #d8e8df;
+    }
+    .btn-danger{
+      background:linear-gradient(135deg,#ef4444,#f97316);
+      color:#fff;
+    }
+
+    .preview-board{
+      min-height:260px;
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+    }
+    .preview-box{
+      background:linear-gradient(180deg,#ffffff,#f7fbff);
+      border:1px solid #e4ecf4;
+      border-radius:18px;
+      padding:12px;
+      position:relative;
+      overflow:hidden;
+    }
+    .preview-box h3{font-size:1rem;margin-bottom:8px}
+    .preview-icons{
+      display:flex;gap:8px;flex-wrap:wrap;font-size:1.6rem
+    }
+    .spark{
+      position:absolute;
+      right:10px;top:8px;font-size:1.2rem;animation:twinkle 1.4s infinite;
+    }
+    @keyframes twinkle{
+      0%,100%{transform:scale(1);opacity:1}
+      50%{transform:scale(1.25);opacity:.5}
+    }
+
+    /* Pantalla de juego */
+    .game-header{
+      padding:12px;
+      display:grid;
+      gap:12px;
+      background:linear-gradient(135deg,#f3fff8,#eef7ff);
+      border-bottom:1px solid #e6f0ea;
+    }
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(6,minmax(0,1fr));
+      gap:10px;
+    }
+    .stat{
+      background:#fff;
+      border:1px solid #dce9e1;
+      border-radius:16px;
+      padding:10px 12px;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      min-height:72px;
+      justify-content:center;
+    }
+    .stat .label{font-size:.78rem;color:#5d7488;font-weight:800;text-transform:uppercase;letter-spacing:.03em}
+    .stat .value{font-size:1.2rem;font-weight:900}
+
+    .progress-wrap{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:12px;
+      align-items:center;
+    }
+    .bar{
+      width:100%;height:16px;background:#e6eff1;border-radius:999px;overflow:hidden;position:relative;
+      border:1px solid #d5e4e7;
+    }
+    .bar > i{
+      display:block;height:100%;width:0%;
+      background:linear-gradient(90deg,#22c55e,#0ea5e9,#7c3aed);
+      border-radius:999px;
+      transition:width .25s ease;
+    }
+    .objective{
+      padding:0 14px 14px;
+      color:#24485d;
+      font-weight:800;
+    }
+    .board{
+      padding:14px;
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:14px;
+      min-height:560px;
+    }
+
+    .play-area,.zone-area{
+      background:linear-gradient(180deg,#fbfffc,#f4fbf7);
+      border:1px solid #e1ede5;
+      border-radius:24px;
+      padding:14px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .belt{
+      min-height:330px;
+      border-radius:20px;
+      background:
+        linear-gradient(180deg, rgba(15,23,42,.03), rgba(15,23,42,.02)),
+        repeating-linear-gradient(90deg,#dfe7ec 0 18px,#cfd9e1 18px 36px);
+      border:1px solid #d8e3e8;
+      padding:14px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+      gap:12px;
+      align-content:start;
+    }
+
+    .subhead{
+      display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap
+    }
+    .subhead h3{font-size:1.1rem}
+    .hint{
+      font-size:.95rem;color:#5b7388;font-weight:700
+    }
+
+    .item{
+      background:#fff;
+      border:2px solid #e4ede7;
+      border-radius:22px;
+      min-height:160px;
+      padding:12px;
+      position:relative;
+      box-shadow:0 8px 18px rgba(0,0,0,.06);
+      transition:.18s transform,.18s box-shadow,.18s border-color,.18s opacity;
+      user-select:none;
+      touch-action:none;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      justify-content:space-between;
+    }
+    .item:hover{transform:translateY(-3px)}
+    .item.selected{
+      border-color:#0ea5e9;
+      box-shadow:0 0 0 4px rgba(14,165,233,.12), 0 10px 24px rgba(14,165,233,.15);
+      transform:translateY(-3px) scale(1.01);
+    }
+    .item.correctFlash{animation:goodPulse .45s ease}
+    .item.wrongFlash{animation:badShake .36s ease}
+    @keyframes goodPulse{
+      0%{transform:scale(1)}
+      50%{transform:scale(1.05)}
+      100%{transform:scale(1)}
+    }
+    @keyframes badShake{
+      0%,100%{transform:translateX(0)}
+      20%{transform:translateX(-6px)}
+      40%{transform:translateX(6px)}
+      60%{transform:translateX(-4px)}
+      80%{transform:translateX(4px)}
+    }
+
+    .item-top{
+      display:flex;justify-content:space-between;align-items:flex-start;gap:8px
+    }
+    .item-emoji{
+      font-size:2rem;line-height:1;
+      width:52px;height:52px;border-radius:16px;display:grid;place-items:center;
+      background:linear-gradient(135deg,#ecfff0,#eef8ff);
+      border:1px solid #dcecdf;
+      flex:none;
+    }
+    .badge{
+      padding:6px 10px;border-radius:999px;font-size:.74rem;font-weight:900;letter-spacing:.02em
+    }
+    .badge.ok{background:#ecfdf3;color:#166534}
+    .badge.warn{background:#fff7ed;color:#9a3412}
+    .badge.info{background:#eff6ff;color:#1d4ed8}
+    .item-title{
+      font-size:1rem;font-weight:900;color:#163652
+    }
+    .item-desc{
+      color:#5f7285;font-size:.92rem;line-height:1.25
+    }
+    .traits{
+      display:flex;flex-wrap:wrap;gap:6px
+    }
+    .trait{
+      background:#f4f9fb;
+      color:#35556b;
+      border:1px solid #dde9ef;
+      border-radius:999px;
+      padding:6px 8px;
+      font-size:.76rem;
+      font-weight:800;
+    }
+
+    .zones{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+    }
+    .zone{
+      min-height:118px;
+      background:linear-gradient(180deg,#ffffff,#f7fbfa);
+      border:2px dashed #cfe0d5;
+      border-radius:22px;
+      padding:12px;
+      position:relative;
+      transition:.18s transform,.18s border-color,.18s background;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:8px;
+    }
+    .zone.drop-hover{
+      border-color:#0ea5e9;
+      background:#eef9ff;
+      transform:scale(1.01);
+    }
+    .zone h4{font-size:1rem}
+    .zone p{font-size:.9rem;color:#5e7486}
+    .zone .zicon{font-size:1.5rem}
+    .zone.correctZone{animation:zoneGood .45s ease}
+    .zone.wrongZone{animation:zoneBad .36s ease}
+    @keyframes zoneGood{
+      0%{box-shadow:0 0 0 rgba(0,0,0,0)}
+      50%{box-shadow:0 0 0 6px rgba(34,197,94,.12)}
+      100%{box-shadow:0 0 0 rgba(0,0,0,0)}
+    }
+    @keyframes zoneBad{
+      0%,100%{transform:translateX(0)}
+      20%{transform:translateX(-4px)}
+      40%{transform:translateX(4px)}
+      60%{transform:translateX(-3px)}
+      80%{transform:translateX(3px)}
+    }
+
+    .mobile-help{
+      margin-top:10px;
+      background:#fff;
+      border:1px solid #dbe8e1;
+      border-radius:16px;
+      padding:10px 12px;
+      color:#35556b;
+      font-size:.92rem;
+      font-weight:700;
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:20px;
+      transform:translateX(-50%) translateY(10px);
+      background:#132238;
+      color:#fff;
+      padding:12px 16px;
+      border-radius:14px;
+      font-weight:900;
+      box-shadow:0 12px 24px rgba(0,0,0,.24);
+      z-index:20;
+      opacity:0;
+      pointer-events:none;
+      transition:.25s;
+      max-width:min(92vw,500px);
+      text-align:center;
+    }
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .toast.good{background:linear-gradient(135deg,#15803d,#16a34a)}
+    .toast.bad{background:linear-gradient(135deg,#b91c1c,#ef4444)}
+    .toast.info{background:linear-gradient(135deg,#1d4ed8,#0ea5e9)}
+
+    .particles{
+      position:absolute;inset:0;pointer-events:none;overflow:hidden
+    }
+    .particle{
+      position:absolute;
+      font-size:1.2rem;
+      animation:rise 900ms ease forwards;
+      opacity:.9;
+    }
+    @keyframes rise{
+      from{transform:translateY(0) scale(.7);opacity:0}
+      20%{opacity:1}
+      to{transform:translateY(-44px) scale(1.25);opacity:0}
+    }
+
+    .final-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      padding:20px;
+    }
+    .result-badge{
+      width:100px;height:100px;border-radius:30px;display:grid;place-items:center;
+      font-size:52px;background:linear-gradient(135deg,#22c55e,#0ea5e9);color:#fff;
+      box-shadow:0 16px 28px rgba(14,165,233,.22);margin-bottom:12px;
+    }
+    .result-list{
+      display:grid;gap:10px;margin-top:14px
+    }
+    .result-item{
+      background:#f8fcf9;border:1px solid #e1ede5;border-radius:16px;padding:12px 14px;
+      display:flex;justify-content:space-between;gap:10px;font-weight:800
+    }
+
+    .footer-note{
+      padding:0 20px 20px;color:#64748b;font-weight:700
+    }
+
+    .tiny{
+      font-size:.84rem;color:#607284;font-weight:700
+    }
+
+    @media (max-width: 980px){
+      .hero-grid,.board,.final-grid{grid-template-columns:1fr}
+      .stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+    }
+    @media (max-width: 640px){
+      .hero{padding:18px}
+      .screen{border-radius:24px}
+      .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .instructions{grid-template-columns:1fr}
+      .zones{grid-template-columns:1fr}
+      .belt{grid-template-columns:1fr 1fr}
+      .item{min-height:152px}
+      .logo{width:60px;height:60px;font-size:32px}
+      button{width:100%}
+      .cta-row{display:grid;grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="bg-deco"></div>
+
+    <!-- INICIO -->
+    <section id="startScreen" class="screen active" aria-label="Pantalla inicial">
+      <div class="hero">
+        <div class="title">
+          <div class="logo">🌱</div>
+          <div>
+            <h1>Vivero Express</h1>
+            <p class="subtitle">Clasifica, identifica y salva lotes de material vegetal antes de que colapse el vivero.</p>
+          </div>
+        </div>
+
+        <div class="pill-row">
+          <div class="pill">1.º FP Básica</div>
+          <div class="pill">Escola FP Safor</div>
+          <div class="pill">Partidas de 6-9 min</div>
+          <div class="pill">Móvil + ordenador</div>
+        </div>
+
+        <div class="hero-grid">
+          <div class="card">
+            <h2>¿Cómo se juega?</h2>
+            <div class="instructions">
+              <div class="mini">
+                <strong>Fase 1 · Recepción</strong>
+                <span>Clasifica semillas, plántulas, plantones, esquejes, bulbos, tubérculos, rizomas y macetas.</span>
+              </div>
+              <div class="mini">
+                <strong>Fase 2 · Anatomía</strong>
+                <span>Envía cada elemento a la zona correcta de la planta: raíz, tallo, hojas, flor, fruto o semilla.</span>
+              </div>
+              <div class="mini">
+                <strong>Fase 3 · Identificación</strong>
+                <span>Distingue árboles, arbustos, herbáceas y trepadoras por su porte y rasgos.</span>
+              </div>
+              <div class="mini">
+                <strong>Fase 4 · Control de calidad</strong>
+                <span>Separa material sano, incidencias y acciones seguras de manipulación y trabajo.</span>
+              </div>
+            </div>
+
+            <div class="cta-row">
+              <button class="btn-primary" id="startBtn">Jugar ahora</button>
+              <button class="btn-secondary" id="howBtn">Ver objetivo</button>
+            </div>
+
+            <p class="tiny" style="margin-top:12px">
+              En móvil: toca una carta y luego toca la zona. En ordenador: puedes tocar o arrastrar.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="preview-board">
+              <div class="preview-box">
+                <span class="spark">✨</span>
+                <h3>Material vegetal</h3>
+                <div class="preview-icons">🌰 🌱 🪴 ✂️ 🧅 🥔 🌿</div>
+              </div>
+              <div class="preview-box">
+                <span class="spark">🍃</span>
+                <h3>Partes de la planta</h3>
+                <div class="preview-icons">🟫 🪵 🍃 🌸 🍅 🌰</div>
+              </div>
+              <div class="preview-box">
+                <span class="spark">🔎</span>
+                <h3>Identificación</h3>
+                <div class="preview-icons">🌳 🌹 🌿 🌼</div>
+              </div>
+              <div class="preview-box">
+                <span class="spark">🛡️</span>
+                <h3>Calidad y seguridad</h3>
+                <div class="preview-icons">✅ 🐛 ☀️ 💧 🧤 🚫</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-note">
+        Objetivo: completar las 4 fases con el mayor número de puntos, sin perder todas las vidas.
+      </div>
+    </section>
+
+    <!-- JUEGO -->
+    <section id="gameScreen" class="screen" aria-label="Pantalla de juego">
+      <div class="game-header">
+        <div class="stats">
+          <div class="stat"><span class="label">Fase</span><span class="value" id="phaseValue">1</span></div>
+          <div class="stat"><span class="label">Puntos</span><span class="value" id="scoreValue">0</span></div>
+          <div class="stat"><span class="label">Vidas</span><span class="value" id="livesValue">3</span></div>
+          <div class="stat"><span class="label">Tiempo</span><span class="value" id="timeValue">60</span></div>
+          <div class="stat"><span class="label">Combo</span><span class="value" id="comboValue">x1</span></div>
+          <div class="stat"><span class="label">Pendientes</span><span class="value" id="remainingValue">0</span></div>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="bar" aria-label="Progreso de fase"><i id="progressBar"></i></div>
+          <strong id="progressText">0%</strong>
+        </div>
+      </div>
+
+      <div class="objective" id="objectiveText"></div>
+
+      <div class="board">
+        <div class="play-area">
+          <div class="subhead">
+            <h3 id="trayTitle">Bandeja de entrada</h3>
+            <div class="hint" id="trayHint">Toca o arrastra cada lote.</div>
+          </div>
+          <div class="belt" id="belt"></div>
+          <div class="mobile-help">Consejo: en pantalla táctil, toca una carta y luego la zona correcta.</div>
+          <div class="particles" id="particles"></div>
+        </div>
+
+        <div class="zone-area">
+          <div class="subhead">
+            <h3>Zonas de destino</h3>
+            <div class="hint" id="zoneHint">Cada envío correcto suma puntos.</div>
+          </div>
+          <div class="zones" id="zones"></div>
+          <div class="cta-row" style="margin-top:14px">
+            <button class="btn-secondary" id="pauseHelpBtn">Recordatorio rápido</button>
+            <button class="btn-danger" id="restartBtn">Reiniciar partida</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL -->
+    <section id="endScreen" class="screen" aria-label="Pantalla final">
+      <div class="hero">
+        <div class="final-grid">
+          <div class="card">
+            <div class="result-badge" id="endBadge">🏆</div>
+            <h2 id="endTitle">¡Vivero superado!</h2>
+            <p class="subtitle" id="endSubtitle">Has gestionado correctamente el material vegetal.</p>
+
+            <div class="result-list">
+              <div class="result-item"><span>Puntuación final</span><strong id="endScore">0</strong></div>
+              <div class="result-item"><span>Fase alcanzada</span><strong id="endPhase">1</strong></div>
+              <div class="result-item"><span>Aciertos</span><strong id="endHits">0</strong></div>
+              <div class="result-item"><span>Errores</span><strong id="endFails">0</strong></div>
+              <div class="result-item"><span>Mejor combo</span><strong id="endBestCombo">x1</strong></div>
+            </div>
+
+            <div class="cta-row" style="margin-top:16px">
+              <button class="btn-primary" id="playAgainBtn">Jugar otra vez</button>
+              <button class="btn-secondary" id="backHomeBtn">Volver al inicio</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Lo que has practicado</h2>
+            <div class="instructions" style="margin-top:14px">
+              <div class="mini"><strong>Material vegetal</strong><span>Semilla, plántula, plantón, esqueje, bulbo, tubérculo, rizoma y maceta.</span></div>
+              <div class="mini"><strong>Partes de la planta</strong><span>Raíz, tallo, hojas, flor, fruto y semilla.</span></div>
+              <div class="mini"><strong>Identificación básica</strong><span>Porte, tipo de tallo y rasgos visibles.</span></div>
+              <div class="mini"><strong>Calidad y seguridad</strong><span>Aspecto sano, plagas, humedad, manipulación y orden.</span></div>
+            </div>
+            <p class="tiny" style="margin-top:14px">
+              Puedes reiniciar cuantas veces quieras para mejorar tu puntuación.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <script>
+    // =========================================================
+    // VIVERO EXPRESS
+    // Juego educativo HTML/CSS/JS en un único archivo.
+    // Diseñado para trabajar material vegetal e identificación
+    // de plantas sin formato de quiz.
+    // =========================================================
+
+    const phases = [
+      {
+        id: 1,
+        title: "Recepción de material vegetal",
+        objective: "Clasifica correctamente cada lote de material vegetal antes de que se acumule en el vivero.",
+        trayTitle: "Lotes del vivero",
+        trayHint: "Reconoce el tipo de material por su aspecto y descripción.",
+        zoneHint: "Coloca cada lote en su categoría correcta.",
+        time: 60,
+        zones: [
+          { id: "semilla", icon: "🌰", name: "Semilla", desc: "Inicio del cultivo desde semilla" },
+          { id: "plantula", icon: "🌱", name: "Plántula", desc: "Planta recién nacida y delicada" },
+          { id: "planton", icon: "🪴", name: "Plantón", desc: "Planta joven lista para trasplantar" },
+          { id: "esqueje", icon: "✂️", name: "Esqueje", desc: "Trozo que sirve para multiplicar" },
+          { id: "bulbo", icon: "🧅", name: "Bulbo", desc: "Órgano subterráneo de reserva" },
+          { id: "tuberculo", icon: "🥔", name: "Tubérculo", desc: "Reserva engrosada" },
+          { id: "rizoma", icon: "🌿", name: "Rizoma", desc: "Tallo subterráneo horizontal" },
+          { id: "maceta", icon: "🪴", name: "Cepellón / maceta", desc: "Planta enraizada con sustrato" }
+        ],
+        items: [
+          { id:"i1", zone:"semilla", icon:"🌰", title:"Lote de semillas", desc:"Pequeñas, secas y listas para siembra.", tags:["germinación","inicio","siembra"] },
+          { id:"i2", zone:"plantula", icon:"🌱", title:"Plántula delicada", desc:"Muy joven, recién nacida, necesita cuidado.", tags:["joven","delicada","poco desarrollo"] },
+          { id:"i3", zone:"planton", icon:"🪴", title:"Plantón listo", desc:"Más desarrollado y preparado para trasplante.", tags:["trasplante","joven","desarrollado"] },
+          { id:"i4", zone:"esqueje", icon:"✂️", title:"Esqueje de tallo", desc:"Fragmento usado para obtener otra planta.", tags:["multiplicación","vegetativa","trozo"] },
+          { id:"i5", zone:"bulbo", icon:"🧅", title:"Bulbo de cebolla", desc:"Órgano subterráneo de reserva.", tags:["subterráneo","reserva"] },
+          { id:"i6", zone:"tuberculo", icon:"🥔", title:"Tubérculo", desc:"Parte engrosada donde se almacena alimento.", tags:["reserva","patata","engrosado"] },
+          { id:"i7", zone:"rizoma", icon:"🌿", title:"Rizoma", desc:"Tallo subterráneo que crece horizontalmente.", tags:["horizontal","subterráneo"] },
+          { id:"i8", zone:"maceta", icon:"🪴", title:"Planta en maceta", desc:"Ya viene enraizada y con su sustrato.", tags:["cepellón","ornamental","enraizada"] },
+          { id:"i9", zone:"semilla", icon:"🌰", title:"Semillas preparadas", desc:"Necesitan humedad, temperatura y oxígeno.", tags:["humedad","oxígeno","temperatura"] },
+          { id:"i10", zone:"esqueje", icon:"✂️", title:"Esqueje de hoja", desc:"Se usa para multiplicación vegetativa.", tags:["hoja","multiplicación"] }
+        ]
+      },
+      {
+        id: 2,
+        title: "Partes básicas de una planta",
+        objective: "Envía cada elemento a la parte correcta de la planta para completar la ficha botánica del vivero.",
+        trayTitle: "Elementos botánicos",
+        trayHint: "Relaciona cada elemento con la parte correcta.",
+        zoneHint: "La observación manda: sujeción, fotosíntesis, reproducción, etc.",
+        time: 55,
+        zones: [
+          { id:"raiz", icon:"🟫", name:"Raíz", desc:"Sujeta la planta y absorbe agua y sales" },
+          { id:"tallo", icon:"🪵", name:"Tallo", desc:"Sostiene y comunica la planta" },
+          { id:"hojas", icon:"🍃", name:"Hojas", desc:"Realizan la fotosíntesis" },
+          { id:"flor", icon:"🌸", name:"Flor", desc:"Órgano reproductor" },
+          { id:"fruto", icon:"🍅", name:"Fruto", desc:"Protege la semilla" },
+          { id:"semillaParte", icon:"🌰", name:"Semilla", desc:"Contiene el embrión" }
+        ],
+        items: [
+          { id:"p1", zone:"raiz", icon:"🟫", title:"Absorbe agua y sales", desc:"Parte que suele estar bajo tierra.", tags:["sujeción","subterránea"] },
+          { id:"p2", zone:"tallo", icon:"🪵", title:"Eje principal", desc:"Conecta raíz con hojas, flores y frutos.", tags:["soporte","comunica"] },
+          { id:"p3", zone:"hojas", icon:"🍃", title:"Láminas verdes", desc:"Aquí se realiza la fotosíntesis.", tags:["verdes","luz","fotosíntesis"] },
+          { id:"p4", zone:"flor", icon:"🌸", title:"Parte reproductora", desc:"Su color y forma ayudan a reconocer especies.", tags:["pétalos","reproducción"] },
+          { id:"p5", zone:"fruto", icon:"🍅", title:"Protección exterior", desc:"Puede ser carnoso o seco.", tags:["protege","semilla"] },
+          { id:"p6", zone:"semillaParte", icon:"🌰", title:"Embrión vegetal", desc:"Germina si las condiciones son adecuadas.", tags:["germinación","inicio"] },
+          { id:"p7", zone:"hojas", icon:"🍃", title:"Borde y forma", desc:"Muy útiles para identificar una planta.", tags:["identificación","borde"] },
+          { id:"p8", zone:"tallo", icon:"🪵", title:"Sostén de la planta", desc:"Mantiene la estructura erguida.", tags:["soporte","estructura"] }
+        ]
+      },
+      {
+        id: 3,
+        title: "Identificación básica",
+        objective: "Observa el porte y los rasgos de cada muestra y envíala a su grupo correcto.",
+        trayTitle: "Muestras para identificar",
+        trayHint: "Fíjate en porte, tallo y aspecto general.",
+        zoneHint: "No hace falta el nombre exacto: clasifica por observación.",
+        time: 55,
+        zones: [
+          { id:"arbol", icon:"🌳", name:"Árbol", desc:"Tronco principal y bastante altura" },
+          { id:"arbusto", icon:"🌹", name:"Arbusto", desc:"Varios tallos desde la base" },
+          { id:"herbacea", icon:"🌿", name:"Herbácea", desc:"Tallos blandos y flexibles" },
+          { id:"trepadora", icon:"🌼", name:"Trepadora", desc:"Necesita apoyo y se extiende" }
+        ],
+        items: [
+          { id:"m1", zone:"arbol", icon:"🌳", title:"Muestra alta con tronco", desc:"Un solo tronco principal y bastante altura.", tags:["porte","tronco","altura"] },
+          { id:"m2", zone:"arbusto", icon:"🌹", title:"Mata con varios tallos", desc:"Ramifica desde la base.", tags:["varios tallos","base"] },
+          { id:"m3", zone:"herbacea", icon:"🌿", title:"Tallo blando", desc:"Flexible y no leñoso.", tags:["blando","flexible"] },
+          { id:"m4", zone:"trepadora", icon:"🌼", title:"Necesita soporte", desc:"Crece agarrándose o apoyándose.", tags:["se apoya","trepa"] },
+          { id:"m5", zone:"arbol", icon:"🌲", title:"Ejemplar leñoso", desc:"Porte alto y eje principal claro.", tags:["leñoso","alto"] },
+          { id:"m6", zone:"arbusto", icon:"🌺", title:"Planta compacta", desc:"No tiene un único tronco dominante.", tags:["ramificada","base"] },
+          { id:"m7", zone:"herbacea", icon:"🍀", title:"Planta herbácea", desc:"Tejidos tiernos y flexibles.", tags:["tierna","verde"] },
+          { id:"m8", zone:"trepadora", icon:"🍃", title:"Tallo guiado", desc:"Se extiende sobre apoyo vertical.", tags:["guiado","soporte"] }
+        ]
+      },
+      {
+        id: 4,
+        title: "Control de calidad y seguridad",
+        objective: "Decide rápido qué material se acepta, qué incidencia se aparta y qué acciones son seguras.",
+        trayTitle: "Inspección final",
+        trayHint: "Separa material sano, incidencias y acciones correctas.",
+        zoneHint: "Calidad, manipulación y seguridad del trabajo.",
+        time: 65,
+        zones: [
+          { id:"aceptar", icon:"✅", name:"Apto para plantar", desc:"Material sano y en buen estado" },
+          { id:"incidencia", icon:"⚠️", name:"Incidencia", desc:"Plagas, daños o mal estado" },
+          { id:"seguro", icon:"🧤", name:"Acción segura", desc:"Buenas prácticas de trabajo" },
+          { id:"riesgo", icon:"🚫", name:"Acción incorrecta", desc:"Manipulación o trabajo inadecuado" }
+        ],
+        items: [
+          { id:"q1", zone:"aceptar", icon:"✅", title:"Plantón con buen color", desc:"Tallos firmes, raíces bien y humedad adecuada.", tags:["sano","raíces","humedad correcta"] },
+          { id:"q2", zone:"incidencia", icon:"🐛", title:"Hojas con plaga", desc:"Presencia de insectos y daño visible.", tags:["plagas","daño"] },
+          { id:"q3", zone:"incidencia", icon:"🥵", title:"Planta muy seca", desc:"Sequedad extrema y aspecto decaído.", tags:["sequía","mal estado"] },
+          { id:"q4", zone:"incidencia", icon:"💧", title:"Exceso de riego", desc:"Demasiada humedad y deterioro.", tags:["encharcada","mal estado"] },
+          { id:"q5", zone:"seguro", icon:"🧤", title:"Usar guantes", desc:"Protege al manipular plantas o tierra.", tags:["protección","higiene"] },
+          { id:"q6", zone:"seguro", icon:"🧹", title:"Zona limpia y ordenada", desc:"Mantener el puesto recogido.", tags:["orden","limpieza"] },
+          { id:"q7", zone:"riesgo", icon:"☀️", title:"Dejar al sol material delicado", desc:"Mala práctica de manipulación.", tags:["exposición","incorrecto"] },
+          { id:"q8", zone:"riesgo", icon:"📦", title:"Golpear envases y plantas", desc:"Puede dañar raíces, hojas y brotes.", tags:["daño","incorrecto"] },
+          { id:"q9", zone:"seguro", icon:"🚚", title:"Transportar con cuidado", desc:"Evita aplastar raíces y brotes.", tags:["cuidado","manipulación"] },
+          { id:"q10", zone:"aceptar", icon:"🏷️", title:"Lote etiquetado y sano", desc:"Correcto para venta o distribución.", tags:["etiquetado","correcto"] }
+        ]
+      }
+    ];
+
+    const state = {
+      currentPhaseIndex: 0,
+      score: 0,
+      lives: 3,
+      time: 0,
+      timer: null,
+      items: [],
+      selectedItemId: null,
+      hits: 0,
+      fails: 0,
+      combo: 1,
+      bestCombo: 1,
+      answered: 0
+    };
+
+    const els = {
+      startScreen: document.getElementById("startScreen"),
+      gameScreen: document.getElementById("gameScreen"),
+      endScreen: document.getElementById("endScreen"),
+      phaseValue: document.getElementById("phaseValue"),
+      scoreValue: document.getElementById("scoreValue"),
+      livesValue: document.getElementById("livesValue"),
+      timeValue: document.getElementById("timeValue"),
+      comboValue: document.getElementById("comboValue"),
+      remainingValue: document.getElementById("remainingValue"),
+      objectiveText: document.getElementById("objectiveText"),
+      progressBar: document.getElementById("progressBar"),
+      progressText: document.getElementById("progressText"),
+      belt: document.getElementById("belt"),
+      zones: document.getElementById("zones"),
+      trayTitle: document.getElementById("trayTitle"),
+      trayHint: document.getElementById("trayHint"),
+      zoneHint: document.getElementById("zoneHint"),
+      toast: document.getElementById("toast"),
+      particles: document.getElementById("particles"),
+      endBadge: document.getElementById("endBadge"),
+      endTitle: document.getElementById("endTitle"),
+      endSubtitle: document.getElementById("endSubtitle"),
+      endScore: document.getElementById("endScore"),
+      endPhase: document.getElementById("endPhase"),
+      endHits: document.getElementById("endHits"),
+      endFails: document.getElementById("endFails"),
+      endBestCombo: document.getElementById("endBestCombo")
+    };
+
+    function $(id){ return document.getElementById(id); }
+
+    function shuffle(arr){
+      const copy = [...arr];
+      for(let i = copy.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function showScreen(name){
+      [els.startScreen, els.gameScreen, els.endScreen].forEach(el => el.classList.remove("active"));
+      if(name === "start") els.startScreen.classList.add("active");
+      if(name === "game") els.gameScreen.classList.add("active");
+      if(name === "end") els.endScreen.classList.add("active");
+    }
+
+    function resetGame(){
+      clearInterval(state.timer);
+      state.currentPhaseIndex = 0;
+      state.score = 0;
+      state.lives = 3;
+      state.time = 0;
+      state.items = [];
+      state.selectedItemId = null;
+      state.hits = 0;
+      state.fails = 0;
+      state.combo = 1;
+      state.bestCombo = 1;
+      state.answered = 0;
+    }
+
+    function startGame(){
+      resetGame();
+      showScreen("game");
+      loadPhase(0);
+    }
+
+    function loadPhase(index){
+      clearInterval(state.timer);
+      state.currentPhaseIndex = index;
+      state.selectedItemId = null;
+      state.answered = 0;
+
+      const phase = phases[index];
+      if(!phase){
+        endGame(true);
+        return;
+      }
+
+      state.time = phase.time;
+      state.items = shuffle(phase.items).map(it => ({...it}));
+      renderPhase();
+      renderItems();
+      renderZones();
+      updateHUD();
+      startTimer();
+      showToast(`Fase ${phase.id}: ${phase.title}`, "info");
+    }
+
+    function startTimer(){
+      updateHUD();
+      state.timer = setInterval(() => {
+        state.time--;
+        updateHUD();
+        if(state.time <= 0){
+          clearInterval(state.timer);
+          damage("¡Se acabó el tiempo!");
+        }
+      }, 1000);
+    }
+
+    function updateHUD(){
+      const phase = phases[state.currentPhaseIndex];
+      const total = phase.items.length;
+      const remaining = state.items.length;
+      const done = total - remaining;
+      const pct = Math.round((done / total) * 100);
+
+      els.phaseValue.textContent = `${phase.id}/4`;
+      els.scoreValue.textContent = state.score;
+      els.livesValue.textContent = "❤️".repeat(Math.max(0, state.lives)) || "0";
+      els.timeValue.textContent = state.time;
+      els.comboValue.textContent = `x${state.combo}`;
+      els.remainingValue.textContent = remaining;
+      els.progressBar.style.width = pct + "%";
+      els.progressText.textContent = pct + "%";
+      els.objectiveText.textContent = phase.objective;
+      els.trayTitle.textContent = phase.trayTitle;
+      els.trayHint.textContent = phase.trayHint;
+      els.zoneHint.textContent = phase.zoneHint;
+    }
+
+    function renderPhase(){
+      els.belt.innerHTML = "";
+      els.zones.innerHTML = "";
+      els.particles.innerHTML = "";
+    }
+
+    function renderItems(){
+      els.belt.innerHTML = "";
+      state.items.forEach(item => {
+        const card = document.createElement("article");
+        card.className = "item";
+        card.draggable = true;
+        card.dataset.id = item.id;
+        card.setAttribute("tabindex","0");
+        card.innerHTML = `
+          <div class="item-top">
+            <div class="item-emoji">${item.icon}</div>
+            <span class="badge ${pickBadge(item)}">${pickBadgeText(item)}</span>
+          </div>
+          <div>
+            <div class="item-title">${item.title}</div>
+            <div class="item-desc">${item.desc}</div>
+          </div>
+          <div class="traits">
+            ${item.tags.map(t => `<span class="trait">${t}</span>`).join("")}
+          </div>
+        `;
+
+        card.addEventListener("click", () => selectItem(item.id));
+        card.addEventListener("keydown", (e) => {
+          if(e.key === "Enter" || e.key === " "){
+            e.preventDefault();
+            selectItem(item.id);
+          }
+        });
+
+        card.addEventListener("dragstart", (e) => {
+          e.dataTransfer.setData("text/plain", item.id);
+          selectItem(item.id);
+        });
+
+        els.belt.appendChild(card);
+      });
+
+      updateSelectedUI();
+    }
+
+    function pickBadge(item){
+      if(["aceptar","seguro"].includes(item.zone)) return "ok";
+      if(["incidencia","riesgo"].includes(item.zone)) return "warn";
+      return "info";
+    }
+    function pickBadgeText(item){
+      const map = {
+        aceptar:"Bueno",
+        incidencia:"Revisar",
+        seguro:"Seguro",
+        riesgo:"Error",
+        semilla:"Lote",
+        plantula:"Lote",
+        planton:"Lote",
+        esqueje:"Lote",
+        bulbo:"Lote",
+        tuberculo:"Lote",
+        rizoma:"Lote",
+        maceta:"Lote"
+      };
+      return map[item.zone] || "Muestra";
+    }
+
+    function renderZones(){
+      const phase = phases[state.currentPhaseIndex];
+      els.zones.innerHTML = "";
+      phase.zones.forEach(zone => {
+        const z = document.createElement("div");
+        z.className = "zone";
+        z.dataset.zone = zone.id;
+        z.innerHTML = `
+          <div class="zicon">${zone.icon}</div>
+          <h4>${zone.name}</h4>
+          <p>${zone.desc}</p>
+        `;
+
+        z.addEventListener("click", () => {
+          if(state.selectedItemId) attemptDrop(state.selectedItemId, zone.id, z);
+        });
+
+        z.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          z.classList.add("drop-hover");
+        });
+
+        z.addEventListener("dragleave", () => z.classList.remove("drop-hover"));
+
+        z.addEventListener("drop", (e) => {
+          e.preventDefault();
+          z.classList.remove("drop-hover");
+          const itemId = e.dataTransfer.getData("text/plain");
+          attemptDrop(itemId, zone.id, z);
+        });
+
+        els.zones.appendChild(z);
+      });
+    }
+
+    function selectItem(itemId){
+      state.selectedItemId = itemId;
+      updateSelectedUI();
+      const item = state.items.find(i => i.id === itemId);
+      if(item){
+        showToast(`Seleccionado: ${item.title}. Ahora toca una zona.`, "info", 900);
+      }
+    }
+
+    function updateSelectedUI(){
+      document.querySelectorAll(".item").forEach(el => {
+        el.classList.toggle("selected", el.dataset.id === state.selectedItemId);
+      });
+    }
+
+    function attemptDrop(itemId, zoneId, zoneEl){
+      const item = state.items.find(i => i.id === itemId);
+      if(!item) return;
+
+      const cardEl = document.querySelector(`.item[data-id="${itemId}"]`);
+      if(item.zone === zoneId){
+        state.hits++;
+        state.combo++;
+        state.bestCombo = Math.max(state.bestCombo, state.combo);
+        const gained = 10 * state.combo;
+        state.score += gained;
+        state.items = state.items.filter(i => i.id !== itemId);
+        state.selectedItemId = null;
+        if(cardEl) cardEl.classList.add("correctFlash");
+        if(zoneEl) flashZone(zoneEl, true);
+        spawnParticles(zoneEl || cardEl, ["✨","🌟","🍃","+"]);
+        beep(660, .04);
+        beep(880, .05, 40);
+        showToast(`¡Correcto! +${gained} puntos`, "good", 900);
+        renderItems();
+        updateHUD();
+        checkPhaseEnd();
+      } else {
+        state.fails++;
+        state.combo = 1;
+        state.score = Math.max(0, state.score - 8);
+        if(cardEl) cardEl.classList.add("wrongFlash");
+        if(zoneEl) flashZone(zoneEl, false);
+        spawnParticles(zoneEl || cardEl, ["❌","💥"]);
+        beep(180, .08);
+        showToast("No va ahí. Revisa el rasgo principal.", "bad", 1000);
+        setTimeout(() => {
+          if(cardEl) cardEl.classList.remove("wrongFlash");
+        }, 420);
+        damage(null, false);
+        updateHUD();
+      }
+    }
+
+    function flashZone(el, ok){
+      el.classList.remove("correctZone", "wrongZone");
+      void el.offsetWidth;
+      el.classList.add(ok ? "correctZone" : "wrongZone");
+      setTimeout(() => el.classList.remove("correctZone","wrongZone"), 520);
+    }
+
+    function damage(message, loseLife = true){
+      if(message) showToast(message, "bad", 1200);
+      if(loseLife){
+        state.lives--;
+        state.combo = 1;
+        updateHUD();
+      }
+      if(state.lives <= 0){
+        clearInterval(state.timer);
+        endGame(false);
+      } else if(message === "¡Se acabó el tiempo!"){
+        nextPhaseOrEnd(false);
+      }
+    }
+
+    function checkPhaseEnd(){
+      if(state.items.length === 0){
+        clearInterval(state.timer);
+        const bonus = state.time * 2 + 25;
+        state.score += bonus;
+        showToast(`Fase superada. Bonus +${bonus}`, "good", 1300);
+        setTimeout(() => nextPhaseOrEnd(true), 900);
+      }
+    }
+
+    function nextPhaseOrEnd(completed){
+      const next = state.currentPhaseIndex + 1;
+      if(next >= phases.length){
+        endGame(completed);
+      } else {
+        loadPhase(next);
+      }
+    }
+
+    function endGame(victory){
+      clearInterval(state.timer);
+      showScreen("end");
+      els.endScore.textContent = state.score;
+      els.endPhase.textContent = `${Math.min(state.currentPhaseIndex + (victory ? 1 : 0), 4)}/4`;
+      els.endHits.textContent = state.hits;
+      els.endFails.textContent = state.fails;
+      els.endBestCombo.textContent = `x${state.bestCombo}`;
+
+      if(victory){
+        els.endBadge.textContent = "🏆";
+        els.endTitle.textContent = "¡Vivero superado!";
+        els.endSubtitle.textContent = "Has completado todas las fases clasificando e identificando correctamente el material vegetal.";
+      } else {
+        els.endBadge.textContent = "🌿";
+        els.endTitle.textContent = "Fin de la partida";
+        els.endSubtitle.textContent = "Puedes volver a intentarlo y mejorar tu gestión del vivero.";
+      }
+    }
+
+    function showToast(text, type="info", ms=1200){
+      const t = els.toast;
+      t.textContent = text;
+      t.className = `toast ${type} show`;
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => t.classList.remove("show"), ms);
+    }
+
+    function spawnParticles(target, chars = ["✨","🍃","🌟"]){
+      if(!target) return;
+      const rect = target.getBoundingClientRect();
+      const containerRect = els.particles.getBoundingClientRect();
+      const x = rect.left - containerRect.left + rect.width / 2;
+      const y = rect.top - containerRect.top + rect.height / 2;
+
+      for(let i = 0; i < 6; i++){
+        const p = document.createElement("span");
+        p.className = "particle";
+        p.textContent = chars[Math.floor(Math.random() * chars.length)];
+        p.style.left = (x + (Math.random() * 40 - 20)) + "px";
+        p.style.top = (y + (Math.random() * 20 - 10)) + "px";
+        p.style.animationDuration = (700 + Math.random() * 400) + "ms";
+        els.particles.appendChild(p);
+        setTimeout(() => p.remove(), 1200);
+      }
+    }
+
+    // Sonido opcional con Web Audio sencillo
+    let audioCtx = null;
+    function beep(freq = 440, duration = .05, delay = 0){
+      try{
+        if(!audioCtx){
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        const now = audioCtx.currentTime + delay / 1000;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.frequency.value = freq;
+        osc.type = "sine";
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.06, now + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+        osc.start(now);
+        osc.stop(now + duration + 0.02);
+      }catch(err){
+        // Si el dispositivo o navegador bloquea el audio, el juego sigue funcionando.
+      }
+    }
+
+    // Eventos UI
+    $("startBtn").addEventListener("click", startGame);
+    $("playAgainBtn").addEventListener("click", startGame);
+    $("backHomeBtn").addEventListener("click", () => {
+      resetGame();
+      showScreen("start");
+    });
+    $("restartBtn").addEventListener("click", startGame);
+
+    $("howBtn").addEventListener("click", () => {
+      showToast("Objetivo: clasificar e identificar jugando. No hay preguntas tipo test.", "info", 1800);
+    });
+
+    $("pauseHelpBtn").addEventListener("click", () => {
+      const tips = [
+        "Semilla: inicio del cultivo.",
+        "Plántula: muy joven y delicada.",
+        "Plantón: más desarrollado, listo para trasplante.",
+        "Esqueje: trozo para multiplicar.",
+        "Raíz: absorbe agua y sales.",
+        "Tallo: sostiene y comunica.",
+        "Hojas: fotosíntesis.",
+        "Árbol: tronco principal.",
+        "Arbusto: varios tallos desde la base.",
+        "Herbácea: tallo blando.",
+        "Material sano: buen color y sin plagas.",
+        "Seguridad: orden, limpieza y guantes."
+      ];
+      showToast(tips[Math.floor(Math.random() * tips.length)], "info", 1800);
+    });
+
+    // Evitar scroll accidental al arrastrar en móvil cuando se interactúa mucho
+    document.addEventListener("touchmove", (e) => {
+      const active = document.querySelector(".item.selected");
+      if(active && els.gameScreen.classList.contains("active")){
+        // no bloquear completamente la página, solo si se toca una carta seleccionada
+      }
+    }, {passive:true});
+  </script>
+</body>
+</html>
