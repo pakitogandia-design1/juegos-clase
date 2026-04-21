@@ -144,13 +144,20 @@
     pointer-events:none;
   }
 
+  .toolsWrap{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    max-width:min(780px, 100%);
+    pointer-events:auto;
+  }
+
   .toolsPanel{
     display:flex;
     gap:8px;
     flex-wrap:wrap;
     justify-content:center;
     padding:10px;
-    max-width:min(760px, 100%);
     pointer-events:auto;
   }
 
@@ -181,12 +188,37 @@
     margin-top:2px;
   }
 
+  .quickRow{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    padding:0 10px 10px;
+  }
+
+  .quickBtn{
+    border:none;
+    border-radius:12px;
+    padding:9px 12px;
+    font-size:12px;
+    font-weight:800;
+    cursor:pointer;
+    background:rgba(255,255,255,.08);
+    color:var(--text);
+    border:1px solid var(--line);
+  }
+
+  .quickBtn.next{
+    background:rgba(255,213,106,.18);
+    border-color:rgba(255,213,106,.34);
+  }
+
   .hintBox{
     padding:10px 12px;
     min-width:220px;
     max-width:340px;
     pointer-events:auto;
   }
+
   .hintTitle{
     font-size:12px;
     text-transform:uppercase;
@@ -194,17 +226,87 @@
     color:var(--muted);
     margin-bottom:6px;
   }
+
   .hintText{
     font-size:13px;
     line-height:1.35;
     min-height:34px;
   }
 
+  .advisorBar{
+    position:absolute;
+    left:12px;
+    right:12px;
+    bottom:96px;
+    z-index:8;
+    pointer-events:none;
+    display:flex;
+    justify-content:center;
+  }
+
+  .advisorCard{
+    width:min(980px, 100%);
+    background:rgba(9,18,14,.9);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:20px;
+    box-shadow:0 18px 40px rgba(0,0,0,.3);
+    display:grid;
+    grid-template-columns:70px 1fr;
+    gap:12px;
+    padding:12px;
+    backdrop-filter: blur(10px);
+    pointer-events:auto;
+  }
+
+  .advisorAvatar{
+    width:58px;
+    height:58px;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+    background:rgba(123,224,255,.12);
+    border:1px solid rgba(123,224,255,.18);
+  }
+
+  .advisorMeta{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:4px;
+    flex-wrap:wrap;
+  }
+
+  .advisorName{
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--accent);
+    font-weight:800;
+  }
+
+  .advisorTag{
+    font-size:11px;
+    padding:4px 8px;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    color:var(--muted);
+    border:1px solid rgba(255,255,255,.08);
+  }
+
+  .advisorText{
+    font-size:14px;
+    line-height:1.45;
+    color:#f4fbf6;
+    min-height:40px;
+  }
+
   .mobileControls{
     position:absolute;
     left:12px;
     right:12px;
-    bottom:88px;
+    bottom:176px;
     display:none;
     justify-content:space-between;
     align-items:flex-end;
@@ -458,6 +560,9 @@
     .missionList{
       font-size:12px;
     }
+    .advisorBar{
+      bottom:162px;
+    }
   }
 
   @media (max-width: 520px){
@@ -471,6 +576,21 @@
     .right{ top:50px; }
     .actionCluster{ grid-template-columns: 66px 66px; }
     .actionBtn{ width:66px; height:66px; border-radius:20px; }
+    .advisorCard{
+      grid-template-columns:56px 1fr;
+      gap:10px;
+      padding:10px;
+    }
+    .advisorAvatar{
+      width:48px;
+      height:48px;
+      font-size:24px;
+      border-radius:14px;
+    }
+    .advisorText{
+      font-size:13px;
+      min-height:34px;
+    }
   }
 </style>
 </head>
@@ -491,6 +611,21 @@
 
     <div class="toastWrap" id="toastWrap"></div>
 
+    <div class="advisorBar">
+      <div class="advisorCard">
+        <div class="advisorAvatar">👨‍🌾</div>
+        <div>
+          <div class="advisorMeta">
+            <div class="advisorName">Encargado del jardín</div>
+            <div class="advisorTag">Consejo didáctico</div>
+          </div>
+          <div class="advisorText" id="advisorText">
+            Observa antes de actuar: una planta seca necesita riego, pero una planta encharcada necesita justo lo contrario.
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="mobileControls" id="mobileControls">
       <div class="dpad">
         <button class="padBtn up" data-dir="up">▲</button>
@@ -507,7 +642,13 @@
     </div>
 
     <div class="bottomBar">
-      <div class="panel toolsPanel" id="toolsPanel"></div>
+      <div class="toolsWrap">
+        <div class="panel toolsPanel" id="toolsPanel"></div>
+        <div class="panel quickRow">
+          <button class="quickBtn" id="inspectQuickBtn">Inspeccionar</button>
+          <button class="quickBtn next" id="manualNextDayBtn">Día siguiente</button>
+        </div>
+      </div>
       <div class="panel hintBox">
         <div class="hintTitle">Zona / pista</div>
         <div class="hintText" id="hintText">Muévete y revisa las parcelas. Cambia de herramienta y actúa cerca de la planta adecuada.</div>
@@ -593,6 +734,7 @@
   const toolsPanel = document.getElementById("toolsPanel");
   const hintText = document.getElementById("hintText");
   const toastWrap = document.getElementById("toastWrap");
+  const advisorText = document.getElementById("advisorText");
 
   const startScreen = document.getElementById("startScreen");
   const pauseScreen = document.getElementById("pauseScreen");
@@ -610,8 +752,11 @@
   const pauseBtn = document.getElementById("pauseBtn");
   const inspectBtn = document.getElementById("inspectBtn");
   const toolCycleBtn = document.getElementById("toolCycleBtn");
+  const inspectQuickBtn = document.getElementById("inspectQuickBtn");
+  const manualNextDayBtn = document.getElementById("manualNextDayBtn");
 
-  const SAVE_KEY = "guardianes_jardin_save_v1";
+  const SAVE_KEY = "guardianes_jardin_save_v2";
+  const SIM_SPEED = 0.22; // más de 4 veces más lento que la versión original
 
   const WORLD = {
     width: 1600,
@@ -674,13 +819,16 @@
     { type:"heat", name:"Calor", sky:"#ffd18c", evap:1.45, rain:0, heat:0.55 }
   ];
 
+  const advisorQueue = [];
+  let advisorTimeout = 0;
+
   const game = {
     running: false,
     paused: false,
     finishedDay: false,
     day: 1,
     time: 0,
-    dayLength: 330, // segundos aprox.
+    dayLength: 1200,
     energy: 100,
     waterTank: 100,
     fertilizerTank: 100,
@@ -689,7 +837,7 @@
     perfectStreak: 0,
     weatherIndex: 0,
     weatherTime: 0,
-    weatherDuration: 35,
+    weatherDuration: 120,
     particles: [],
     sparkles: [],
     toasts: [],
@@ -727,20 +875,36 @@
   const camera = { x:0, y:0, zoom:1 };
 
   function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
-  function lerp(a,b,t){ return a + (b-a)*t; }
   function rand(min, max){ return Math.random()*(max-min)+min; }
-  function irand(min, max){ return Math.floor(rand(min, max+1)); }
   function dist(ax, ay, bx, by){ return Math.hypot(ax-bx, ay-by); }
   function choice(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+  function within(v, a, b){ return v >= a && v <= b; }
+
+  function queueAdvice(msg, priority=false){
+    if(priority) advisorQueue.unshift(msg);
+    else advisorQueue.push(msg);
+    if(!advisorTimeout) flushAdvice();
+  }
+
+  function flushAdvice(){
+    if(advisorQueue.length === 0){
+      advisorTimeout = 0;
+      return;
+    }
+    advisorText.textContent = advisorQueue.shift();
+    advisorTimeout = setTimeout(() => {
+      advisorTimeout = 0;
+      flushAdvice();
+    }, 3400);
+  }
 
   function getWeather(){
     return WEATHER_TYPES[game.weatherIndex];
   }
 
   function createPlot(x, y, speciesKey, planted = true){
-    const species = SPECIES[speciesKey];
     return {
-      x, y, w: 118, h: 118,
+      x, y, w: 138, h: 138,
       speciesKey,
       planted,
       health: planted ? rand(72, 94) : 0,
@@ -766,14 +930,10 @@
     game.paths = [];
 
     const plotDefs = [
-      [380, 250, "cesped", true, "Pradera central"],
-      [540, 250, "rosal", true, "Rosales de acceso"],
-      [700, 250, "lavanda", true, "Banda aromática"],
-      [860, 250, "boj", true, "Seto ornamental"],
-      [380, 430, "lavanda", true, "Rincón seco"],
-      [540, 430, "boj", true, "Topiaria joven"],
-      [700, 430, "cesped", true, "Tapiz verde"],
-      [860, 430, "rosal", true, "Parterre floral"]
+      [450, 260, "cesped", true, "Pradera central"],
+      [660, 260, "rosal", true, "Rosales de acceso"],
+      [450, 500, "lavanda", true, "Rincón seco"],
+      [660, 500, "boj", true, "Seto ornamental"]
     ];
 
     for(const [x,y,species,planted,zone] of plotDefs){
@@ -782,48 +942,37 @@
       game.plots.push(p);
     }
 
-    // caminos
-    game.paths.push({x:290,y:180,w:760,h:100});
-    game.paths.push({x:290,y:360,w:760,h:100});
-    game.paths.push({x:290,y:540,w:760,h:100});
-    game.paths.push({x:290,y:180,w:100,h:460});
-    game.paths.push({x:450,y:180,w:100,h:460});
-    game.paths.push({x:610,y:180,w:100,h:460});
-    game.paths.push({x:770,y:180,w:100,h:460});
-    game.paths.push({x:930,y:180,w:100,h:460});
+    game.paths.push({x:350,y:180,w:520,h:100});
+    game.paths.push({x:350,y:420,w:520,h:100});
+    game.paths.push({x:350,y:660,w:520,h:100});
+    game.paths.push({x:350,y:180,w:100,h:580});
+    game.paths.push({x:560,y:180,w:100,h:580});
+    game.paths.push({x:770,y:180,w:100,h:580});
 
-    // cobertizo
-    game.decorations.push({type:"shed", x:1140, y:180, w:240, h:200});
-    // compost
-    game.decorations.push({type:"compost", x:1120, y:450, w:130, h:110});
-    // deposito
-    game.decorations.push({type:"tank", x:1280, y:450, w:90, h:110});
-    // estanque
-    game.decorations.push({type:"pond", x:105, y:170, w:120, h:210});
-    // bancos/macizos
-    game.decorations.push({type:"bench", x:118, y:450, w:120, h:40});
+    game.decorations.push({type:"shed", x:1080, y:180, w:240, h:200});
+    game.decorations.push({type:"compost", x:1080, y:450, w:130, h:110});
+    game.decorations.push({type:"tank", x:1240, y:450, w:90, h:110});
+    game.decorations.push({type:"pond", x:120, y:170, w:140, h:220});
+    game.decorations.push({type:"bench", x:130, y:460, w:130, h:40});
     game.decorations.push({type:"tree", x:1180, y:720, w:90, h:90});
     game.decorations.push({type:"tree", x:1295, y:700, w:100, h:100});
     game.decorations.push({type:"tree", x:145, y:720, w:110, h:110});
-    game.decorations.push({type:"tree", x:260, y:760, w:90, h:90});
-    game.decorations.push({type:"flowerbed", x:490, y:730, w:420, h:170});
+    game.decorations.push({type:"flowerbed", x:430, y:820, w:500, h:150});
 
-    // colisiones
     game.boundaries = [
       {x:-20,y:-20,w:WORLD.width+40,h:20},
       {x:-20,y:WORLD.height,w:WORLD.width+40,h:20},
       {x:-20,y:0,w:20,h:WORLD.height},
       {x:WORLD.width,y:0,w:20,h:WORLD.height},
-      {x:1140,y:180,w:240,h:200},
-      {x:1120,y:450,w:130,h:110},
-      {x:1280,y:450,w:90,h:110},
-      {x:110,y:170,w:110,h:210},
-      {x:118,y:450,w:120,h:40},
+      {x:1080,y:180,w:240,h:200},
+      {x:1080,y:450,w:130,h:110},
+      {x:1240,y:450,w:90,h:110},
+      {x:120,y:170,w:130,h:220},
+      {x:130,y:460,w:130,h:40},
       {x:1180,y:730,w:90,h:70},
       {x:1300,y:715,w:90,h:80},
       {x:150,y:735,w:90,h:80},
-      {x:270,y:775,w:70,h:60},
-      {x:490,y:730,w:420,h:170}
+      {x:430,y:820,w:500,h:150}
     ];
 
     resetDayState(false);
@@ -833,30 +982,29 @@
     if(advanceDay) game.day++;
     game.finishedDay = false;
     game.time = 0;
-    game.energy = clamp(100 - (game.day-1)*2, 70, 100);
-    game.waterTank = clamp(100 - (game.day-1)*1, 75, 100);
-    game.fertilizerTank = clamp(100 - (game.day-1)*2, 60, 100);
-    game.pesticideTank = clamp(100 - (game.day-1)*1.5, 65, 100);
+    game.energy = 100;
+    game.waterTank = 100;
+    game.fertilizerTank = 100;
+    game.pesticideTank = 100;
     game.score = 0;
     game.perfectStreak = 0;
     game.weatherIndex = (game.day-1) % WEATHER_TYPES.length;
     game.weatherTime = 0;
-    game.weatherDuration = rand(26, 42);
+    game.weatherDuration = rand(90, 140);
 
-    player.x = 310;
-    player.y = 860;
+    player.x = 350;
+    player.y = 900;
     player.toolIndex = 1;
 
-    // Ajuste inicial de parcelas por día
     for(const p of game.plots){
       const species = SPECIES[p.speciesKey];
       p.planted = true;
       p.dead = false;
-      p.growth = clamp(rand(18, 55) + game.day*3, 10, 96);
-      p.health = clamp(rand(68, 92) - game.day*1.2, 40, 98);
-      p.moisture = clamp(rand(35, 62) - game.day*1.3, 20, 80);
-      p.pests = clamp(rand(0, 10) + game.day*1.4, 0, 34);
-      p.weeds = clamp(rand(0, 12) + game.day*1.2 * species.weedRisk, 0, 35);
+      p.growth = clamp(rand(20, 56) + game.day*2, 10, 96);
+      p.health = clamp(rand(70, 92) - game.day*.6, 45, 98);
+      p.moisture = clamp(rand(35, 62) - game.day*.8, 20, 80);
+      p.pests = clamp(rand(0, 10) + game.day*.8, 0, 34);
+      p.weeds = clamp(rand(0, 12) + game.day*.7 * species.weedRisk, 0, 35);
       p.fertilizer = clamp(rand(4, 22), 0, 35);
       p.stress = 0;
       p.lastActionFlash = 0;
@@ -864,7 +1012,6 @@
       p.shake = 0;
     }
 
-    // Cada ciertos días, una parcela empieza vacía
     if(game.day >= 2){
       const emptyPlot = choice(game.plots);
       emptyPlot.planted = false;
@@ -876,22 +1023,22 @@
       emptyPlot.fertilizer = 0;
     }
 
-    // Objetivos
-    const minHealthy = Math.min(7, 4 + game.day);
-    const requiredTreat = clamp(1 + Math.floor(game.day/2), 1, 4);
-    const requiredWeed = clamp(Math.floor(game.day/2), 0, 3);
+    const minHealthy = Math.min(4, 2 + Math.floor(game.day/2));
+    const requiredTreat = clamp(1 + Math.floor(game.day/3), 1, 3);
+    const requiredWeed = clamp(Math.floor(game.day/3), 0, 2);
     const requiredPlant = game.day >= 2 ? 1 : 0;
 
     game.missions = [
       { id:"healthy", text:`Mantén ${minHealthy} parcelas con salud ≥ 75`, target:minHealthy, value:0, done:false },
-      { id:"pests", text:`Deja como máximo ${Math.max(1, 3-requiredTreat+1)} parcelas con plaga visible`, target:1, value:0, done:false },
+      { id:"pests", text:`Deja como máximo 1 parcela con plaga visible`, target:1, value:0, done:false },
       { id:"actionsTreat", text:`Aplica al menos ${requiredTreat} tratamientos correctos`, target:requiredTreat, value:0, done:false },
       { id:"actionsWeed", text:`Elimina malas hierbas ${requiredWeed} veces`, target:requiredWeed, value:0, done: requiredWeed===0 },
       { id:"plant", text:`Repón ${requiredPlant} parcela${requiredPlant===1?"":"s"} vacía${requiredPlant===1?"":"s"}`, target:requiredPlant, value:0, done: requiredPlant===0 }
     ];
 
     updateHud();
-    showToast(`Día ${game.day}: revisa el jardín y completa la jornada.`);
+    showToast(`Día ${game.day}: jornada preparada.`);
+    queueAdvice(`Empieza observando. En jardinería educativa no gana quien actúa más rápido, sino quien decide mejor qué necesita cada parcela.`, true);
   }
 
   function saveGame(){
@@ -952,6 +1099,7 @@
       btn.addEventListener("click", () => {
         player.toolIndex = index;
         updateToolsUi();
+        queueAdvice(`Herramienta activa: ${tool.label}. Úsala solo cuando la planta realmente lo necesite.`);
       });
       toolsPanel.appendChild(btn);
     });
@@ -975,10 +1123,10 @@
       <div class="chip">Día <strong>${game.day}</strong></div>
       <div class="chip">Clima <strong>${weather.name}</strong></div>
       <div class="chip">Tiempo <strong>${Math.ceil(timeLeft)}s</strong></div>
-      <div class="chip">Agua <strong>${Math.round(game.waterTank)}%</strong></div>
-      <div class="chip">Abono <strong>${Math.round(game.fertilizerTank)}%</strong></div>
-      <div class="chip">Tratamiento <strong>${Math.round(game.pesticideTank)}%</strong></div>
-      <div class="chip">Energía <strong>${Math.round(game.energy)}%</strong></div>
+      <div class="chip">Agua <strong>∞</strong></div>
+      <div class="chip">Abono <strong>∞</strong></div>
+      <div class="chip">Tratamiento <strong>∞</strong></div>
+      <div class="chip">Acciones libres <strong>Sí</strong></div>
       <div class="chip">Parcelas sanas <strong>${healthy}/${game.plots.length}</strong></div>
       <div class="chip">Plaga grave <strong>${badPests}</strong></div>
     `;
@@ -1024,9 +1172,10 @@
 
   function inspectNearestPlot(){
     if(player.inspectCooldown > 0) return;
-    const p = findNearestPlot(110);
+    const p = findNearestPlot(120);
     if(!p){
       showToast("No hay ninguna parcela suficientemente cerca.");
+      queueAdvice("Acércate más a una parcela para inspeccionarla. Primero se observa, luego se interviene.", true);
       player.inspectCooldown = .35;
       return;
     }
@@ -1041,20 +1190,33 @@
 
     game.inspectedText = `${p.zoneName}: ${base}`;
     hintText.textContent = game.inspectedText;
+
+    if(!p.planted){
+      queueAdvice("Esta parcela está vacía. Si la jornada pide reponer, aquí sí tiene sentido plantar.");
+    }else if(p.pests > 20){
+      queueAdvice("Aquí la prioridad es tratar la plaga. Regar o abonar ahora no resuelve el problema principal.");
+    }else if(p.moisture < sp.idealMoisture[0]){
+      queueAdvice("La humedad está por debajo del rango ideal. Aquí regar sí sería una decisión adecuada.");
+    }else if(p.moisture > sp.idealMoisture[1] + 12){
+      queueAdvice("La planta va pasada de agua. El aprendizaje clave aquí es no regar más cuando ya hay exceso.");
+    }else if(p.weeds > 18){
+      queueAdvice("Las malas hierbas compiten por agua y nutrientes. Escardar mejora el manejo de la parcela.");
+    }else{
+      queueAdvice("El estado general es aceptable. En mantenimiento, a veces la mejor acción es vigilar y no intervenir de más.");
+    }
+
     showToast("Inspección actualizada.");
     player.inspectCooldown = .35;
   }
 
   function useToolOnPlot(plot){
-    if(player.interactCooldown > 0 || game.energy <= 0){
-      if(game.energy <= 0) showToast("Sin energía. Termina la jornada o gestiona mejor tus acciones.");
-      return;
-    }
+    if(player.interactCooldown > 0) return;
 
     const tool = getTool();
     const sp = SPECIES[plot.speciesKey];
     let success = false;
     let msg = "";
+    let advice = "";
 
     plot.shake = 0.18;
     plot.lastActionFlash = 0.4;
@@ -1064,6 +1226,7 @@
       case "plant":{
         if(plot.planted){
           msg = "Esa parcela ya tiene planta implantada.";
+          advice = "Plantar encima de una parcela ya ocupada no es correcto. Primero detecta si la parcela está realmente vacía.";
         }else{
           plot.planted = true;
           plot.dead = false;
@@ -1074,34 +1237,30 @@
           plot.pests = 0;
           plot.weeds = clamp(plot.weeds - 8, 0, 100);
           player.interactCooldown = 0.32;
-          game.energy -= 6;
           success = true;
           msg = `Has repuesto ${sp.name}.`;
+          advice = "Buena decisión: reponer una parcela vacía restablece la continuidad del jardín y permite volver al mantenimiento.";
           addMissionProgress("plant", 1);
           burstSparkles(plot.x + plot.w/2, plot.y + 34, "#8cf29f", 10);
         }
       } break;
 
       case "water":{
-        if(game.waterTank < 5){
-          msg = "Depósito de agua demasiado bajo.";
-        }else if(!plot.planted){
+        if(!plot.planted){
           plot.moisture = clamp(plot.moisture + 10, 0, 100);
-          game.waterTank -= 5;
-          game.energy -= 2;
           success = true;
           msg = "Has humedecido el suelo.";
+          advice = "Aportar algo de agua al terreno puede facilitar la implantación futura, pero solo si no está ya demasiado húmedo.";
           sprayWater(plot.x + plot.w/2, plot.y + 20);
         }else{
           const beforeIdeal = within(plot.moisture, sp.idealMoisture[0], sp.idealMoisture[1]);
           plot.moisture = clamp(plot.moisture + 18, 0, 100);
-          game.waterTank -= 6;
-          game.energy -= 2.5;
           player.interactCooldown = 0.25;
           sprayWater(plot.x + plot.w/2, plot.y + 10);
           if(plot.moisture > 88){
             plot.health = clamp(plot.health - 5, 0, 100);
             msg = "Has regado en exceso. Riesgo de asfixia radicular.";
+            advice = "Acción incorrecta: el exceso de agua desplaza el aire del suelo y perjudica las raíces.";
           }else{
             const afterIdeal = within(plot.moisture, sp.idealMoisture[0], sp.idealMoisture[1]);
             if(!beforeIdeal && afterIdeal){
@@ -1109,58 +1268,62 @@
               plot.growth = clamp(plot.growth + 3, 0, 100);
               success = true;
               msg = "Riego correcto: mejora el equilibrio hídrico.";
+              advice = "Acción correcta: has llevado la humedad al rango adecuado para esta especie.";
+            }else if(plot.moisture < sp.idealMoisture[0]){
+              success = true;
+              msg = "Riego aplicado.";
+              advice = "Vas en buena dirección. Esta planta estaba algo seca y el riego ayuda a recuperarla.";
             }else{
               success = true;
               msg = "Riego aplicado.";
+              advice = "Cuidado: no siempre regar suma. Conviene revisar el nivel de humedad antes de repetir.";
             }
           }
         }
       } break;
 
       case "fertilize":{
-        if(game.fertilizerTank < 6){
-          msg = "Queda poco fertilizante.";
-        }else if(!plot.planted){
+        if(!plot.planted){
           msg = "No tiene sentido abonar una parcela sin plantar.";
+          advice = "El abonado es útil cuando hay una planta establecida que pueda aprovechar los nutrientes.";
         }else{
           plot.fertilizer = clamp(plot.fertilizer + 18, 0, 100);
-          game.fertilizerTank -= 7;
-          game.energy -= 3;
           player.interactCooldown = 0.28;
           if(plot.fertilizer > 75){
             plot.health = clamp(plot.health - 8, 0, 100);
             plot.stress += 10;
             msg = "Exceso de abono: la planta se resiente.";
+            advice = "Acción incorrecta: abonar demasiado puede quemar raíces o generar desequilibrios nutricionales.";
             burstSparkles(plot.x + plot.w/2, plot.y + 40, "#ffb56b", 8);
           }else{
             plot.growth = clamp(plot.growth + 4, 0, 100);
             plot.health = clamp(plot.health + 3, 0, 100);
             success = true;
             msg = "Abonado correcto: mejora el vigor.";
+            advice = "Acción correcta: un abonado moderado puede favorecer el crecimiento y el estado general.";
             burstSparkles(plot.x + plot.w/2, plot.y + 40, "#b2ff90", 8);
           }
         }
       } break;
 
       case "pesticide":{
-        if(game.pesticideTank < 6){
-          msg = "Tratamiento fitosanitario insuficiente.";
-        }else if(!plot.planted){
+        if(!plot.planted){
           msg = "No hay planta que tratar.";
+          advice = "No se trata una plaga donde no hay planta afectada.";
         }else{
-          game.pesticideTank -= 7;
-          game.energy -= 3;
           player.interactCooldown = 0.3;
           if(plot.pests > 8){
             plot.pests = clamp(plot.pests - 24, 0, 100);
             plot.health = clamp(plot.health + 4, 0, 100);
             success = true;
             msg = "Plaga controlada.";
+            advice = "Acción correcta: has actuado sobre el problema real. Tratar a tiempo evita que la salud vegetal empeore.";
             addMissionProgress("actionsTreat", 1);
             burstSparkles(plot.x + plot.w/2, plot.y + 40, "#7be0ff", 10);
           }else{
             plot.health = clamp(plot.health - 2, 0, 100);
             msg = "Tratamiento innecesario. Conviene actuar con criterio.";
+            advice = "Aplicar tratamiento sin necesidad no es buen manejo. En jardinería profesional se interviene cuando hay indicios claros.";
           }
         }
       } break;
@@ -1168,45 +1331,44 @@
       case "prune":{
         if(!plot.planted){
           msg = "Parcela vacía. Nada que podar.";
+          advice = "La poda es una labor de mantenimiento sobre plantas implantadas, no sobre suelo desnudo.";
         }else{
-          game.energy -= 3;
           player.interactCooldown = 0.24;
           if(plot.growth > 55 || plot.stress > 8){
             plot.health = clamp(plot.health + 5, 0, 100);
             plot.stress = clamp(plot.stress - 10, 0, 100);
             success = true;
             msg = "Poda de mantenimiento realizada.";
+            advice = "Buena intervención: una poda ligera puede mejorar equilibrio, aireación y manejo de la planta.";
             burstSparkles(plot.x + plot.w/2, plot.y + 26, "#c4ffd4", 8);
           }else{
             plot.health = clamp(plot.health - 1, 0, 100);
             msg = "Poda poco necesaria en este momento.";
+            advice = "La poda no siempre toca. Podar sin motivo puede restar superficie útil y debilitar el ejemplar.";
           }
         }
       } break;
 
       case "weed":{
-        game.energy -= 2.5;
         player.interactCooldown = 0.22;
         if(plot.weeds > 5){
           plot.weeds = clamp(plot.weeds - 22, 0, 100);
           plot.health = clamp(plot.health + (plot.planted ? 3 : 0), 0, 100);
           success = true;
           msg = "Malas hierbas eliminadas.";
+          advice = "Acción correcta: al eliminar competencia, la planta dispone de más agua, luz y nutrientes.";
           addMissionProgress("actionsWeed", 1);
           burstSparkles(plot.x + plot.w/2, plot.y + 38, "#d9ff75", 8);
         }else{
           msg = "La parcela ya está bastante limpia.";
+          advice = "No hacía falta insistir aquí. Conviene priorizar zonas con más competencia vegetal.";
         }
       } break;
     }
 
-    game.energy = clamp(game.energy, 0, 100);
-    game.waterTank = clamp(game.waterTank, 0, 100);
-    game.fertilizerTank = clamp(game.fertilizerTank, 0, 100);
-    game.pesticideTank = clamp(game.pesticideTank, 0, 100);
-
     if(success) game.score += 10;
     if(msg) showToast(msg);
+    if(advice) queueAdvice(advice, true);
     updateHud();
   }
 
@@ -1217,57 +1379,51 @@
     m.done = m.value >= m.target;
   }
 
-  function within(v, a, b){ return v >= a && v <= b; }
-
   function updatePlots(dt){
+    const simDt = dt * SIM_SPEED;
     const weather = getWeather();
-    const dayFactor = 1 + (game.day-1)*0.09;
+    const dayFactor = 1 + (game.day-1)*0.04;
 
     for(const p of game.plots){
       const sp = SPECIES[p.speciesKey];
       p.lastActionFlash = Math.max(0, p.lastActionFlash - dt);
       p.shake = Math.max(0, p.shake - dt*2.4);
 
-      // humedad
-      let evapBase = 2.9 * weather.evap * dayFactor * dt;
-      if(p.weeds > 16) evapBase += 0.7 * dt;
+      let evapBase = 2.9 * weather.evap * dayFactor * simDt;
+      if(p.weeds > 16) evapBase += 0.7 * simDt;
       if(weather.type === "rain"){
-        p.moisture += weather.rain * 6.5 * dt;
+        p.moisture += weather.rain * 6.5 * simDt;
       }else{
         p.moisture -= evapBase;
       }
 
-      // malas hierbas y plagas
-      p.weeds += (0.55 + sp.weedRisk * 0.5 + game.day * 0.06) * dt;
+      p.weeds += (0.55 + sp.weedRisk * 0.5 + game.day * 0.03) * simDt;
       if(p.planted && !p.dead){
         const moistureBad = p.moisture < sp.idealMoisture[0]-8 || p.moisture > sp.idealMoisture[1]+10;
         const heatStress = weather.heat > sp.heatTolerance ? (weather.heat - sp.heatTolerance) * 14 : 0;
-        if(moistureBad) p.pests += 0.9 * dt * dayFactor;
-        p.pests += (p.weeds > 18 ? 0.9 : 0.25) * dt * dayFactor;
-        p.stress += heatStress * dt;
+        if(moistureBad) p.pests += 0.9 * simDt * dayFactor;
+        p.pests += (p.weeds > 18 ? 0.9 : 0.25) * simDt * dayFactor;
+        p.stress += heatStress * simDt;
 
-        // fertilizante se consume
-        p.fertilizer = clamp(p.fertilizer - (0.62 * dt), 0, 100);
+        p.fertilizer = clamp(p.fertilizer - (0.62 * simDt), 0, 100);
 
-        // crecimiento
         const inMoisture = within(p.moisture, sp.idealMoisture[0], sp.idealMoisture[1]);
         const pestPenalty = p.pests * 0.024;
         const weedPenalty = p.weeds * 0.017;
         const fertBonus = p.fertilizer > 8 && p.fertilizer < 60 ? 0.5 : p.fertilizer >= 60 ? -0.4 : 0;
-        const growthGain = (sp.growthRate * 60) * dt * (inMoisture ? 1.2 : 0.45) + fertBonus * dt - pestPenalty*dt - weedPenalty*dt;
+        const growthGain = (sp.growthRate * 60) * simDt * (inMoisture ? 1.2 : 0.45) + fertBonus * simDt - pestPenalty*simDt - weedPenalty*simDt;
         p.growth = clamp(p.growth + growthGain, 0, 100);
 
-        // salud
         let healthDelta = 0;
-        if(p.moisture < sp.idealMoisture[0]-10) healthDelta -= 2.0 * dt;
-        if(p.moisture > sp.idealMoisture[1]+16) healthDelta -= 2.4 * dt;
-        if(within(p.moisture, sp.idealMoisture[0], sp.idealMoisture[1])) healthDelta += 0.55 * dt;
-        if(p.pests > 20) healthDelta -= 2.8 * dt;
-        if(p.weeds > 20) healthDelta -= 1.4 * dt;
-        if(p.fertilizer > 72) healthDelta -= 1.7 * dt;
-        if(p.fertilizer > 10 && p.fertilizer < 55) healthDelta += 0.25 * dt;
-        if(weather.type === "rain" && p.moisture > sp.idealMoisture[1]+10) healthDelta -= 1.2 * dt;
-        if(weather.type === "heat" && sp.heatTolerance < 0.6) healthDelta -= 1.4 * dt;
+        if(p.moisture < sp.idealMoisture[0]-10) healthDelta -= 2.0 * simDt;
+        if(p.moisture > sp.idealMoisture[1]+16) healthDelta -= 2.4 * simDt;
+        if(within(p.moisture, sp.idealMoisture[0], sp.idealMoisture[1])) healthDelta += 0.55 * simDt;
+        if(p.pests > 20) healthDelta -= 2.8 * simDt;
+        if(p.weeds > 20) healthDelta -= 1.4 * simDt;
+        if(p.fertilizer > 72) healthDelta -= 1.7 * simDt;
+        if(p.fertilizer > 10 && p.fertilizer < 55) healthDelta += 0.25 * simDt;
+        if(weather.type === "rain" && p.moisture > sp.idealMoisture[1]+10) healthDelta -= 1.2 * simDt;
+        if(weather.type === "heat" && sp.heatTolerance < 0.6) healthDelta -= 1.4 * simDt;
 
         p.health = clamp(p.health + healthDelta, 0, 100);
 
@@ -1278,10 +1434,11 @@
           p.pests = 0;
           p.fertilizer = 0;
           p.weeds = clamp(p.weeds + 8, 0, 100);
+          queueAdvice(`Una planta se ha perdido por manejo tardío o condiciones adversas. En mantenimiento, detectar a tiempo importa mucho.`, true);
         }
       }else{
         p.moisture = clamp(p.moisture, 0, 100);
-        p.weeds += 0.5 * dt;
+        p.weeds += 0.5 * simDt;
       }
 
       p.moisture = clamp(p.moisture, 0, 100);
@@ -1292,6 +1449,7 @@
   }
 
   function updateWeather(dt){
+    const simDt = dt * SIM_SPEED;
     game.weatherTime += dt;
     if(game.weatherTime >= game.weatherDuration){
       game.weatherTime = 0;
@@ -1301,8 +1459,19 @@
         options = options.filter(w => w.type !== "heat");
       }
       game.weatherIndex = WEATHER_TYPES.indexOf(choice(options));
-      game.weatherDuration = rand(24, 40);
+      game.weatherDuration = rand(90, 140);
       showToast(`Cambio de clima: ${getWeather().name}.`);
+
+      const wt = getWeather().type;
+      if(wt === "rain"){
+        queueAdvice("Con lluvia, no conviene seguir regando sin mirar la humedad: el agua ya la está aportando el clima.");
+      }else if(wt === "heat"){
+        queueAdvice("Con calor, la evaporación aumenta. Habrá que vigilar mejor las especies menos tolerantes al estrés térmico.");
+      }else if(wt === "cloudy"){
+        queueAdvice("Con tiempo nublado el jardín pierde humedad más lentamente. No hace falta precipitarse con el riego.");
+      }else{
+        queueAdvice("Con tiempo soleado conviene vigilar la humedad, pero sin convertir el riego en una rutina automática.");
+      }
     }
   }
 
@@ -1328,11 +1497,9 @@
       player.moving = false;
     }
 
-    const speedFactor = game.energy < 18 ? 0.76 : 1;
-    let nx = player.x + ax * player.speed * dt * speedFactor;
-    let ny = player.y + ay * player.speed * dt * speedFactor;
+    let nx = player.x + ax * player.speed * dt;
+    let ny = player.y + ay * player.speed * dt;
 
-    // colisiones por separado
     if(!collides(nx - player.w/2, player.y - player.h/2, player.w, player.h)) player.x = nx;
     if(!collides(player.x - player.w/2, ny - player.h/2, player.w, player.h)) player.y = ny;
 
@@ -1340,9 +1507,12 @@
     player.y = clamp(player.y, 28, WORLD.height - 28);
 
     if(input.action){
-      const p = findNearestPlot(95);
+      const p = findNearestPlot(105);
       if(p) useToolOnPlot(p);
-      else showToast("Acércate más a una parcela para actuar.");
+      else{
+        showToast("Acércate más a una parcela para actuar.");
+        queueAdvice("No basta con elegir bien la herramienta: también hay que situarse junto a la zona de trabajo.");
+      }
       input.action = false;
     }
 
@@ -1457,14 +1627,12 @@
   function drawBackground(){
     const weather = getWeather();
 
-    // cielo
     const grad = ctx.createLinearGradient(0,0,0,canvas.height);
     grad.addColorStop(0, weather.sky);
     grad.addColorStop(1, "#d9f1e0");
     ctx.fillStyle = grad;
     ctx.fillRect(0,0,canvas.width,canvas.height);
 
-    // suelo base
     const a = worldToScreen(0,0);
     const w = WORLD.width * camera.zoom;
     const h = WORLD.height * camera.zoom;
@@ -1472,7 +1640,6 @@
     ctx.fillStyle = "#88c57a";
     ctx.fillRect(a.x, a.y, w, h);
 
-    // textura ligera
     for(let gx = 0; gx < WORLD.width; gx += 42){
       for(let gy = 0; gy < WORLD.height; gy += 42){
         const p = worldToScreen(gx, gy);
@@ -1482,7 +1649,6 @@
       }
     }
 
-    // caminos
     for(const path of game.paths){
       const p = worldToScreen(path.x, path.y);
       drawRoundedRect(p.x,p.y,path.w*camera.zoom,path.h*camera.zoom,18*camera.zoom, "#c9b58b", "rgba(0,0,0,.07)");
@@ -1492,7 +1658,6 @@
       }
     }
 
-    // decoraciones
     for(const d of game.decorations){
       const p = worldToScreen(d.x, d.y);
       if(d.type === "shed"){
@@ -1573,14 +1738,11 @@
       const x = pos.x + shakeX;
       const y = pos.y;
 
-      // borde exterior
       drawRoundedRect(x,y,p.w*camera.zoom,p.h*camera.zoom,16*camera.zoom, "#7d5737", "#563923");
 
-      // suelo
       ctx.fillStyle = p.planted ? "#6d482a" : "#5b3f29";
       drawRoundedRect(x+8*camera.zoom,y+8*camera.zoom,(p.w-16)*camera.zoom,(p.h-16)*camera.zoom,12*camera.zoom, ctx.fillStyle);
 
-      // humedad visual del suelo
       const moistAlpha = clamp(p.moisture / 100, 0, 1) * 0.42;
       ctx.fillStyle = `rgba(88,168,255,${moistAlpha})`;
       drawRoundedRect(x+10*camera.zoom,y+10*camera.zoom,(p.w-20)*camera.zoom,(p.h-20)*camera.zoom,10*camera.zoom, ctx.fillStyle);
@@ -1592,13 +1754,11 @@
         const growthScale = 0.55 + p.growth/100*0.68;
         const healthTint = p.health < 45 ? "#a99158" : sp.color;
 
-        // sombra
         ctx.fillStyle = "rgba(0,0,0,.15)";
         ctx.beginPath();
         ctx.ellipse(plantX, plantBaseY + 10*camera.zoom, 20*camera.zoom*growthScale, 8*camera.zoom, 0, 0, Math.PI*2);
         ctx.fill();
 
-        // tallo
         ctx.strokeStyle = "#3f7b35";
         ctx.lineWidth = 5 * camera.zoom * growthScale;
         ctx.beginPath();
@@ -1606,7 +1766,6 @@
         ctx.lineTo(plantX, plantBaseY - 34*camera.zoom*growthScale);
         ctx.stroke();
 
-        // hojas / masa vegetal
         ctx.fillStyle = healthTint;
         const crowns = 3 + Math.floor(p.growth / 28);
         for(let i=0;i<crowns;i++){
@@ -1617,13 +1776,11 @@
           ctx.fill();
         }
 
-        // flor / icono
         ctx.fillStyle = "#ffffff";
         ctx.font = `${Math.max(14, 20*camera.zoom*growthScale)}px serif`;
         ctx.textAlign = "center";
         ctx.fillText(sp.icon, plantX, plantBaseY - 24*camera.zoom*growthScale);
 
-        // plaga
         if(p.pests > 10){
           const count = Math.min(5, 1 + Math.floor(p.pests/18));
           for(let i=0;i<count;i++){
@@ -1636,13 +1793,12 @@
           }
         }
 
-        // malas hierbas
         if(p.weeds > 7){
           ctx.strokeStyle = "#a4db54";
           ctx.lineWidth = 2.4*camera.zoom;
           const weedCount = Math.min(6, 1 + Math.floor(p.weeds/8));
           for(let i=0;i<weedCount;i++){
-            const wx = x + (18 + i*14) * camera.zoom;
+            const wx = x + (18 + i*18) * camera.zoom;
             const wy = y + (p.h-16) * camera.zoom;
             ctx.beginPath();
             ctx.moveTo(wx, wy);
@@ -1661,7 +1817,7 @@
           ctx.strokeStyle = "#9bcf4d";
           ctx.lineWidth = 2.2*camera.zoom;
           for(let i=0;i<5;i++){
-            const wx = x + (20 + i*16) * camera.zoom;
+            const wx = x + (24 + i*18) * camera.zoom;
             const wy = y + (p.h-16) * camera.zoom;
             ctx.beginPath();
             ctx.moveTo(wx, wy);
@@ -1672,24 +1828,20 @@
         }
       }
 
-      // barras estado
-      drawMiniBar(x+10*camera.zoom, y+10*camera.zoom, 48*camera.zoom, 6*camera.zoom, p.health, "#68d67c", "rgba(0,0,0,.35)");
-      drawMiniBar(x+10*camera.zoom, y+20*camera.zoom, 48*camera.zoom, 6*camera.zoom, p.moisture, "#58a8ff", "rgba(0,0,0,.35)");
+      drawMiniBar(x+10*camera.zoom, y+10*camera.zoom, 54*camera.zoom, 6*camera.zoom, p.health, "#68d67c", "rgba(0,0,0,.35)");
+      drawMiniBar(x+10*camera.zoom, y+20*camera.zoom, 54*camera.zoom, 6*camera.zoom, p.moisture, "#58a8ff", "rgba(0,0,0,.35)");
 
-      // borde de alerta
       if(p.planted && (p.health < 45 || p.pests > 24 || p.moisture > 85 || p.moisture < 18)){
         ctx.strokeStyle = `rgba(255,125,125,${0.5 + Math.sin(performance.now()*0.008)*0.15})`;
         ctx.lineWidth = 4*camera.zoom;
         drawRoundedRect(x+4*camera.zoom,y+4*camera.zoom,(p.w-8)*camera.zoom,(p.h-8)*camera.zoom,12*camera.zoom,null,ctx.strokeStyle);
       }
 
-      // flash de acción
       if(flash > 0){
         ctx.fillStyle = `rgba(255,255,255,${flash*0.24})`;
         drawRoundedRect(x+4*camera.zoom,y+4*camera.zoom,(p.w-8)*camera.zoom,(p.h-8)*camera.zoom,14*camera.zoom,ctx.fillStyle);
       }
 
-      // nombre corto
       ctx.fillStyle = "rgba(255,255,255,.85)";
       ctx.font = `${11*camera.zoom}px sans-serif`;
       ctx.textAlign = "left";
@@ -1698,9 +1850,7 @@
   }
 
   function drawMiniBar(x,y,w,h,val,color,bg){
-    ctx.fillStyle = bg;
     drawRoundedRect(x,y,w,h,h/2,bg);
-    ctx.fillStyle = color;
     drawRoundedRect(x,y,w*clamp(val/100,0,1),h,h/2,color);
   }
 
@@ -1709,32 +1859,27 @@
     const bob = player.moving ? Math.sin(player.step * 2) * 2.2 * camera.zoom : 0;
     const x = s.x, y = s.y + bob;
 
-    // sombra
     ctx.fillStyle = "rgba(0,0,0,.18)";
     ctx.beginPath();
     ctx.ellipse(x, y + 18*camera.zoom, 14*camera.zoom, 6*camera.zoom, 0, 0, Math.PI*2);
     ctx.fill();
 
-    // cuerpo
-    ctx.fillStyle = "#2f6bd8";
     drawRoundedRect(x-12*camera.zoom, y-4*camera.zoom, 24*camera.zoom, 26*camera.zoom, 8*camera.zoom, "#2f6bd8");
-    // piernas
     ctx.fillStyle = "#203a72";
     ctx.fillRect(x-9*camera.zoom, y+18*camera.zoom, 7*camera.zoom, 10*camera.zoom);
     ctx.fillRect(x+2*camera.zoom, y+18*camera.zoom, 7*camera.zoom, 10*camera.zoom);
-    // cabeza
+
     ctx.fillStyle = "#f0c49a";
     ctx.beginPath();
     ctx.arc(x, y-12*camera.zoom, 12*camera.zoom, 0, Math.PI*2);
     ctx.fill();
-    // gorra
+
     ctx.fillStyle = "#52b067";
     ctx.beginPath();
     ctx.arc(x, y-15*camera.zoom, 12*camera.zoom, Math.PI, 0);
     ctx.fill();
     ctx.fillRect(x-12*camera.zoom, y-15*camera.zoom, 24*camera.zoom, 5*camera.zoom);
 
-    // cara simple
     ctx.fillStyle = "#1a1a1a";
     const eyeShift = player.dirX < -0.2 ? -2 : player.dirX > 0.2 ? 2 : 0;
     ctx.beginPath();
@@ -1742,7 +1887,6 @@
     ctx.arc(x+4*camera.zoom + eyeShift, y-13*camera.zoom, 1.3*camera.zoom, 0, Math.PI*2);
     ctx.fill();
 
-    // herramienta equipada
     ctx.font = `${16*camera.zoom}px sans-serif`;
     ctx.textAlign = "center";
     ctx.fillText(getTool().emoji, x + player.dirX*14*camera.zoom, y + player.dirY*6*camera.zoom - 28*camera.zoom);
@@ -1800,7 +1944,6 @@
       }
     }
 
-    // viñeta ligera
     const g = ctx.createRadialGradient(canvas.width/2, canvas.height/2, canvas.height*.15, canvas.width/2, canvas.height/2, canvas.height*.7);
     g.addColorStop(0, "rgba(0,0,0,0)");
     g.addColorStop(1, "rgba(0,0,0,.14)");
@@ -1809,13 +1952,12 @@
   }
 
   function drawTargetHint(){
-    const p = findNearestPlot(110);
+    const p = findNearestPlot(120);
     if(!p) return;
     const pos = worldToScreen(p.x + p.w/2, p.y - 8);
     ctx.font = `${13*camera.zoom}px sans-serif`;
     ctx.textAlign = "center";
-    ctx.fillStyle = "rgba(8,15,11,.82)";
-    drawRoundedRect(pos.x - 72*camera.zoom, pos.y - 16*camera.zoom, 144*camera.zoom, 28*camera.zoom, 12*camera.zoom, "rgba(8,15,11,.82)");
+    drawRoundedRect(pos.x - 76*camera.zoom, pos.y - 16*camera.zoom, 152*camera.zoom, 28*camera.zoom, 12*camera.zoom, "rgba(8,15,11,.82)");
     ctx.fillStyle = "#fff";
     ctx.fillText(`Actuar: ${getTool().label}`, pos.x, pos.y + 3*camera.zoom);
   }
@@ -1828,7 +1970,7 @@
   }
 
   function updateHintText(){
-    const p = findNearestPlot(110);
+    const p = findNearestPlot(120);
     if(!p){
       hintText.textContent = "Muévete entre las zonas. Inspecciona antes de actuar para decidir bien.";
       return;
@@ -1947,6 +2089,11 @@
     startGame();
   }
 
+  function manualAdvanceDay(){
+    queueAdvice("Has avanzado manualmente al siguiente día. Esto permite trabajar por sesiones cortas o reiniciar el reto diario.", true);
+    nextDay();
+  }
+
   function keySet(code, pressed){
     if(code === "ArrowUp" || code === "KeyW") input.up = pressed;
     if(code === "ArrowDown" || code === "KeyS") input.down = pressed;
@@ -1973,10 +2120,16 @@
       return;
     }
 
+    if(e.code === "KeyN"){
+      manualAdvanceDay();
+      return;
+    }
+
     const num = parseInt(e.key, 10);
     if(num >= 1 && num <= 6){
       player.toolIndex = num - 1;
       updateToolsUi();
+      queueAdvice(`Herramienta activa: ${getTool().label}.`);
       return;
     }
 
@@ -2010,14 +2163,19 @@
 
   actionBtn.addEventListener("pointerdown", (e) => { e.preventDefault(); input.action = true; });
   inspectBtn.addEventListener("pointerdown", (e) => { e.preventDefault(); input.inspect = true; });
+  inspectQuickBtn.addEventListener("click", () => { input.inspect = true; });
+  manualNextDayBtn.addEventListener("click", manualAdvanceDay);
+
   pauseBtn.addEventListener("pointerdown", (e) => {
     e.preventDefault();
     if(game.paused) resumeGame(); else pauseGame();
   });
+
   toolCycleBtn.addEventListener("pointerdown", (e) => {
     e.preventDefault();
     player.toolIndex = (player.toolIndex + 1) % TOOLS.length;
     updateToolsUi();
+    queueAdvice(`Herramienta activa: ${getTool().label}.`);
   });
 
   startBtn.addEventListener("click", () => {
@@ -2039,8 +2197,7 @@
 
   window.addEventListener("resize", resize);
 
-  canvas.addEventListener("pointerdown", (e) => {
-    // Toque sobre canvas: inspección rápida si no hay controles visibles pulsados
+  canvas.addEventListener("pointerdown", () => {
     if(matchMedia("(pointer:coarse)").matches){
       input.inspect = true;
     }
@@ -2051,6 +2208,7 @@
     buildWorld();
     resize();
     updateHud();
+    queueAdvice("Consejo inicial: primero inspecciona. Después decide si hace falta regar, tratar, abonar, podar o simplemente no tocar.");
     requestAnimationFrame(loop);
   }
 
