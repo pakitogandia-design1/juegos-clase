@@ -1,0 +1,1645 @@
+[
+  {
+    "id": 1,
+    "slug": "alacero",
+    "name": "Alacero",
+    "gen": 2,
+    "type1": "Acero",
+    "type2": "Volador",
+    "hp": 125,
+    "speed": 84,
+    "image": "assets/cards/alacero.png",
+    "moves": [
+      {
+        "name": "Perforala",
+        "type": "Volador",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Ala de Metal",
+        "type": "Acero",
+        "power": 55,
+        "priority": false
+      },
+      {
+        "name": "Cuchillas Pétreas",
+        "type": "Roca",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "slug": "aurorama",
+    "name": "Aurorama",
+    "gen": 2,
+    "type1": "Psíquico",
+    "type2": null,
+    "hp": 101,
+    "speed": 113,
+    "image": "assets/cards/aurorama.png",
+    "moves": [
+      {
+        "name": "Impulso Mental",
+        "type": "Psíquico",
+        "power": 65,
+        "priority": false
+      },
+      {
+        "name": "Arremetida Temeraria",
+        "type": "Normal",
+        "power": 50,
+        "priority": false
+      },
+      {
+        "name": "Orbe Umbrío",
+        "type": "Fantasma",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "slug": "azurlia",
+    "name": "Azurlia",
+    "gen": 2,
+    "type1": "Agua",
+    "type2": "Hada",
+    "hp": 141,
+    "speed": 49,
+    "image": "assets/cards/azurlia.png",
+    "moves": [
+      {
+        "name": "Brillo Encantado",
+        "type": "Hada",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Chorro",
+        "type": "Agua",
+        "power": 54,
+        "priority": false
+      },
+      {
+        "name": "Chorro Veloz",
+        "type": "Agua",
+        "power": 30,
+        "priority": true
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "slug": "bonalba",
+    "name": "Bonalba",
+    "gen": 1,
+    "type1": "Normal",
+    "type2": null,
+    "hp": 142,
+    "speed": 41,
+    "image": "assets/cards/bonalba.webp",
+    "moves": [
+      {
+        "name": "Proyectil Ovoide",
+        "type": "Normal",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Puño Eléctrico",
+        "type": "Eléctrico",
+        "power": 54,
+        "priority": false
+      },
+      {
+        "name": "Puño Gélido",
+        "type": "Hielo",
+        "power": 44,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "slug": "cebolave",
+    "name": "Cebolave",
+    "gen": 1,
+    "type1": "Normal",
+    "type2": "Volador",
+    "hp": 107,
+    "speed": 90,
+    "image": "assets/cards/cebolave.webp",
+    "moves": [
+      {
+        "name": "Ciclón Aéreo",
+        "type": "Volador",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Hojas Navaja",
+        "type": "Planta",
+        "power": 54,
+        "priority": false
+      },
+      {
+        "name": "Ataque Veloz",
+        "type": "Normal",
+        "power": 35,
+        "priority": true
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "slug": "cloron",
+    "name": "Clorón",
+    "gen": 2,
+    "type1": "Planta",
+    "type2": null,
+    "hp": 131,
+    "speed": 77,
+    "image": "assets/cards/cloron.png",
+    "moves": [
+      {
+        "name": "Haz Solar",
+        "type": "Planta",
+        "power": 60,
+        "priority": false
+      },
+      {
+        "name": "Impacto Corporal",
+        "type": "Normal",
+        "power": 50,
+        "priority": false
+      },
+      {
+        "name": "Falla Sísmica",
+        "type": "Tierra",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "slug": "cuernigero",
+    "name": "Cuernígero",
+    "gen": 2,
+    "type1": "Bicho",
+    "type2": "Lucha",
+    "hp": 121,
+    "speed": 86,
+    "image": "assets/cards/cuernigero.webp",
+    "moves": [
+      {
+        "name": "Megacuerno",
+        "type": "Bicho",
+        "power": 68,
+        "priority": false
+      },
+      {
+        "name": "Demolición",
+        "type": "Lucha",
+        "power": 56,
+        "priority": false
+      },
+      {
+        "name": "Cuchillas Pétreas",
+        "type": "Roca",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "slug": "dormungor",
+    "name": "Dormungor",
+    "gen": 1,
+    "type1": "Normal",
+    "type2": null,
+    "hp": 138,
+    "speed": 29,
+    "image": "assets/cards/dormungor.webp",
+    "moves": [
+      {
+        "name": "Impacto Corporal",
+        "type": "Normal",
+        "power": 68,
+        "priority": false
+      },
+      {
+        "name": "Falla Sísmica",
+        "type": "Tierra",
+        "power": 54,
+        "priority": false
+      },
+      {
+        "name": "Golpe Oportunista",
+        "type": "Siniestro",
+        "power": 30,
+        "priority": true
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "slug": "dracotero",
+    "name": "Dracótero",
+    "gen": 1,
+    "type1": "Dragón",
+    "type2": "Volador",
+    "hp": 128,
+    "speed": 79,
+    "image": "assets/cards/dracotero.webp",
+    "moves": [
+      {
+        "name": "Garra Dracónica",
+        "type": "Dragón",
+        "power": 65,
+        "priority": false
+      },
+      {
+        "name": "Ala Veloz",
+        "type": "Volador",
+        "power": 55,
+        "priority": false
+      },
+      {
+        "name": "Falla Sísmica",
+        "type": "Tierra",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "slug": "dunadraco",
+    "name": "Dunadraco",
+    "gen": 3,
+    "type1": "Tierra",
+    "type2": "Dragón",
+    "hp": 123,
+    "speed": 100,
+    "image": "assets/cards/dunadraco.webp",
+    "moves": [
+      {
+        "name": "Garra Dracónica",
+        "type": "Dragón",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Falla Sísmica",
+        "type": "Tierra",
+        "power": 56,
+        "priority": false
+      },
+      {
+        "name": "Cuchillas Pétreas",
+        "type": "Roca",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "slug": "electractor",
+    "name": "Electráctor",
+    "gen": 1,
+    "type1": "Eléctrico",
+    "type2": "Acero",
+    "hp": 118,
+    "speed": 70,
+    "image": "assets/cards/electractor.webp",
+    "moves": [
+      {
+        "name": "Tormenta Eléctrica",
+        "type": "Eléctrico",
+        "power": 70,
+        "priority": false
+      },
+      {
+        "name": "Garra Férrica",
+        "type": "Acero",
+        "power": 52,
+        "priority": false
+      },
+      {
+        "name": "Ráfaga Rocosa",
+        "type": "Roca",
+        "power": 25,
+        "priority": true
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "slug": "enjambrax",
+    "name": "Enjambrax",
+    "gen": 2,
+    "type1": "Bicho",
+    "type2": "Acero",
+    "hp": 121,
+    "speed": 87,
+    "image": "assets/cards/enjambrax.webp",
+    "moves": [
+      {
+        "name": "Corte Enjambre",
+        "type": "Bicho",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Ala de Metal",
+        "type": "Acero",
+        "power": 55,
+        "priority": false
+      },
+      {
+        "name": "Bala de Acero",
+        "type": "Acero",
+        "power": 30,
+        "priority": true
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "slug": "espadilva",
+    "name": "Espadilva",
+    "gen": 3,
+    "type1": "Planta",
+    "type2": null,
+    "hp": 111,
+    "speed": 103,
+    "image": "assets/cards/espadilva.webp",
+    "moves": [
+      {
+        "name": "Hojas Navaja",
+        "type": "Planta",
+        "power": 67,
+        "priority": false
+      },
+      {
+        "name": "Ciclón Aéreo",
+        "type": "Volador",
+        "power": 54,
+        "priority": false
+      },
+      {
+        "name": "Falla Sísmica",
+        "type": "Tierra",
+        "power": 43,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "slug": "ferruneo",
+    "name": "Ferrúneo",
+    "gen": 2,
+    "type1": "Acero",
+    "type2": "Tierra",
+    "hp": 137,
+    "speed": 31,
+    "image": "assets/cards/ferruneo.webp",
+    "moves": [
+      {
+        "name": "Cola Metálica",
+        "type": "Acero",
+        "power": 60,
+        "priority": false
+      },
+      {
+        "name": "Falla Sísmica",
+        "type": "Tierra",
+        "power": 55,
+        "priority": false
+      },
+      {
+        "name": "Derrumbe",
+        "type": "Roca",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "slug": "florazote",
+    "name": "Florazote",
+    "gen": 1,
+    "type1": "Planta",
+    "type2": "Veneno",
+    "hp": 120,
+    "speed": 80,
+    "image": "assets/cards/florazote.webp",
+    "moves": [
+      {
+        "name": "Haz Solar",
+        "type": "Planta",
+        "power": 70,
+        "priority": false
+      },
+      {
+        "name": "Granada Tóxica",
+        "type": "Veneno",
+        "power": 55,
+        "priority": false
+      },
+      {
+        "name": "Falla Sísmica",
+        "type": "Tierra",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "slug": "fluxmar",
+    "name": "Fluxmar",
+    "gen": 2,
+    "type1": "Agua",
+    "type2": "Eléctrico",
+    "hp": 133,
+    "speed": 67,
+    "image": "assets/cards/fluxmar.webp",
+    "moves": [
+      {
+        "name": "Descarga",
+        "type": "Eléctrico",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Diluvio",
+        "type": "Agua",
+        "power": 54,
+        "priority": false
+      },
+      {
+        "name": "Chorro Veloz",
+        "type": "Agua",
+        "power": 30,
+        "priority": true
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "slug": "fosilazor",
+    "name": "Fosilazor",
+    "gen": 3,
+    "type1": "Bicho",
+    "type2": "Roca",
+    "hp": 129,
+    "speed": 75,
+    "image": "assets/cards/fosilazor.webp",
+    "moves": [
+      {
+        "name": "Cuchillas Pétreas",
+        "type": "Roca",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Cizalla Doble",
+        "type": "Bicho",
+        "power": 56,
+        "priority": false
+      },
+      {
+        "name": "Ráfaga Rocosa",
+        "type": "Roca",
+        "power": 30,
+        "priority": true
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "slug": "furion",
+    "name": "Furión",
+    "gen": 1,
+    "type1": "Agua",
+    "type2": "Volador",
+    "hp": 126,
+    "speed": 81,
+    "image": "assets/cards/furion.webp",
+    "moves": [
+      {
+        "name": "Diluvio",
+        "type": "Agua",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Aletazo",
+        "type": "Volador",
+        "power": 54,
+        "priority": false
+      },
+      {
+        "name": "Cuchillas Pétreas",
+        "type": "Roca",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "slug": "geodromo",
+    "name": "Geódromo",
+    "gen": 3,
+    "type1": "Tierra",
+    "type2": "Psíquico",
+    "hp": 128,
+    "speed": 75,
+    "image": "assets/cards/geodromo.webp",
+    "moves": [
+      {
+        "name": "Falla Sísmica",
+        "type": "Tierra",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Impulso Mental",
+        "type": "Psíquico",
+        "power": 56,
+        "priority": false
+      },
+      {
+        "name": "Alud Gélido",
+        "type": "Hielo",
+        "power": 44,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "slug": "glaciaris",
+    "name": "Glaciaris",
+    "gen": 3,
+    "type1": "Hielo",
+    "type2": null,
+    "hp": 96,
+    "speed": 50,
+    "image": "assets/cards/glaciaris.webp",
+    "moves": [
+      {
+        "name": "Alud Gélido",
+        "type": "Hielo",
+        "power": 75,
+        "priority": false
+      },
+      {
+        "name": "Descarga",
+        "type": "Eléctrico",
+        "power": 58,
+        "priority": false
+      },
+      {
+        "name": "Onda Marcial",
+        "type": "Lucha",
+        "power": 46,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "slug": "guantor",
+    "name": "Guantor",
+    "gen": 1,
+    "type1": "Lucha",
+    "type2": null,
+    "hp": 118,
+    "speed": 76,
+    "image": "assets/cards/guantor.webp",
+    "moves": [
+      {
+        "name": "Puñetazo Titánico",
+        "type": "Lucha",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Puño Gélido",
+        "type": "Hielo",
+        "power": 54,
+        "priority": false
+      },
+      {
+        "name": "Puño Relámpago",
+        "type": "Lucha",
+        "power": 30,
+        "priority": true
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "slug": "harikami",
+    "name": "Harikami",
+    "gen": 3,
+    "type1": "Lucha",
+    "type2": null,
+    "hp": 137,
+    "speed": 50,
+    "image": "assets/cards/harikami.webp",
+    "moves": [
+      {
+        "name": "Ira Marcial",
+        "type": "Lucha",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Cuchillas Pétreas",
+        "type": "Roca",
+        "power": 54,
+        "priority": false
+      },
+      {
+        "name": "Bala de Acero",
+        "type": "Acero",
+        "power": 30,
+        "priority": true
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "slug": "helionegro",
+    "name": "Hélionegro",
+    "gen": 2,
+    "type1": "Fuego",
+    "type2": "Siniestro",
+    "hp": 107,
+    "speed": 97,
+    "image": "assets/cards/helionegro.webp",
+    "moves": [
+      {
+        "name": "Llama Suprema",
+        "type": "Fuego",
+        "power": 70,
+        "priority": false
+      },
+      {
+        "name": "Mordida Tenebrosa",
+        "type": "Siniestro",
+        "power": 54,
+        "priority": false
+      },
+      {
+        "name": "Haz Solar",
+        "type": "Planta",
+        "power": 42,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "slug": "ignifris",
+    "name": "Ígnifris",
+    "gen": 3,
+    "type1": "Fuego",
+    "type2": "Lucha",
+    "hp": 117,
+    "speed": 89,
+    "image": "assets/cards/ignifris.webp",
+    "moves": [
+      {
+        "name": "Llama Suprema",
+        "type": "Fuego",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Patada Cometa",
+        "type": "Lucha",
+        "power": 56,
+        "priority": false
+      },
+      {
+        "name": "Falla Sísmica",
+        "type": "Tierra",
+        "power": 43,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "slug": "lenturio",
+    "name": "Lenturio",
+    "gen": 1,
+    "type1": "Agua",
+    "type2": "Psíquico",
+    "hp": 137,
+    "speed": 43,
+    "image": "assets/cards/lenturio.webp",
+    "moves": [
+      {
+        "name": "Diluvio",
+        "type": "Agua",
+        "power": 60,
+        "priority": false
+      },
+      {
+        "name": "Impulso Mental",
+        "type": "Psíquico",
+        "power": 55,
+        "priority": false
+      },
+      {
+        "name": "Alud Gélido",
+        "type": "Hielo",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "slug": "luzvera",
+    "name": "Luzvera",
+    "gen": 3,
+    "type1": "Psíquico",
+    "type2": "Hada",
+    "hp": 104,
+    "speed": 82,
+    "image": "assets/cards/luzvera.webp",
+    "moves": [
+      {
+        "name": "Luz Feérica",
+        "type": "Hada",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Impulso Mental",
+        "type": "Psíquico",
+        "power": 54,
+        "priority": false
+      },
+      {
+        "name": "Onda Marcial",
+        "type": "Lucha",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "slug": "maracanto",
+    "name": "Maracanto",
+    "gen": 3,
+    "type1": "Agua",
+    "type2": "Planta",
+    "hp": 127,
+    "speed": 70,
+    "image": "assets/cards/maracanto.webp",
+    "moves": [
+      {
+        "name": "Orbe Clorofila",
+        "type": "Planta",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Diluvio",
+        "type": "Agua",
+        "power": 54,
+        "priority": false
+      },
+      {
+        "name": "Alud Gélido",
+        "type": "Hielo",
+        "power": 44,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "slug": "marealdraco",
+    "name": "Marealdraco",
+    "gen": 2,
+    "type1": "Agua",
+    "type2": "Dragón",
+    "hp": 129,
+    "speed": 83,
+    "image": "assets/cards/marealdraco.webp",
+    "moves": [
+      {
+        "name": "Diluvio",
+        "type": "Agua",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Onda Dracón",
+        "type": "Dragón",
+        "power": 56,
+        "priority": false
+      },
+      {
+        "name": "Alud Gélido",
+        "type": "Hielo",
+        "power": 44,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "slug": "mentatex",
+    "name": "Mentatex",
+    "gen": 1,
+    "type1": "Psíquico",
+    "type2": null,
+    "hp": 100,
+    "speed": 120,
+    "image": "assets/cards/mentatex.webp",
+    "moves": [
+      {
+        "name": "Impulso Mental",
+        "type": "Psíquico",
+        "power": 65,
+        "priority": false
+      },
+      {
+        "name": "Puño Sombrío",
+        "type": "Fantasma",
+        "power": 45,
+        "priority": false
+      },
+      {
+        "name": "Puño Eléctrico",
+        "type": "Eléctrico",
+        "power": 50,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "slug": "metacortex",
+    "name": "Metacórtex",
+    "gen": 3,
+    "type1": "Acero",
+    "type2": "Psíquico",
+    "hp": 131,
+    "speed": 70,
+    "image": "assets/cards/metacortex.webp",
+    "moves": [
+      {
+        "name": "Puño Meteórico",
+        "type": "Acero",
+        "power": 68,
+        "priority": false
+      },
+      {
+        "name": "Cabeza Serena",
+        "type": "Psíquico",
+        "power": 54,
+        "priority": false
+      },
+      {
+        "name": "Bala de Acero",
+        "type": "Acero",
+        "power": 30,
+        "priority": true
+      }
+    ]
+  },
+  {
+    "id": 31,
+    "slug": "miceliox",
+    "name": "Miceliox",
+    "gen": 3,
+    "type1": "Planta",
+    "type2": "Lucha",
+    "hp": 119,
+    "speed": 74,
+    "image": "assets/cards/miceliox.webp",
+    "moves": [
+      {
+        "name": "Semilla Explosiva",
+        "type": "Planta",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Demolición",
+        "type": "Lucha",
+        "power": 56,
+        "priority": false
+      },
+      {
+        "name": "Puño Relámpago",
+        "type": "Lucha",
+        "power": 30,
+        "priority": true
+      }
+    ]
+  },
+  {
+    "id": 32,
+    "slug": "monolito",
+    "name": "Monolito",
+    "gen": 1,
+    "type1": "Roca",
+    "type2": "Tierra",
+    "hp": 139,
+    "speed": 47,
+    "image": "assets/cards/monolito.webp",
+    "moves": [
+      {
+        "name": "Derrumbe",
+        "type": "Roca",
+        "power": 60,
+        "priority": false
+      },
+      {
+        "name": "Falla Sísmica",
+        "type": "Tierra",
+        "power": 55,
+        "priority": false
+      },
+      {
+        "name": "Estallido",
+        "type": "Normal",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "slug": "mortifero",
+    "name": "Mortífero",
+    "gen": 3,
+    "type1": "Fantasma",
+    "type2": null,
+    "hp": 129,
+    "speed": 35,
+    "image": "assets/cards/mortifero.webp",
+    "moves": [
+      {
+        "name": "Orbe Umbrío",
+        "type": "Fantasma",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Puño Ígneo",
+        "type": "Fuego",
+        "power": 52,
+        "priority": false
+      },
+      {
+        "name": "Sombra Fugaz",
+        "type": "Fantasma",
+        "power": 30,
+        "priority": true
+      }
+    ]
+  },
+  {
+    "id": 34,
+    "slug": "nayadeon",
+    "name": "Náyadeon",
+    "gen": 1,
+    "type1": "Agua",
+    "type2": "Hielo",
+    "hp": 135,
+    "speed": 55,
+    "image": "assets/cards/nayadeon.webp",
+    "moves": [
+      {
+        "name": "Diluvio",
+        "type": "Agua",
+        "power": 60,
+        "priority": false
+      },
+      {
+        "name": "Alud Gélido",
+        "type": "Hielo",
+        "power": 60,
+        "priority": false
+      },
+      {
+        "name": "Descarga",
+        "type": "Eléctrico",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 35,
+    "slug": "nuboxido",
+    "name": "Nubóxido",
+    "gen": 1,
+    "type1": "Veneno",
+    "type2": null,
+    "hp": 129,
+    "speed": 63,
+    "image": "assets/cards/nuboxido.webp",
+    "moves": [
+      {
+        "name": "Granada Tóxica",
+        "type": "Veneno",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Llama Suprema",
+        "type": "Fuego",
+        "power": 54,
+        "priority": false
+      },
+      {
+        "name": "Golpe Oportunista",
+        "type": "Siniestro",
+        "power": 30,
+        "priority": true
+      }
+    ]
+  },
+  {
+    "id": 36,
+    "slug": "obsidion",
+    "name": "Obsidión",
+    "gen": 2,
+    "type1": "Roca",
+    "type2": "Siniestro",
+    "hp": 141,
+    "speed": 59,
+    "image": "assets/cards/obsidion.webp",
+    "moves": [
+      {
+        "name": "Derrumbe",
+        "type": "Roca",
+        "power": 68,
+        "priority": false
+      },
+      {
+        "name": "Mordida Tenebrosa",
+        "type": "Siniestro",
+        "power": 56,
+        "priority": false
+      },
+      {
+        "name": "Falla Sísmica",
+        "type": "Tierra",
+        "power": 44,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 37,
+    "slug": "pantanoz",
+    "name": "Pantanoz",
+    "gen": 3,
+    "type1": "Agua",
+    "type2": "Tierra",
+    "hp": 139,
+    "speed": 61,
+    "image": "assets/cards/pantanoz.webp",
+    "moves": [
+      {
+        "name": "Diluvio",
+        "type": "Agua",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Falla Sísmica",
+        "type": "Tierra",
+        "power": 54,
+        "priority": false
+      },
+      {
+        "name": "Chorro Veloz",
+        "type": "Agua",
+        "power": 30,
+        "priority": true
+      }
+    ]
+  },
+  {
+    "id": 38,
+    "slug": "petraelix",
+    "name": "Petraélix",
+    "gen": 1,
+    "type1": "Roca",
+    "type2": "Volador",
+    "hp": 104,
+    "speed": 130,
+    "image": "assets/cards/petraelix.webp",
+    "moves": [
+      {
+        "name": "Cuchillas Pétreas",
+        "type": "Roca",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Falla Sísmica",
+        "type": "Tierra",
+        "power": 56,
+        "priority": false
+      },
+      {
+        "name": "Ciclón Aéreo",
+        "type": "Volador",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 39,
+    "slug": "pirozuma",
+    "name": "Pirozuma",
+    "gen": 2,
+    "type1": "Fuego",
+    "type2": null,
+    "hp": 113,
+    "speed": 97,
+    "image": "assets/cards/pirozuma.webp",
+    "moves": [
+      {
+        "name": "Llama Suprema",
+        "type": "Fuego",
+        "power": 65,
+        "priority": false
+      },
+      {
+        "name": "Puño Eléctrico",
+        "type": "Eléctrico",
+        "power": 50,
+        "priority": false
+      },
+      {
+        "name": "Falla Sísmica",
+        "type": "Tierra",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 40,
+    "slug": "psiomega",
+    "name": "Psiomega",
+    "gen": 1,
+    "type1": "Psíquico",
+    "type2": null,
+    "hp": 96,
+    "speed": 115,
+    "image": "assets/cards/psiomega.webp",
+    "moves": [
+      {
+        "name": "Impulso Mental",
+        "type": "Psíquico",
+        "power": 75,
+        "priority": false
+      },
+      {
+        "name": "Orbe Umbrío",
+        "type": "Fantasma",
+        "power": 58,
+        "priority": false
+      },
+      {
+        "name": "Onda Marcial",
+        "type": "Lucha",
+        "power": 46,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 41,
+    "slug": "pyrodraco",
+    "name": "Pyrodraco",
+    "gen": 1,
+    "type1": "Fuego",
+    "type2": "Volador",
+    "hp": 110,
+    "speed": 100,
+    "image": "assets/cards/pyrodraco.webp",
+    "moves": [
+      {
+        "name": "Llama Suprema",
+        "type": "Fuego",
+        "power": 70,
+        "priority": false
+      },
+      {
+        "name": "Ala Veloz",
+        "type": "Volador",
+        "power": 55,
+        "priority": false
+      },
+      {
+        "name": "Falla Sísmica",
+        "type": "Tierra",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 42,
+    "slug": "rodazar",
+    "name": "Rodázar",
+    "gen": 2,
+    "type1": "Tierra",
+    "type2": null,
+    "hp": 137,
+    "speed": 50,
+    "image": "assets/cards/rodazar.webp",
+    "moves": [
+      {
+        "name": "Falla Sísmica",
+        "type": "Tierra",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Derrumbe",
+        "type": "Roca",
+        "power": 54,
+        "priority": false
+      },
+      {
+        "name": "Canto Glacial",
+        "type": "Hielo",
+        "power": 30,
+        "priority": true
+      }
+    ]
+  },
+  {
+    "id": 43,
+    "slug": "rugimar",
+    "name": "Rugimar",
+    "gen": 2,
+    "type1": "Agua",
+    "type2": null,
+    "hp": 133,
+    "speed": 69,
+    "image": "assets/cards/rugimar.webp",
+    "moves": [
+      {
+        "name": "Diluvio",
+        "type": "Agua",
+        "power": 60,
+        "priority": false
+      },
+      {
+        "name": "Mordida Tenebrosa",
+        "type": "Siniestro",
+        "power": 50,
+        "priority": false
+      },
+      {
+        "name": "Alud Gélido",
+        "type": "Hielo",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 44,
+    "slug": "terratox",
+    "name": "Terratox",
+    "gen": 1,
+    "type1": "Veneno",
+    "type2": "Tierra",
+    "hp": 133,
+    "speed": 73,
+    "image": "assets/cards/terratox.webp",
+    "moves": [
+      {
+        "name": "Granada Tóxica",
+        "type": "Veneno",
+        "power": 60,
+        "priority": false
+      },
+      {
+        "name": "Falla Sísmica",
+        "type": "Tierra",
+        "power": 55,
+        "priority": false
+      },
+      {
+        "name": "Alud Gélido",
+        "type": "Hielo",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 45,
+    "slug": "tetrabrax",
+    "name": "Tetrabrax",
+    "gen": 1,
+    "type1": "Lucha",
+    "type2": null,
+    "hp": 130,
+    "speed": 55,
+    "image": "assets/cards/tetrabrax.webp",
+    "moves": [
+      {
+        "name": "Puñetazo Titánico",
+        "type": "Lucha",
+        "power": 65,
+        "priority": false
+      },
+      {
+        "name": "Cuchillas Pétreas",
+        "type": "Roca",
+        "power": 50,
+        "priority": false
+      },
+      {
+        "name": "Falla Sísmica",
+        "type": "Tierra",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 46,
+    "slug": "tormentrix",
+    "name": "Tormentrix",
+    "gen": 1,
+    "type1": "Eléctrico",
+    "type2": "Volador",
+    "hp": 92,
+    "speed": 100,
+    "image": "assets/cards/tormentrix.webp",
+    "moves": [
+      {
+        "name": "Descarga",
+        "type": "Eléctrico",
+        "power": 75,
+        "priority": false
+      },
+      {
+        "name": "Perforala",
+        "type": "Volador",
+        "power": 58,
+        "priority": false
+      },
+      {
+        "name": "Onda Ígnea",
+        "type": "Fuego",
+        "power": 46,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 47,
+    "slug": "tortalar",
+    "name": "Tortalar",
+    "gen": 1,
+    "type1": "Agua",
+    "type2": null,
+    "hp": 130,
+    "speed": 78,
+    "image": "assets/cards/tortalar.webp",
+    "moves": [
+      {
+        "name": "Diluvio",
+        "type": "Agua",
+        "power": 70,
+        "priority": false
+      },
+      {
+        "name": "Alud Gélido",
+        "type": "Hielo",
+        "power": 50,
+        "priority": false
+      },
+      {
+        "name": "Falla Sísmica",
+        "type": "Tierra",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 48,
+    "slug": "toxiala",
+    "name": "Tóxiala",
+    "gen": 2,
+    "type1": "Veneno",
+    "type2": "Volador",
+    "hp": 103,
+    "speed": 127,
+    "image": "assets/cards/toxiala.webp",
+    "moves": [
+      {
+        "name": "Ala Veloz",
+        "type": "Volador",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Colmillo Venenoso",
+        "type": "Veneno",
+        "power": 54,
+        "priority": false
+      },
+      {
+        "name": "Mordisco Sombrío",
+        "type": "Siniestro",
+        "power": 42,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 49,
+    "slug": "umbrasma",
+    "name": "Umbrasma",
+    "gen": 3,
+    "type1": "Siniestro",
+    "type2": "Fantasma",
+    "hp": 108,
+    "speed": 70,
+    "image": "assets/cards/umbrasma.webp",
+    "moves": [
+      {
+        "name": "Mordida Tenebrosa",
+        "type": "Siniestro",
+        "power": 66,
+        "priority": false
+      },
+      {
+        "name": "Orbe Umbrío",
+        "type": "Fantasma",
+        "power": 54,
+        "priority": false
+      },
+      {
+        "name": "Sombra Fugaz",
+        "type": "Fantasma",
+        "power": 30,
+        "priority": true
+      }
+    ]
+  },
+  {
+    "id": 50,
+    "slug": "umbrilex",
+    "name": "Umbrílex",
+    "gen": 1,
+    "type1": "Fantasma",
+    "type2": "Veneno",
+    "hp": 100,
+    "speed": 110,
+    "image": "assets/cards/umbrilex.webp",
+    "moves": [
+      {
+        "name": "Orbe Umbrío",
+        "type": "Fantasma",
+        "power": 60,
+        "priority": false
+      },
+      {
+        "name": "Granada Tóxica",
+        "type": "Veneno",
+        "power": 55,
+        "priority": false
+      },
+      {
+        "name": "Impulso Mental",
+        "type": "Psíquico",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 51,
+    "slug": "umbrunox",
+    "name": "Umbrunox",
+    "gen": 2,
+    "type1": "Siniestro",
+    "type2": null,
+    "hp": 133,
+    "speed": 67,
+    "image": "assets/cards/umbrunox.webp",
+    "moves": [
+      {
+        "name": "Mordida Tenebrosa",
+        "type": "Siniestro",
+        "power": 60,
+        "priority": false
+      },
+      {
+        "name": "Cola Metálica",
+        "type": "Acero",
+        "power": 55,
+        "priority": false
+      },
+      {
+        "name": "Ataque Veloz",
+        "type": "Normal",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 52,
+    "slug": "voltazeta",
+    "name": "Voltazeta",
+    "gen": 1,
+    "type1": "Eléctrico",
+    "type2": null,
+    "hp": 101,
+    "speed": 129,
+    "image": "assets/cards/voltazeta.webp",
+    "moves": [
+      {
+        "name": "Descarga",
+        "type": "Eléctrico",
+        "power": 68,
+        "priority": false
+      },
+      {
+        "name": "Orbe Umbrío",
+        "type": "Fantasma",
+        "power": 52,
+        "priority": false
+      },
+      {
+        "name": "Doble Impacto",
+        "type": "Lucha",
+        "power": 43,
+        "priority": false
+      }
+    ]
+  },
+  {
+    "id": 53,
+    "slug": "voltillo",
+    "name": "Voltillo",
+    "gen": 1,
+    "type1": "Eléctrico",
+    "type2": null,
+    "hp": 100,
+    "speed": 110,
+    "image": "assets/cards/voltillo.webp",
+    "moves": [
+      {
+        "name": "Descarga",
+        "type": "Eléctrico",
+        "power": 65,
+        "priority": false
+      },
+      {
+        "name": "Cola Metálica",
+        "type": "Acero",
+        "power": 55,
+        "priority": false
+      },
+      {
+        "name": "Onda Marcial",
+        "type": "Lucha",
+        "power": 45,
+        "priority": false
+      }
+    ]
+  }
+]

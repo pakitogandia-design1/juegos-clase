@@ -1,0 +1,54 @@
+name,gen,type1,type2,hp,speed,move1_name,move1_type,move1_power,move1_priority,move2_name,move2_type,move2_power,move2_priority,move3_name,move3_type,move3_power,move3_priority
+Alacero,2,Acero,Volador,125,84,Perforala,Volador,66,False,Ala de Metal,Acero,55,False,Cuchillas Pétreas,Roca,45,False
+Aurorama,2,Psíquico,,101,113,Impulso Mental,Psíquico,65,False,Arremetida Temeraria,Normal,50,False,Orbe Umbrío,Fantasma,45,False
+Azurlia,2,Agua,Hada,141,49,Brillo Encantado,Hada,66,False,Chorro,Agua,54,False,Chorro Veloz,Agua,30,True
+Bonalba,1,Normal,,142,41,Proyectil Ovoide,Normal,66,False,Puño Eléctrico,Eléctrico,54,False,Puño Gélido,Hielo,44,False
+Cebolave,1,Normal,Volador,107,90,Ciclón Aéreo,Volador,66,False,Hojas Navaja,Planta,54,False,Ataque Veloz,Normal,35,True
+Clorón,2,Planta,,131,77,Haz Solar,Planta,60,False,Impacto Corporal,Normal,50,False,Falla Sísmica,Tierra,45,False
+Cuernígero,2,Bicho,Lucha,121,86,Megacuerno,Bicho,68,False,Demolición,Lucha,56,False,Cuchillas Pétreas,Roca,45,False
+Dormungor,1,Normal,,138,29,Impacto Corporal,Normal,68,False,Falla Sísmica,Tierra,54,False,Golpe Oportunista,Siniestro,30,True
+Dracótero,1,Dragón,Volador,128,79,Garra Dracónica,Dragón,65,False,Ala Veloz,Volador,55,False,Falla Sísmica,Tierra,45,False
+Dunadraco,3,Tierra,Dragón,123,100,Garra Dracónica,Dragón,66,False,Falla Sísmica,Tierra,56,False,Cuchillas Pétreas,Roca,45,False
+Electráctor,1,Eléctrico,Acero,118,70,Tormenta Eléctrica,Eléctrico,70,False,Garra Férrica,Acero,52,False,Ráfaga Rocosa,Roca,25,True
+Enjambrax,2,Bicho,Acero,121,87,Corte Enjambre,Bicho,66,False,Ala de Metal,Acero,55,False,Bala de Acero,Acero,30,True
+Espadilva,3,Planta,,111,103,Hojas Navaja,Planta,67,False,Ciclón Aéreo,Volador,54,False,Falla Sísmica,Tierra,43,False
+Ferrúneo,2,Acero,Tierra,137,31,Cola Metálica,Acero,60,False,Falla Sísmica,Tierra,55,False,Derrumbe,Roca,45,False
+Florazote,1,Planta,Veneno,120,80,Haz Solar,Planta,70,False,Granada Tóxica,Veneno,55,False,Falla Sísmica,Tierra,45,False
+Fluxmar,2,Agua,Eléctrico,133,67,Descarga,Eléctrico,66,False,Diluvio,Agua,54,False,Chorro Veloz,Agua,30,True
+Fosilazor,3,Bicho,Roca,129,75,Cuchillas Pétreas,Roca,66,False,Cizalla Doble,Bicho,56,False,Ráfaga Rocosa,Roca,30,True
+Furión,1,Agua,Volador,126,81,Diluvio,Agua,66,False,Aletazo,Volador,54,False,Cuchillas Pétreas,Roca,45,False
+Geódromo,3,Tierra,Psíquico,128,75,Falla Sísmica,Tierra,66,False,Impulso Mental,Psíquico,56,False,Alud Gélido,Hielo,44,False
+Glaciaris,3,Hielo,,96,50,Alud Gélido,Hielo,75,False,Descarga,Eléctrico,58,False,Onda Marcial,Lucha,46,False
+Guantor,1,Lucha,,118,76,Puñetazo Titánico,Lucha,66,False,Puño Gélido,Hielo,54,False,Puño Relámpago,Lucha,30,True
+Harikami,3,Lucha,,137,50,Ira Marcial,Lucha,66,False,Cuchillas Pétreas,Roca,54,False,Bala de Acero,Acero,30,True
+Hélionegro,2,Fuego,Siniestro,107,97,Llama Suprema,Fuego,70,False,Mordida Tenebrosa,Siniestro,54,False,Haz Solar,Planta,42,False
+Ígnifris,3,Fuego,Lucha,117,89,Llama Suprema,Fuego,66,False,Patada Cometa,Lucha,56,False,Falla Sísmica,Tierra,43,False
+Lenturio,1,Agua,Psíquico,137,43,Diluvio,Agua,60,False,Impulso Mental,Psíquico,55,False,Alud Gélido,Hielo,45,False
+Luzvera,3,Psíquico,Hada,104,82,Luz Feérica,Hada,66,False,Impulso Mental,Psíquico,54,False,Onda Marcial,Lucha,45,False
+Maracanto,3,Agua,Planta,127,70,Orbe Clorofila,Planta,66,False,Diluvio,Agua,54,False,Alud Gélido,Hielo,44,False
+Marealdraco,2,Agua,Dragón,129,83,Diluvio,Agua,66,False,Onda Dracón,Dragón,56,False,Alud Gélido,Hielo,44,False
+Mentatex,1,Psíquico,,100,120,Impulso Mental,Psíquico,65,False,Puño Sombrío,Fantasma,45,False,Puño Eléctrico,Eléctrico,50,False
+Metacórtex,3,Acero,Psíquico,131,70,Puño Meteórico,Acero,68,False,Cabeza Serena,Psíquico,54,False,Bala de Acero,Acero,30,True
+Miceliox,3,Planta,Lucha,119,74,Semilla Explosiva,Planta,66,False,Demolición,Lucha,56,False,Puño Relámpago,Lucha,30,True
+Monolito,1,Roca,Tierra,139,47,Derrumbe,Roca,60,False,Falla Sísmica,Tierra,55,False,Estallido,Normal,45,False
+Mortífero,3,Fantasma,,129,35,Orbe Umbrío,Fantasma,66,False,Puño Ígneo,Fuego,52,False,Sombra Fugaz,Fantasma,30,True
+Náyadeon,1,Agua,Hielo,135,55,Diluvio,Agua,60,False,Alud Gélido,Hielo,60,False,Descarga,Eléctrico,45,False
+Nubóxido,1,Veneno,,129,63,Granada Tóxica,Veneno,66,False,Llama Suprema,Fuego,54,False,Golpe Oportunista,Siniestro,30,True
+Obsidión,2,Roca,Siniestro,141,59,Derrumbe,Roca,68,False,Mordida Tenebrosa,Siniestro,56,False,Falla Sísmica,Tierra,44,False
+Pantanoz,3,Agua,Tierra,139,61,Diluvio,Agua,66,False,Falla Sísmica,Tierra,54,False,Chorro Veloz,Agua,30,True
+Petraélix,1,Roca,Volador,104,130,Cuchillas Pétreas,Roca,66,False,Falla Sísmica,Tierra,56,False,Ciclón Aéreo,Volador,45,False
+Pirozuma,2,Fuego,,113,97,Llama Suprema,Fuego,65,False,Puño Eléctrico,Eléctrico,50,False,Falla Sísmica,Tierra,45,False
+Psiomega,1,Psíquico,,96,115,Impulso Mental,Psíquico,75,False,Orbe Umbrío,Fantasma,58,False,Onda Marcial,Lucha,46,False
+Pyrodraco,1,Fuego,Volador,110,100,Llama Suprema,Fuego,70,False,Ala Veloz,Volador,55,False,Falla Sísmica,Tierra,45,False
+Rodázar,2,Tierra,,137,50,Falla Sísmica,Tierra,66,False,Derrumbe,Roca,54,False,Canto Glacial,Hielo,30,True
+Rugimar,2,Agua,,133,69,Diluvio,Agua,60,False,Mordida Tenebrosa,Siniestro,50,False,Alud Gélido,Hielo,45,False
+Terratox,1,Veneno,Tierra,133,73,Granada Tóxica,Veneno,60,False,Falla Sísmica,Tierra,55,False,Alud Gélido,Hielo,45,False
+Tetrabrax,1,Lucha,,130,55,Puñetazo Titánico,Lucha,65,False,Cuchillas Pétreas,Roca,50,False,Falla Sísmica,Tierra,45,False
+Tormentrix,1,Eléctrico,Volador,92,100,Descarga,Eléctrico,75,False,Perforala,Volador,58,False,Onda Ígnea,Fuego,46,False
+Tortalar,1,Agua,,130,78,Diluvio,Agua,70,False,Alud Gélido,Hielo,50,False,Falla Sísmica,Tierra,45,False
+Tóxiala,2,Veneno,Volador,103,127,Ala Veloz,Volador,66,False,Colmillo Venenoso,Veneno,54,False,Mordisco Sombrío,Siniestro,42,False
+Umbrasma,3,Siniestro,Fantasma,108,70,Mordida Tenebrosa,Siniestro,66,False,Orbe Umbrío,Fantasma,54,False,Sombra Fugaz,Fantasma,30,True
+Umbrílex,1,Fantasma,Veneno,100,110,Orbe Umbrío,Fantasma,60,False,Granada Tóxica,Veneno,55,False,Impulso Mental,Psíquico,45,False
+Umbrunox,2,Siniestro,,133,67,Mordida Tenebrosa,Siniestro,60,False,Cola Metálica,Acero,55,False,Ataque Veloz,Normal,45,False
+Voltazeta,1,Eléctrico,,101,129,Descarga,Eléctrico,68,False,Orbe Umbrío,Fantasma,52,False,Doble Impacto,Lucha,43,False
+Voltillo,1,Eléctrico,,100,110,Descarga,Eléctrico,65,False,Cola Metálica,Acero,55,False,Onda Marcial,Lucha,45,False

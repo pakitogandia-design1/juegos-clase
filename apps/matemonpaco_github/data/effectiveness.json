@@ -1,0 +1,1622 @@
+[
+  {
+    "attack_type": "Normal",
+    "defense_type": "Normal",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Normal",
+    "defense_type": "Fuego",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Normal",
+    "defense_type": "Agua",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Normal",
+    "defense_type": "Eléctrico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Normal",
+    "defense_type": "Planta",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Normal",
+    "defense_type": "Hielo",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Normal",
+    "defense_type": "Lucha",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Normal",
+    "defense_type": "Veneno",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Normal",
+    "defense_type": "Tierra",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Normal",
+    "defense_type": "Volador",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Normal",
+    "defense_type": "Psíquico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Normal",
+    "defense_type": "Bicho",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Normal",
+    "defense_type": "Roca",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Normal",
+    "defense_type": "Fantasma",
+    "multiplier": 0
+  },
+  {
+    "attack_type": "Normal",
+    "defense_type": "Dragón",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Normal",
+    "defense_type": "Siniestro",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Normal",
+    "defense_type": "Acero",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Normal",
+    "defense_type": "Hada",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fuego",
+    "defense_type": "Normal",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fuego",
+    "defense_type": "Fuego",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Fuego",
+    "defense_type": "Agua",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Fuego",
+    "defense_type": "Eléctrico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fuego",
+    "defense_type": "Planta",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Fuego",
+    "defense_type": "Hielo",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Fuego",
+    "defense_type": "Lucha",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fuego",
+    "defense_type": "Veneno",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fuego",
+    "defense_type": "Tierra",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fuego",
+    "defense_type": "Volador",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fuego",
+    "defense_type": "Psíquico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fuego",
+    "defense_type": "Bicho",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Fuego",
+    "defense_type": "Roca",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Fuego",
+    "defense_type": "Fantasma",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fuego",
+    "defense_type": "Dragón",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Fuego",
+    "defense_type": "Siniestro",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fuego",
+    "defense_type": "Acero",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Fuego",
+    "defense_type": "Hada",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Agua",
+    "defense_type": "Normal",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Agua",
+    "defense_type": "Fuego",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Agua",
+    "defense_type": "Agua",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Agua",
+    "defense_type": "Eléctrico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Agua",
+    "defense_type": "Planta",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Agua",
+    "defense_type": "Hielo",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Agua",
+    "defense_type": "Lucha",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Agua",
+    "defense_type": "Veneno",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Agua",
+    "defense_type": "Tierra",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Agua",
+    "defense_type": "Volador",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Agua",
+    "defense_type": "Psíquico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Agua",
+    "defense_type": "Bicho",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Agua",
+    "defense_type": "Roca",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Agua",
+    "defense_type": "Fantasma",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Agua",
+    "defense_type": "Dragón",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Agua",
+    "defense_type": "Siniestro",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Agua",
+    "defense_type": "Acero",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Agua",
+    "defense_type": "Hada",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Eléctrico",
+    "defense_type": "Normal",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Eléctrico",
+    "defense_type": "Fuego",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Eléctrico",
+    "defense_type": "Agua",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Eléctrico",
+    "defense_type": "Eléctrico",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Eléctrico",
+    "defense_type": "Planta",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Eléctrico",
+    "defense_type": "Hielo",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Eléctrico",
+    "defense_type": "Lucha",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Eléctrico",
+    "defense_type": "Veneno",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Eléctrico",
+    "defense_type": "Tierra",
+    "multiplier": 0
+  },
+  {
+    "attack_type": "Eléctrico",
+    "defense_type": "Volador",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Eléctrico",
+    "defense_type": "Psíquico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Eléctrico",
+    "defense_type": "Bicho",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Eléctrico",
+    "defense_type": "Roca",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Eléctrico",
+    "defense_type": "Fantasma",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Eléctrico",
+    "defense_type": "Dragón",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Eléctrico",
+    "defense_type": "Siniestro",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Eléctrico",
+    "defense_type": "Acero",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Eléctrico",
+    "defense_type": "Hada",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Planta",
+    "defense_type": "Normal",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Planta",
+    "defense_type": "Fuego",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Planta",
+    "defense_type": "Agua",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Planta",
+    "defense_type": "Eléctrico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Planta",
+    "defense_type": "Planta",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Planta",
+    "defense_type": "Hielo",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Planta",
+    "defense_type": "Lucha",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Planta",
+    "defense_type": "Veneno",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Planta",
+    "defense_type": "Tierra",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Planta",
+    "defense_type": "Volador",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Planta",
+    "defense_type": "Psíquico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Planta",
+    "defense_type": "Bicho",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Planta",
+    "defense_type": "Roca",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Planta",
+    "defense_type": "Fantasma",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Planta",
+    "defense_type": "Dragón",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Planta",
+    "defense_type": "Siniestro",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Planta",
+    "defense_type": "Acero",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Planta",
+    "defense_type": "Hada",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hielo",
+    "defense_type": "Normal",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hielo",
+    "defense_type": "Fuego",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Hielo",
+    "defense_type": "Agua",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Hielo",
+    "defense_type": "Eléctrico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hielo",
+    "defense_type": "Planta",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Hielo",
+    "defense_type": "Hielo",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Hielo",
+    "defense_type": "Lucha",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hielo",
+    "defense_type": "Veneno",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hielo",
+    "defense_type": "Tierra",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Hielo",
+    "defense_type": "Volador",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Hielo",
+    "defense_type": "Psíquico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hielo",
+    "defense_type": "Bicho",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hielo",
+    "defense_type": "Roca",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hielo",
+    "defense_type": "Fantasma",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hielo",
+    "defense_type": "Dragón",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Hielo",
+    "defense_type": "Siniestro",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hielo",
+    "defense_type": "Acero",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Hielo",
+    "defense_type": "Hada",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Lucha",
+    "defense_type": "Normal",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Lucha",
+    "defense_type": "Fuego",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Lucha",
+    "defense_type": "Agua",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Lucha",
+    "defense_type": "Eléctrico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Lucha",
+    "defense_type": "Planta",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Lucha",
+    "defense_type": "Hielo",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Lucha",
+    "defense_type": "Lucha",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Lucha",
+    "defense_type": "Veneno",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Lucha",
+    "defense_type": "Tierra",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Lucha",
+    "defense_type": "Volador",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Lucha",
+    "defense_type": "Psíquico",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Lucha",
+    "defense_type": "Bicho",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Lucha",
+    "defense_type": "Roca",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Lucha",
+    "defense_type": "Fantasma",
+    "multiplier": 0
+  },
+  {
+    "attack_type": "Lucha",
+    "defense_type": "Dragón",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Lucha",
+    "defense_type": "Siniestro",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Lucha",
+    "defense_type": "Acero",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Lucha",
+    "defense_type": "Hada",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Veneno",
+    "defense_type": "Normal",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Veneno",
+    "defense_type": "Fuego",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Veneno",
+    "defense_type": "Agua",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Veneno",
+    "defense_type": "Eléctrico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Veneno",
+    "defense_type": "Planta",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Veneno",
+    "defense_type": "Hielo",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Veneno",
+    "defense_type": "Lucha",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Veneno",
+    "defense_type": "Veneno",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Veneno",
+    "defense_type": "Tierra",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Veneno",
+    "defense_type": "Volador",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Veneno",
+    "defense_type": "Psíquico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Veneno",
+    "defense_type": "Bicho",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Veneno",
+    "defense_type": "Roca",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Veneno",
+    "defense_type": "Fantasma",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Veneno",
+    "defense_type": "Dragón",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Veneno",
+    "defense_type": "Siniestro",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Veneno",
+    "defense_type": "Acero",
+    "multiplier": 0
+  },
+  {
+    "attack_type": "Veneno",
+    "defense_type": "Hada",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Tierra",
+    "defense_type": "Normal",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Tierra",
+    "defense_type": "Fuego",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Tierra",
+    "defense_type": "Agua",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Tierra",
+    "defense_type": "Eléctrico",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Tierra",
+    "defense_type": "Planta",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Tierra",
+    "defense_type": "Hielo",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Tierra",
+    "defense_type": "Lucha",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Tierra",
+    "defense_type": "Veneno",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Tierra",
+    "defense_type": "Tierra",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Tierra",
+    "defense_type": "Volador",
+    "multiplier": 0
+  },
+  {
+    "attack_type": "Tierra",
+    "defense_type": "Psíquico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Tierra",
+    "defense_type": "Bicho",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Tierra",
+    "defense_type": "Roca",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Tierra",
+    "defense_type": "Fantasma",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Tierra",
+    "defense_type": "Dragón",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Tierra",
+    "defense_type": "Siniestro",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Tierra",
+    "defense_type": "Acero",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Tierra",
+    "defense_type": "Hada",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Volador",
+    "defense_type": "Normal",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Volador",
+    "defense_type": "Fuego",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Volador",
+    "defense_type": "Agua",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Volador",
+    "defense_type": "Eléctrico",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Volador",
+    "defense_type": "Planta",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Volador",
+    "defense_type": "Hielo",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Volador",
+    "defense_type": "Lucha",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Volador",
+    "defense_type": "Veneno",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Volador",
+    "defense_type": "Tierra",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Volador",
+    "defense_type": "Volador",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Volador",
+    "defense_type": "Psíquico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Volador",
+    "defense_type": "Bicho",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Volador",
+    "defense_type": "Roca",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Volador",
+    "defense_type": "Fantasma",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Volador",
+    "defense_type": "Dragón",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Volador",
+    "defense_type": "Siniestro",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Volador",
+    "defense_type": "Acero",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Volador",
+    "defense_type": "Hada",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Psíquico",
+    "defense_type": "Normal",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Psíquico",
+    "defense_type": "Fuego",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Psíquico",
+    "defense_type": "Agua",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Psíquico",
+    "defense_type": "Eléctrico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Psíquico",
+    "defense_type": "Planta",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Psíquico",
+    "defense_type": "Hielo",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Psíquico",
+    "defense_type": "Lucha",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Psíquico",
+    "defense_type": "Veneno",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Psíquico",
+    "defense_type": "Tierra",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Psíquico",
+    "defense_type": "Volador",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Psíquico",
+    "defense_type": "Psíquico",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Psíquico",
+    "defense_type": "Bicho",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Psíquico",
+    "defense_type": "Roca",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Psíquico",
+    "defense_type": "Fantasma",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Psíquico",
+    "defense_type": "Dragón",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Psíquico",
+    "defense_type": "Siniestro",
+    "multiplier": 0
+  },
+  {
+    "attack_type": "Psíquico",
+    "defense_type": "Acero",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Psíquico",
+    "defense_type": "Hada",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Bicho",
+    "defense_type": "Normal",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Bicho",
+    "defense_type": "Fuego",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Bicho",
+    "defense_type": "Agua",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Bicho",
+    "defense_type": "Eléctrico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Bicho",
+    "defense_type": "Planta",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Bicho",
+    "defense_type": "Hielo",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Bicho",
+    "defense_type": "Lucha",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Bicho",
+    "defense_type": "Veneno",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Bicho",
+    "defense_type": "Tierra",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Bicho",
+    "defense_type": "Volador",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Bicho",
+    "defense_type": "Psíquico",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Bicho",
+    "defense_type": "Bicho",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Bicho",
+    "defense_type": "Roca",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Bicho",
+    "defense_type": "Fantasma",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Bicho",
+    "defense_type": "Dragón",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Bicho",
+    "defense_type": "Siniestro",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Bicho",
+    "defense_type": "Acero",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Bicho",
+    "defense_type": "Hada",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Roca",
+    "defense_type": "Normal",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Roca",
+    "defense_type": "Fuego",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Roca",
+    "defense_type": "Agua",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Roca",
+    "defense_type": "Eléctrico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Roca",
+    "defense_type": "Planta",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Roca",
+    "defense_type": "Hielo",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Roca",
+    "defense_type": "Lucha",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Roca",
+    "defense_type": "Veneno",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Roca",
+    "defense_type": "Tierra",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Roca",
+    "defense_type": "Volador",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Roca",
+    "defense_type": "Psíquico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Roca",
+    "defense_type": "Bicho",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Roca",
+    "defense_type": "Roca",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Roca",
+    "defense_type": "Fantasma",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Roca",
+    "defense_type": "Dragón",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Roca",
+    "defense_type": "Siniestro",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Roca",
+    "defense_type": "Acero",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Roca",
+    "defense_type": "Hada",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fantasma",
+    "defense_type": "Normal",
+    "multiplier": 0
+  },
+  {
+    "attack_type": "Fantasma",
+    "defense_type": "Fuego",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fantasma",
+    "defense_type": "Agua",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fantasma",
+    "defense_type": "Eléctrico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fantasma",
+    "defense_type": "Planta",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fantasma",
+    "defense_type": "Hielo",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fantasma",
+    "defense_type": "Lucha",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fantasma",
+    "defense_type": "Veneno",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fantasma",
+    "defense_type": "Tierra",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fantasma",
+    "defense_type": "Volador",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fantasma",
+    "defense_type": "Psíquico",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Fantasma",
+    "defense_type": "Bicho",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fantasma",
+    "defense_type": "Roca",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fantasma",
+    "defense_type": "Fantasma",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Fantasma",
+    "defense_type": "Dragón",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fantasma",
+    "defense_type": "Siniestro",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Fantasma",
+    "defense_type": "Acero",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Fantasma",
+    "defense_type": "Hada",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Dragón",
+    "defense_type": "Normal",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Dragón",
+    "defense_type": "Fuego",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Dragón",
+    "defense_type": "Agua",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Dragón",
+    "defense_type": "Eléctrico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Dragón",
+    "defense_type": "Planta",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Dragón",
+    "defense_type": "Hielo",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Dragón",
+    "defense_type": "Lucha",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Dragón",
+    "defense_type": "Veneno",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Dragón",
+    "defense_type": "Tierra",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Dragón",
+    "defense_type": "Volador",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Dragón",
+    "defense_type": "Psíquico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Dragón",
+    "defense_type": "Bicho",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Dragón",
+    "defense_type": "Roca",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Dragón",
+    "defense_type": "Fantasma",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Dragón",
+    "defense_type": "Dragón",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Dragón",
+    "defense_type": "Siniestro",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Dragón",
+    "defense_type": "Acero",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Dragón",
+    "defense_type": "Hada",
+    "multiplier": 0
+  },
+  {
+    "attack_type": "Siniestro",
+    "defense_type": "Normal",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Siniestro",
+    "defense_type": "Fuego",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Siniestro",
+    "defense_type": "Agua",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Siniestro",
+    "defense_type": "Eléctrico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Siniestro",
+    "defense_type": "Planta",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Siniestro",
+    "defense_type": "Hielo",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Siniestro",
+    "defense_type": "Lucha",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Siniestro",
+    "defense_type": "Veneno",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Siniestro",
+    "defense_type": "Tierra",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Siniestro",
+    "defense_type": "Volador",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Siniestro",
+    "defense_type": "Psíquico",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Siniestro",
+    "defense_type": "Bicho",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Siniestro",
+    "defense_type": "Roca",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Siniestro",
+    "defense_type": "Fantasma",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Siniestro",
+    "defense_type": "Dragón",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Siniestro",
+    "defense_type": "Siniestro",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Siniestro",
+    "defense_type": "Acero",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Siniestro",
+    "defense_type": "Hada",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Acero",
+    "defense_type": "Normal",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Acero",
+    "defense_type": "Fuego",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Acero",
+    "defense_type": "Agua",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Acero",
+    "defense_type": "Eléctrico",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Acero",
+    "defense_type": "Planta",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Acero",
+    "defense_type": "Hielo",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Acero",
+    "defense_type": "Lucha",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Acero",
+    "defense_type": "Veneno",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Acero",
+    "defense_type": "Tierra",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Acero",
+    "defense_type": "Volador",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Acero",
+    "defense_type": "Psíquico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Acero",
+    "defense_type": "Bicho",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Acero",
+    "defense_type": "Roca",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Acero",
+    "defense_type": "Fantasma",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Acero",
+    "defense_type": "Dragón",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Acero",
+    "defense_type": "Siniestro",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Acero",
+    "defense_type": "Acero",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Acero",
+    "defense_type": "Hada",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Hada",
+    "defense_type": "Normal",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hada",
+    "defense_type": "Fuego",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Hada",
+    "defense_type": "Agua",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hada",
+    "defense_type": "Eléctrico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hada",
+    "defense_type": "Planta",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hada",
+    "defense_type": "Hielo",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hada",
+    "defense_type": "Lucha",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Hada",
+    "defense_type": "Veneno",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Hada",
+    "defense_type": "Tierra",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hada",
+    "defense_type": "Volador",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hada",
+    "defense_type": "Psíquico",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hada",
+    "defense_type": "Bicho",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hada",
+    "defense_type": "Roca",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hada",
+    "defense_type": "Fantasma",
+    "multiplier": 1
+  },
+  {
+    "attack_type": "Hada",
+    "defense_type": "Dragón",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Hada",
+    "defense_type": "Siniestro",
+    "multiplier": 2
+  },
+  {
+    "attack_type": "Hada",
+    "defense_type": "Acero",
+    "multiplier": 0.5
+  },
+  {
+    "attack_type": "Hada",
+    "defense_type": "Hada",
+    "multiplier": 1
+  }
+]
