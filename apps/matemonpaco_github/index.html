@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Batallas MateMon Paco</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Juego matemático de combate y álgebra</p>
+        <h1>Batallas MateMon Paco</h1>
+        <p class="subtitle">Combate calculando daños exactos o completa la MateDex resolviendo incógnitas para capturar las 53 especies.</p>
+      </div>
+      <div class="hero-actions">
+        <button id="newGameBtn" class="btn primary">Menú principal</button>
+        <button id="randomTeamsBtn" class="btn">Equipos aleatorios</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="setupScreen" class="screen active">
+        <div class="panel mode-panel">
+          <div>
+            <p class="eyebrow">Modo de juego</p>
+            <h2>¿Cómo quieres jugar?</h2>
+            <p class="muted">Elige batalla contra Paco, dos jugadores local o el nuevo modo de colección algebraica.</p>
+          </div>
+          <div class="mode-buttons" role="group" aria-label="Modo de juego">
+            <button id="modeAiBtn" class="mode-btn active" data-mode="ai">Jugador vs IA Paco</button>
+            <button id="modeLocalBtn" class="mode-btn" data-mode="local">Dos jugadores local</button>
+            <button id="modeCaptureBtn" class="mode-btn special" data-mode="capture">Atrapa las 53 incógnitas</button>
+          </div>
+        </div>
+
+        <div id="captureIntroPanel" class="panel capture-intro hidden">
+          <div>
+            <p class="eyebrow">Modo MateDex</p>
+            <h2>Atrapa las 53 incógnitas</h2>
+            <p class="muted">Aparecerá un MateMon salvaje. Resuelve una ecuación de hasta segundo grado para cargar la Master MateBall. Si aciertas, lo capturas y queda marcado en la MateDex. Si fallas, huye y verás la solución paso a paso.</p>
+            <div id="captureIntroStats" class="capture-stats"></div>
+          </div>
+          <div class="capture-actions">
+            <button id="startCaptureBtn" class="btn primary big">Entrar en Atrapa las 53 incógnitas</button>
+            <button id="resetDexBtn" class="btn ghost danger">Reiniciar MateDex</button>
+          </div>
+        </div>
+
+        <div id="formulaPanel" class="panel formula-panel">
+          <div>
+            <p class="eyebrow">Regla matemática</p>
+            <h2>Daño = Potencia × Efectividad × STAB</h2>
+            <p class="muted"><strong>STAB</strong> vale ×1,5 si el tipo del movimiento coincide con un tipo del atacante. Si el defensor tiene dos tipos, multiplica las dos efectividades.</p>
+          </div>
+          <button id="toggleTypeTableBtn" class="btn ghost">Ver tabla de tipos</button>
+        </div>
+        <div id="typeTablePanel" class="panel type-table-panel hidden">
+          <h3>Tabla de efectividades</h3>
+          <p class="muted">Busca el tipo del ataque en la columna izquierda y el tipo defensor en la fila superior.</p>
+          <div id="typeTable" class="type-table-wrap"></div>
+        </div>
+
+        <div id="teamSetupPanel" class="panel setup-grid">
+          <section>
+            <div class="section-title"><span>1</span><h2>Selecciona equipos</h2></div>
+            <p id="teamHelp" class="muted">Elige 3 MateMon para tu equipo. Puedes dejar que Paco complete su equipo automáticamente.</p>
+            <div class="filters">
+              <input id="searchInput" type="search" placeholder="Buscar carta, tipo o ataque...">
+              <select id="typeFilter"><option value="">Todos los tipos</option></select>
+              <select id="genFilter">
+                <option value="">Todas las generaciones</option>
+                <option value="1">Gen 1</option>
+                <option value="2">Gen 2</option>
+              </select>
+            </div>
+          </section>
+          <section class="team-boxes">
+            <div class="team-card player-a">
+              <h3 id="teamATitle">Tu equipo</h3>
+              <div id="teamA" class="mini-team"></div>
+            </div>
+            <div class="team-card player-b">
+              <h3 id="teamBTitle">Equipo de Paco</h3>
+              <div id="teamB" class="mini-team"></div>
+            </div>
+          </section>
+        </div>
+
+        <div id="battleToolbar" class="toolbar">
+          <button id="clearTeamsBtn" class="btn ghost">Vaciar equipos</button>
+          <button id="startBattleBtn" class="btn primary big" disabled>Comenzar batalla</button>
+        </div>
+        <section id="cardGrid" class="card-grid" aria-live="polite"></section>
+      </section>
+
+      <section id="captureScreen" class="screen">
+        <div class="battle-topbar">
+          <button id="backCaptureMenuBtn" class="btn ghost">← Volver al menú</button>
+          <button id="resetDexBtn2" class="btn ghost danger">Reiniciar MateDex</button>
+        </div>
+
+        <div id="captureBanner" class="battle-comment capture">Resuelve la incógnita para cargar la Master MateBall.</div>
+
+        <div class="capture-layout">
+          <article id="wildCard" class="wild-card panel"></article>
+          <section class="panel algebra-panel">
+            <div class="turn-info">
+              <p class="eyebrow" id="captureProgressLabel">MateDex 0/53</p>
+              <h2 id="algebraTitle">Encuentro salvaje</h2>
+              <p id="algebraHelp" class="muted">Escribe la solución de x. En segundo grado, separa las dos soluciones con coma.</p>
+            </div>
+            <div id="equationBox" class="equation-box"></div>
+            <div id="algebraHint" class="tip-box"></div>
+            <div class="damage-entry algebra-entry">
+              <label for="algebraAnswerInput">Tu respuesta</label>
+              <div class="damage-row">
+                <input id="algebraAnswerInput" type="text" inputmode="decimal" autocomplete="off" placeholder="Ejemplo: 6  /  2,3  /  -5,5">
+                <button id="throwBallBtn" class="btn primary">Lanzar Master MateBall</button>
+              </div>
+              <p class="muted small">Puedes escribir fracciones simples como 1/2 si aparecen. El orden no importa cuando hay dos soluciones.</p>
+            </div>
+            <div id="captureSolution" class="solution-box hidden"></div>
+            <div class="capture-actions-row">
+              <button id="nextEncounterBtn" class="btn primary hidden">Siguiente encuentro</button>
+            </div>
+          </section>
+        </div>
+
+        <section class="panel dex-panel">
+          <div class="dex-head">
+            <div>
+              <p class="eyebrow">MateDex</p>
+              <h2>Especies capturadas</h2>
+            </div>
+            <div id="dexSummary" class="dex-summary">0 / 53</div>
+          </div>
+          <div id="mateDexGrid" class="matedex-grid"></div>
+        </section>
+      </section>
+
+      <section id="battleScreen" class="screen">
+        <div class="battle-topbar">
+          <button id="backSetupBtn" class="btn ghost">← Volver a equipos</button>
+          <button id="resetBattleBtn" class="btn">Reiniciar combate</button>
+        </div>
+
+        <div id="winnerBanner" class="winner-banner hidden"></div>
+        <div id="battleComment" class="battle-comment">Elige movimiento. Después calcula el daño exacto.</div>
+
+        <div class="battle-arena">
+          <article id="fighterA" class="fighter player-a"></article>
+          <div class="versus">VS</div>
+          <article id="fighterB" class="fighter player-b"></article>
+        </div>
+
+        <div class="battle-controls panel">
+          <div class="turn-info">
+            <p class="eyebrow" id="turnLabel">Turno 1</p>
+            <h2 id="phaseTitle">Elige ataque</h2>
+            <p id="phaseHelp" class="muted">Primero se eligen los movimientos de ambos MateMon. Luego se resuelve la prioridad y la velocidad.</p>
+          </div>
+
+          <div id="selectedMovesSummary" class="selected-summary hidden"></div>
+          <div id="moveButtons" class="move-buttons"></div>
+          <div id="mathTask" class="math-task hidden"></div>
+
+          <div id="damageEntry" class="damage-entry hidden">
+            <label id="damageLabel" for="declaredDamageInput">Daño calculado</label>
+            <div class="damage-row">
+              <input id="declaredDamageInput" type="number" inputmode="numeric" min="0" step="1" placeholder="Escribe el daño exacto">
+              <button id="resolveBtn" class="btn primary">Guardar cálculo</button>
+            </div>
+            <p id="damageHelp" class="muted small">Redondea al entero más cercano. Ejemplo: 24,5 se convierte en 25.</p>
+          </div>
+
+          <div class="turn-action-row">
+            <button id="changeMoveBtn" class="btn ghost hidden">← Cambiar movimiento</button>
+            <button id="resolveTurnBtn" class="btn primary big hidden">Resolver turno</button>
+            <button id="nextTurnBtn" class="btn primary hidden">Siguiente turno</button>
+          </div>
+        </div>
+
+        <section class="battle-lower">
+          <div class="panel">
+            <h3>Registro de combate</h3>
+            <div id="battleLog" class="battle-log"></div>
+          </div>
+          <div class="panel">
+            <h3>Banco</h3>
+            <div class="bench-wrap">
+              <div><h4 id="benchATitle">Tu equipo</h4><div id="benchA" class="bench"></div></div>
+              <div><h4 id="benchBTitle">Equipo de Paco</h4><div id="benchB" class="bench"></div></div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
