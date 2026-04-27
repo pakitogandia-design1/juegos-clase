@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Identificando Material Vegetal 4.0</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Juego didáctico interactivo</p>
+        <h1>Identificando Material Vegetal 4.0</h1>
+      </div>
+      <div class="topbar-actions">
+        <button id="homeBtn" class="ghost-btn">🏡 Menú</button>
+        <button id="progressBtn" class="ghost-btn">📒 Progreso</button>
+        <button id="resetBtn" class="ghost-btn danger">♻ Reiniciar</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="menuView" class="view active">
+        <div class="hero">
+          <div class="hero-card">
+            <span class="hero-badge">Colección de cartas · estrellas · progreso guardado</span>
+            <h2>Recorre todos los apartados del tema y mejora tu nota hasta conseguir el 10.</h2>
+            <p>
+              Completa cada bloque, consigue estrellas, deja todos los apartados en dorado y demuestra que dominas
+              el material vegetal y la identificación de plantas.
+            </p>
+            <div class="hero-stats" id="heroStats"></div>
+          </div>
+        </div>
+        <div id="cardsGrid" class="cards-grid"></div>
+      </section>
+
+      <section id="gameView" class="view">
+        <div class="section-head">
+          <button id="backFromGame" class="ghost-btn">← Volver al menú</button>
+          <div>
+            <p id="sectionKicker" class="section-kicker"></p>
+            <h2 id="sectionTitle"></h2>
+            <p id="sectionDescription" class="section-description"></p>
+          </div>
+          <div id="sectionMiniProgress" class="mini-progress"></div>
+        </div>
+        <div id="gameContainer" class="game-card"></div>
+      </section>
+
+      <section id="progressView" class="view">
+        <div class="progress-layout">
+          <div class="game-card sticky-card">
+            <p class="section-kicker">Álbum de progreso</p>
+            <h2>Tu avance en el tema</h2>
+            <div id="overallBox"></div>
+            <div id="finalBox" class="final-box"></div>
+          </div>
+          <div class="game-card">
+            <h3>Estado por apartados</h3>
+            <div id="progressList" class="progress-list"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <template id="summaryTemplate">
+    <div class="summary-box">
+      <h3 class="summary-title"></h3>
+      <p class="summary-text"></p>
+      <div class="summary-actions">
+        <button class="primary-btn retry-btn">🔁 Repetir apartado</button>
+        <button class="ghost-btn menu-btn">🏡 Menú principal</button>
+      </div>
+    </div>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
