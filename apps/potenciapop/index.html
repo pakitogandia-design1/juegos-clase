@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Potencia Pop</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app" class="app">
+    <canvas id="stars" aria-hidden="true"></canvas>
+
+    <header class="topbar">
+      <button id="btnHome" class="ghost-btn">🏠 Menú</button>
+      <div class="brand">
+        <div class="brand-icon">π</div>
+        <div>
+          <h1>Potencia Pop</h1>
+          <p>Arcade de burbujas, cuadrados y cubos</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button id="btnSound" class="ghost-btn">🔊 Sonido</button>
+        <button id="btnReset" class="ghost-btn danger">♻ Reiniciar progreso</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="screenMenu" class="screen active menu-screen">
+        <div class="hero-card glass">
+          <div class="hero-copy">
+            <span class="kicker">FP · Matemáticas con puntería</span>
+            <h2>Dispara potencias. Forma tríos. Revienta el tablero.</h2>
+            <p>
+              Apunta con el cañón, dispara <strong>6²</strong> contra burbujas de <strong>36</strong>,
+              forma grupos de 3 iguales y evita que bajen hasta la línea de peligro.
+            </p>
+            <div class="hero-buttons">
+              <button class="primary-btn" data-screen="screenModeSelect" data-mode="normal">Jugar</button>
+              <button class="secondary-btn" data-screen="screenTutorial">Tutorial</button>
+            </div>
+          </div>
+          <div class="bubble-showcase" aria-hidden="true">
+            <div class="orb big">6²</div>
+            <div class="orb small">36</div>
+            <div class="orb med">5³</div>
+            <div class="orb tiny">125</div>
+            <div class="spark">×3</div>
+          </div>
+        </div>
+
+        <div class="mode-grid">
+          <article class="mode-card normal" data-open-mode="normal">
+            <h3>Modo Normal</h3>
+            <p>Guía de disparo, siguiente burbuja visible y velocidad equilibrada.</p>
+            <span id="normalSummary">Nivel máximo: 1</span>
+          </article>
+          <article class="mode-card hard" data-open-mode="hard">
+            <h3>Modo Difícil</h3>
+            <p>Sin guía de disparo. Mantiene la siguiente burbuja visible.</p>
+            <span id="hardSummary">Nivel máximo: 1</span>
+          </article>
+          <article class="mode-card nightmare" data-open-mode="nightmare">
+            <h3>Modo Pesadilla</h3>
+            <p>Sin guía, sin siguiente burbuja y con descenso más rápido.</p>
+            <span id="nightmareSummary">Nivel máximo: 1</span>
+          </article>
+        </div>
+
+        <div class="menu-tabs">
+          <button class="tab-btn" data-screen="screenAchievements">🏆 Logros</button>
+          <button class="tab-btn" data-screen="screenProgress">📈 Progreso</button>
+        </div>
+      </section>
+
+      <section id="screenModeSelect" class="screen">
+        <div class="panel glass">
+          <div class="section-title">
+            <div>
+              <span class="kicker">Selecciona nivel</span>
+              <h2 id="modeTitle">Modo Normal</h2>
+            </div>
+            <button class="secondary-btn" data-screen="screenMenu">Volver</button>
+          </div>
+          <p id="modeDesc" class="muted"></p>
+          <div id="levelGrid" class="level-grid"></div>
+          <div class="legend">
+            <span><i class="dot unlocked"></i> desbloqueado</span>
+            <span><i class="dot completed"></i> completado</span>
+            <span><i class="dot perfect"></i> perfecto</span>
+            <span><i class="dot locked"></i> bloqueado</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="screenGame" class="screen game-screen">
+        <aside class="hud glass">
+          <div class="hud-row"><span>Modo</span><strong id="hudMode">Normal</strong></div>
+          <div class="hud-row"><span>Nivel</span><strong id="hudLevel">1</strong></div>
+          <div class="hud-row"><span>Puntos</span><strong id="hudScore">0</strong></div>
+          <div class="hud-row"><span>Vidas</span><strong id="hudLives">3</strong></div>
+          <div class="hud-row"><span>Racha</span><strong id="hudStreak">0</strong></div>
+          <div class="hud-row"><span>Objetivo</span><strong id="hudGoal">0/0</strong></div>
+          <div class="hud-next" id="hudNextWrap">
+            <span>Siguiente</span>
+            <div id="hudNext" class="mini-orb">?</div>
+          </div>
+          <div class="powerups">
+            <h4>Power-ups</h4>
+            <button id="powerFreeze" class="power-btn">❄ Congelar <b>0</b></button>
+            <button id="powerLupa" class="power-btn">🔍 Lupa <b>0</b></button>
+            <button id="powerSwap" class="power-btn">🔁 Cambiar <b>0</b></button>
+            <button id="powerBomb" class="power-btn">💥 Bomba raíz <b>0</b></button>
+          </div>
+          <div id="tipBox" class="tip-box">Apunta y forma grupos de 3 resultados iguales.</div>
+        </aside>
+        <div class="canvas-wrap glass">
+          <canvas id="gameCanvas" width="960" height="720"></canvas>
+          <div id="toast" class="toast hidden"></div>
+          <div id="pauseOverlay" class="pause-overlay hidden">
+            <div class="modal-card">
+              <h2 id="modalTitle">Nivel superado</h2>
+              <p id="modalText"></p>
+              <div class="modal-actions">
+                <button id="btnContinue" class="primary-btn">Continuar</button>
+                <button class="secondary-btn" data-screen="screenModeSelect">Elegir nivel</button>
+                <button class="secondary-btn" data-screen="screenMenu">Menú</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screenTutorial" class="screen">
+        <div class="panel glass tutorial-panel">
+          <div class="section-title">
+            <div>
+              <span class="kicker">Tutorial</span>
+              <h2>Aprende a jugar en 90 segundos</h2>
+            </div>
+            <button class="secondary-btn" data-screen="screenMenu">Volver</button>
+          </div>
+          <div class="tutorial-grid">
+            <div class="tutorial-card"><b>1</b><h3>Disparas potencias</h3><p>La burbuja del cañón puede ser <strong>6²</strong>, <strong>12²</strong> o <strong>5³</strong>.</p></div>
+            <div class="tutorial-card"><b>2</b><h3>El tablero tiene resultados</h3><p>Busca su resultado: <strong>6² = 36</strong>, <strong>5³ = 125</strong>.</p></div>
+            <div class="tutorial-card"><b>3</b><h3>Forma grupos de 3</h3><p>Si disparas <strong>6²</strong>, se pega como <strong>36</strong>. Si conecta con dos <strong>36</strong>, explotan.</p></div>
+            <div class="tutorial-card"><b>4</b><h3>Si fallas, molesta</h3><p>La burbuja se pega y se convierte en un resultado aleatorio. El error ocupa espacio.</p></div>
+            <div class="tutorial-card"><b>5</b><h3>La línea de peligro</h3><p>Las burbujas bajan con el tiempo. Si cruzan la línea roja, pierdes una vida.</p></div>
+            <div class="tutorial-card"><b>6</b><h3>Ojo con el 64</h3><p><strong>64</strong> acepta <strong>8²</strong> y también <strong>4³</strong>. ¡Número con doble vida!</p></div>
+          </div>
+          <div class="tutorial-demo">
+            <button id="btnCompleteTutorial" class="primary-btn">Completar tutorial y desbloquear logro</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="screenAchievements" class="screen">
+        <div class="panel glass">
+          <div class="section-title">
+            <div><span class="kicker">Colección</span><h2>Logros</h2></div>
+            <button class="secondary-btn" data-screen="screenMenu">Volver</button>
+          </div>
+          <div id="achievementsGrid" class="achievements-grid"></div>
+        </div>
+      </section>
+
+      <section id="screenProgress" class="screen">
+        <div class="panel glass">
+          <div class="section-title">
+            <div><span class="kicker">Estadísticas</span><h2>Progreso</h2></div>
+            <button class="secondary-btn" data-screen="screenMenu">Volver</button>
+          </div>
+          <div id="progressCards" class="progress-grid"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>
