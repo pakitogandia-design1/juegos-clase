@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Potencia Pop Arcade</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo-bubble">x²</div>
+        <div>
+          <h1>Potencia Pop Arcade</h1>
+          <p>Bubble shooter de potencias, cuadrados y cubos</p>
+        </div>
+      </div>
+      <nav class="nav">
+        <button data-screen="menu">Inicio</button>
+        <button data-screen="tutorial">Tutorial</button>
+        <button data-screen="progress">Progreso</button>
+        <button data-screen="achievements">Logros</button>
+      </nav>
+    </header>
+
+    <main>
+      <section id="screen-menu" class="screen active">
+        <div class="hero card">
+          <div>
+            <span class="pill">Edición Phaser Arcade</span>
+            <h2>Dispara potencias. Forma tríos. Revienta el tablero.</h2>
+            <p>La burbuja disparada muestra una potencia, por ejemplo <b>6²</b>. Al pegarse se transforma en su resultado, <b>36</b>. Si conecta con 3 o más burbujas iguales, explotan.</p>
+            <div class="mode-grid">
+              <button class="mode-card normal" data-mode="normal"><b>Normal</b><span>Con guía y próxima burbuja</span></button>
+              <button class="mode-card hard" data-mode="hard"><b>Difícil</b><span>Sin guía, con próxima burbuja</span></button>
+              <button class="mode-card nightmare" data-mode="nightmare"><b>Pesadilla</b><span>Sin guía, sin próxima y más velocidad</span></button>
+            </div>
+          </div>
+          <div class="arcade-panel">
+            <div class="fake-cabinet">
+              <div class="cabinet-screen">
+                <span>4³</span><span>64</span><span>64</span><span>64</span>
+              </div>
+              <div class="cabinet-controls"><i></i><i></i><i></i></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-levels" class="screen">
+        <div class="card">
+          <div class="screen-head">
+            <div>
+              <span class="pill" id="level-mode-pill">Modo</span>
+              <h2>Elige nivel</h2>
+              <p>Solo puedes elegir niveles alcanzados. Los completados aparecen con reborde dorado.</p>
+            </div>
+            <button id="back-to-menu" class="ghost">Volver</button>
+          </div>
+          <div id="level-grid" class="level-grid"></div>
+        </div>
+      </section>
+
+      <section id="screen-game" class="screen game-screen">
+        <div class="game-layout">
+          <div id="game-container"></div>
+          <aside class="hud-panel card">
+            <h3 id="hud-title">Potencia Pop Arcade</h3>
+            <div class="hud-line"><span>Modo</span><b id="hud-mode">Normal</b></div>
+            <div class="hud-line"><span>Nivel</span><b id="hud-level">1</b></div>
+            <div class="hud-line"><span>Puntos</span><b id="hud-score">0</b></div>
+            <div class="hud-line"><span>Racha</span><b id="hud-streak">0</b></div>
+            <div class="hud-line"><span>Vidas</span><b id="hud-lives">3</b></div>
+            <div class="next-box" id="next-box"><span>Siguiente</span><b id="hud-next">?</b></div>
+            <div class="powerups">
+              <button id="pu-freeze">❄️ Congelar</button>
+              <button id="pu-shuffle">🔁 Cambiar</button>
+              <button id="pu-bomb">💥 Bomba raíz</button>
+            </div>
+            <p id="hud-tip">Apunta, rebota y forma grupos de 3 resultados iguales.</p>
+            <button id="exit-game" class="danger">Salir al menú</button>
+          </aside>
+        </div>
+      </section>
+
+      <section id="screen-tutorial" class="screen">
+        <div class="card tutorial-card">
+          <span class="pill">Tutorial independiente</span>
+          <h2>Cómo se juega</h2>
+          <ol>
+            <li>El cañón carga una potencia: <b>7²</b>, <b>4³</b>, <b>12²</b>...</li>
+            <li>Calcula su resultado mentalmente. Ejemplo: <b>7² = 49</b>.</li>
+            <li>Dispara hacia una zona donde pueda formar grupo con otros <b>49</b>.</li>
+            <li>Cuando la burbuja se pega, cambia de potencia a resultado.</li>
+            <li>Si conecta con 3 o más resultados iguales, explotan.</li>
+            <li>Si quedan burbujas desconectadas del techo, caen y dan puntos extra.</li>
+            <li>El tablero baja poco a poco. Si cruza la línea de peligro, pierdes una vida.</li>
+            <li><b>64</b> es especial: puede venir de <b>8²</b> o de <b>4³</b>.</li>
+          </ol>
+          <button id="complete-tutorial" class="primary">Marcar tutorial completado</button>
+        </div>
+      </section>
+
+      <section id="screen-progress" class="screen">
+        <div class="card">
+          <div class="screen-head"><div><span class="pill">Datos guardados</span><h2>Progreso</h2><p>Se guarda en este navegador mediante localStorage.</p></div><button id="reset-progress" class="danger">Reiniciar progreso</button></div>
+          <div id="progress-content" class="stats-grid"></div>
+        </div>
+      </section>
+
+      <section id="screen-achievements" class="screen">
+        <div class="card">
+          <span class="pill">Colección de logros</span>
+          <h2>Logros</h2>
+          <div id="achievement-grid" class="achievement-grid"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="modal" class="modal hidden">
+    <div class="modal-card">
+      <h2 id="modal-title">Nivel superado</h2>
+      <p id="modal-body">Buen trabajo.</p>
+      <div id="modal-actions"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.min.js"></script>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
