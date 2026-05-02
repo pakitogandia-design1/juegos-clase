@@ -1,0 +1,41 @@
+
+:root {
+  --bg: #0f1114;
+  --panel: rgba(16, 18, 22, 0.9);
+  --panel-2: rgba(24, 27, 34, 0.94);
+  --text: #f4efe4;
+  --muted: #cabd9f;
+  --accent: #f4b04e;
+  --accent-2: #ffd278;
+  --danger: #c44747;
+  --line: rgba(255,255,255,0.08);
+  --shadow: 0 12px 40px rgba(0,0,0,0.35);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: radial-gradient(circle at top, #1b2029, #0f1114 60%); color: var(--text); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+body { padding: 18px; }
+.page { max-width: 1280px; margin: 0 auto; }
+.page-header { display:flex; justify-content:space-between; gap:16px; align-items:flex-end; margin-bottom: 14px; }
+.page-header h1 { margin: 0; font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1.05; }
+.page-header h1 span { color: var(--accent); }
+.eyebrow { margin: 0 0 6px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-size: .78rem; }
+.header-status { color: var(--muted); background: rgba(255,255,255,0.04); border: 1px solid var(--line); padding: 10px 12px; border-radius: 12px; min-width: 220px; text-align: right; }
+.game-shell { background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015)); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 14px; }
+#gameCanvas { width: 100%; display:block; aspect-ratio: 16 / 9; background: #0b0d10; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); }
+.controls { display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
+.controls.hidden { display: none; }
+button { appearance:none; border:none; border-radius:14px; padding: 14px 18px; background: #2b313b; color: var(--text); font-size: 1rem; font-weight: 700; cursor:pointer; box-shadow: var(--shadow); }
+button:hover { filter: brightness(1.06); }
+button:disabled { opacity:.45; cursor:not-allowed; }
+button.primary { background: linear-gradient(180deg, var(--accent), #c98726); color: #2a1b05; }
+button.danger { background: linear-gradient(180deg, #d25959, #9d3636); }
+button.grow { flex: 1 1 240px; }
+.hint { margin: 12px 4px 2px; color: var(--muted); font-size: .95rem; }
+@media (max-width: 760px) {
+  body { padding: 10px; }
+  .page-header { align-items:stretch; flex-direction:column; }
+  .header-status { text-align:left; min-width:auto; }
+  button { flex: 1 1 calc(50% - 10px); }
+  button.grow { flex-basis: 100%; }
+  .hint { font-size: .88rem; }
+}
