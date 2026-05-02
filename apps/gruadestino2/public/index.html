@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>La Grúa del Destino (AUTOAVENTURA LIGERA)</title>
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+  <noscript>Este autojuego necesita JavaScript activado.</noscript>
+  <main id="app">
+    <section id="menu" class="screen menu">
+      <img class="bg" src="assets/00-menu-poster.jpg" alt="Cartel de La Grúa del Destino">
+      <div class="overlay"></div>
+      <div class="card menu-card">
+        <p class="tag">Autojuego narrativo · versión ligera</p>
+        <h1>LA GRÚA DEL DESTINO</h1>
+        <h2>AUTOAVENTURA</h2>
+        <p class="lead">Pulsa <strong>Siguiente paso</strong> y mira cómo una casa contenedor, una grúa imposible y la FP Básica convierten el optimismo en material didáctico.</p>
+        <div class="buttons">
+          <button id="startBtn" class="primary">Empezar</button>
+          <button id="continueBtn">Continuar</button>
+          <button id="resetBtn" class="danger">Borrar progreso</button>
+        </div>
+        <p class="small">Versión sin Phaser, sin CDN y con imágenes comprimidas para cargar bien en GitHub Pages.</p>
+      </div>
+    </section>
+
+    <section id="game" class="screen hidden game">
+      <img id="sceneImage" class="bg" alt="Escena de la autoaventura">
+      <div class="overlay"></div>
+      <header class="hud top">
+        <div>
+          <p id="counter" class="tag"></p>
+          <h2 id="title"></h2>
+          <p id="place"></p>
+        </div>
+        <div class="mini-buttons">
+          <button id="backMenuBtn">Menú</button>
+          <button id="restartBtn">Reiniciar</button>
+        </div>
+      </header>
+      <aside class="progressBox">
+        <span id="progressText"></span>
+        <div class="track"><div id="bar"></div></div>
+      </aside>
+      <section class="card dialogue-card">
+        <div id="speaker" class="speaker"></div>
+        <p id="dialogue" class="dialogue"></p>
+        <p id="objective" class="objective"></p>
+        <div class="buttons game-buttons">
+          <button id="nextBtn" class="primary big">Siguiente paso ▶</button>
+          <button id="skipBtn">Saltar pantalla +</button>
+        </div>
+      </section>
+    </section>
+
+    <section id="ending" class="screen hidden ending">
+      <img class="bg" src="assets/29-galeria-caos.jpg" alt="Galería final del caos">
+      <div class="overlay strong"></div>
+      <div class="card ending-card">
+        <p class="tag">Final de la Autoaventura</p>
+        <h1>FIN</h1>
+        <blockquote>“Por muy mal que te vaya la vida, piensa que siempre te puede ir peor”.</blockquote>
+        <p>La ilusión, la grúa, la casa contenedor, las facturas y el aula de FP Básica quedan archivadas como advertencia visual.</p>
+        <div class="buttons">
+          <button id="againBtn" class="primary">Volver a empezar</button>
+          <button id="endingMenuBtn">Menú</button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="src/data.js"></script>
+  <script src="src/main.js"></script>
+</body>
+</html>
