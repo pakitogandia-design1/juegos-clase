@@ -754,8 +754,7 @@ class EndingScene extends Phaser.Scene {
   create(){
     this.add.image(W/2,H/2,'bg29').setDisplaySize(W,H).setAlpha(.72); this.add.rectangle(W/2,H/2,W,H,0x000000,.62); this.add.rectangle(W/2,H/2,1040,540,0x090603,.80).setStrokeStyle(3,0xf0a13a,.9);
     this.add.text(W/2,116,'FINAL DE LA AUTOAVENTURA EXTENDIDA',{fontSize:'40px', color:'#ffbf5b', fontStyle:'bold', align:'center', stroke:'#000', strokeThickness:6}).setOrigin(.5);
-    this.add.text(W/2,262,'“Por muy mal que te vaya la vida,
-piensa que siempre te puede ir peor”.',{fontFamily:'Georgia, serif', fontSize:'44px', color:'#fff6df', align:'center', wordWrap:{width:920}, lineSpacing:12, stroke:'#000', strokeThickness:7}).setOrigin(.5);
+    this.add.text(W/2,262,'“Por muy mal que te vaya la vida, piensa que siempre te puede ir peor”.',{fontFamily:'Georgia, serif', fontSize:'44px', color:'#fff6df', align:'center', wordWrap:{width:920}, lineSpacing:12, stroke:'#000', strokeThickness:7}).setOrigin(.5);
     this.add.text(W/2,414,`Has recorrido ${chapters.length} pantallas visuales. Fran sobrevivió a la grúa, a la casa contenedor y al aula. Eso no significa que haya aprendido nada.`,{fontSize:'24px', color:'#ead2aa', align:'center', wordWrap:{width:900}, lineSpacing:8}).setOrigin(.5);
     this.makeButton(W/2-190,555,'VOLVER A EMPEZAR',()=>{ clearSave(); this.scene.start('AutoScene',{chapterIndex:0, stepIndex:0}); }); this.makeButton(W/2+190,555,'MENÚ',()=>this.scene.start('MenuScene'));
   }
