@@ -1,0 +1,6 @@
+export class TournamentManager{
+ static nextPow2(n){let p=1;while(p<n)p*=2;return p;}
+ static create(players){const size=this.nextPow2(players.length); const list=[...players]; while(list.length<size)list.push({type:'bye',name:'BYE',nick:'Pase automático'}); Phaser.Utils.Array.Shuffle(list); const rounds=[]; let current=list.map(p=>({player:p,score:null})); while(current.length>1){const matches=[]; for(let i=0;i<current.length;i+=2){matches.push({a:current[i].player,b:current[i+1].player,scoreA:null,scoreB:null,winner:null,done:false});} rounds.push(matches); current=new Array(matches.length).fill(null).map((_,i)=>({player:{type:'pending',name:`Ganador ${i+1}`}}));}
+ return {rounds,currentRound:0,champion:null};}
+ static advance(t){const round=t.rounds[t.currentRound]; if(!round.every(m=>m.done))return false; const winners=round.map(m=>m.winner); if(t.currentRound===t.rounds.length-1){t.champion=winners[0]; return true;} const next=t.rounds[t.currentRound+1]; winners.forEach((w,i)=>{const m=next[Math.floor(i/2)]; if(i%2===0)m.a=w; else m.b=w;}); t.currentRound++; next.forEach(m=>{if(m.a?.type==='bye'&&m.b?.type!=='bye'){m.winner=m.b;m.done=true;} if(m.b?.type==='bye'&&m.a?.type!=='bye'){m.winner=m.a;m.done=true;}}); return true;}
+}

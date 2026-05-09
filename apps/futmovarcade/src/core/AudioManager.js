@@ -1,0 +1,8 @@
+export class AudioManager{
+ constructor(save){this.save=save;this.ctx=null;this.musicTimer=null;this.step=0;}
+ ensure(){if(!this.ctx)this.ctx=new (window.AudioContext||window.webkitAudioContext)(); if(this.ctx.state==='suspended')this.ctx.resume();}
+ beep(freq=440,dur=.1,type='sine',vol=.2){if(!this.save.settings.sfx)return; this.ensure(); const o=this.ctx.createOscillator(); const g=this.ctx.createGain(); o.type=type;o.frequency.value=freq;g.gain.value=(this.save.settings.sfxVolume||.7)*vol;o.connect(g);g.connect(this.ctx.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,this.ctx.currentTime+dur);o.stop(this.ctx.currentTime+dur+.03);}
+ sfx(name){const map={start:[250,.08,'square',.12],stop:[700,.05,'triangle',.18],goal:[880,.18,'sawtooth',.2],penalty:[520,.15,'triangle',.2],free:[320,.18,'sawtooth',.2],miss:[120,.2,'square',.2],win:[980,.25,'triangle',.23],ach:[1200,.22,'sine',.25],click:[540,.04,'square',.08]}; const v=map[name]||map.click; this.beep(...v); if(name==='goal'||name==='win')setTimeout(()=>this.beep(v[0]*1.25,.15,'triangle',.18),90);}
+ startMusic(mode='menu'){if(!this.save.settings.music)return; this.ensure(); this.stopMusic(); const scale=mode==='match'?[196,246,294,392,494,392,294,246]:mode==='campaign'?[164,196,246,330,392,330,246,196]:[220,277,330,440,554,440,330,277]; this.musicTimer=setInterval(()=>{if(!this.save.settings.music)return; this.beep(scale[this.step%scale.length],.08,'sine',.045*(this.save.settings.musicVolume||.45)); this.step++;},260);}
+ stopMusic(){if(this.musicTimer){clearInterval(this.musicTimer);this.musicTimer=null;}}
+}

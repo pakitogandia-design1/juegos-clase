@@ -1,0 +1,2 @@
+import { bg, title } from '../ui/ui.js';
+export class BootScene extends Phaser.Scene{constructor(){super('BootScene')} create(){bg(this); title(this,'FUTMOV',220,82); const bar=this.add.rectangle(640,390,0,24,0x26e6ff).setOrigin(0,.5); this.add.rectangle(640,390,520,28,0xffffff,.12).setStrokeStyle(2,0x26e6ff); this.add.text(640,450,'Cargando estadio, egos y centésimas...', {fontSize:'24px',color:'#dff8ff'}).setOrigin(.5); this.tweens.add({targets:bar,displayWidth:520,duration:900,ease:'Cubic.Out',onComplete:()=>this.scene.start('MainMenu')});}}

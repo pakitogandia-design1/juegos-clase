@@ -1,0 +1,2 @@
+import { bg,title,button,small,homeButton } from '../ui/ui.js';
+export class ModeSelectScene extends Phaser.Scene{constructor(){super('ModeSelect')} create(){bg(this);homeButton(this);title(this,'JUGAR',90,60); small(this,640,145,'Elige cómo quieres perder la dignidad deportiva.',24); button(this,430,330,330,95,'Partido local\n1 vs 1',()=>this.scene.start('MatchSetup',{mode:'local'})); button(this,850,330,330,95,'Vs IA',()=>this.scene.start('MatchSetup',{mode:'ai'})); button(this,640,470,330,70,'Volver',()=>this.scene.start('MainMenu'),0xff4d8d);}}

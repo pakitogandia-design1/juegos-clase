@@ -1,0 +1,25 @@
+import { StorageManager } from './core/StorageManager.js';
+import { AudioManager } from './core/AudioManager.js';
+import { TrashTalkManager } from './core/TrashTalkManager.js';
+import { BootScene } from './scenes/BootScene.js';
+import { MainMenuScene } from './scenes/MainMenuScene.js';
+import { ModeSelectScene } from './scenes/ModeSelectScene.js';
+import { MatchSetupScene } from './scenes/MatchSetupScene.js';
+import { MatchScene } from './scenes/MatchScene.js';
+import { TournamentScene } from './scenes/TournamentScene.js';
+import { TrainingScene } from './scenes/TrainingScene.js';
+import { AchievementsScene } from './scenes/AchievementsScene.js';
+import { CollectionScene } from './scenes/CollectionScene.js';
+import { RankingScene } from './scenes/RankingScene.js';
+import { SettingsScene } from './scenes/SettingsScene.js';
+import { CampaignScene } from './scenes/CampaignScene.js';
+import { ResultsScene } from './scenes/ResultsScene.js';
+import { HowToScene } from './scenes/HowToScene.js';
+
+const config={type:Phaser.AUTO,parent:'game',backgroundColor:'#07111f',scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH,width:1280,height:720},dom:{createContainer:true},scene:[BootScene,MainMenuScene,ModeSelectScene,MatchSetupScene,MatchScene,TournamentScene,TrainingScene,AchievementsScene,CollectionScene,RankingScene,SettingsScene,CampaignScene,ResultsScene,HowToScene]};
+const game=new Phaser.Game(config);
+game.save=StorageManager.load();
+game.audio=new AudioManager(game.save);
+game.trash=new TrashTalkManager();
+game.persist=()=>{const newly=StorageManager.checkAchievements(game.save);StorageManager.save(game.save);return newly;};
+window.FUTMOV=game;
