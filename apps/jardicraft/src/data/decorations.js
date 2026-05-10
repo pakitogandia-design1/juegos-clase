@@ -1,3 +1,0 @@
-export const DECORATIONS = [
-  ['fence','Valla',80],['pot','Macetero',70],['table','Mesa de cultivo',150],['composter','Compostera',180],['water_tank','Deposito de agua',220],['hut','Caseta',0],['workbench','Banco de trabajo',160],['sign','Cartel botanico',50],['sprinkler','Aspersor',260],['greenhouse','Invernadero pequeno',450],['bench','Banco',130],['lamp','Farol',120],['fountain','Fuente',350],['pergola','Pergola',420],['pond','Estanque',300],['border','Bordura',40],['stone_path','Camino de piedra',40],['wood_path','Camino de madera',45],['raised_bed','Bancal elevado',180],['bee_hotel','Hotel de insectos',240]
-].map(d=>({id:d[0],name:d[1],price:d[2],type:'decoration'}));
