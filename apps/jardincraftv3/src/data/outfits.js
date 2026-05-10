@@ -1,0 +1,15 @@
+const rarities = ['comun','raro','epico','legendario','secreto'];
+export const OUTFITS = [
+  ['hat_straw','Sombrero de paja','gorro','comun',80],['hat_cactus','Gorro de cactus','gorro','epico',0,'Domina 5 plantas de bajo riego'],['hat_builder','Casco de paisajista','gorro','raro',220],['hat_flower','Diadema floral','gorro','raro',180],['hat_rain','Capucha de lluvia','gorro','raro',0,'Supera 5 dias de lluvia'],['hat_light','Casco con linterna','gorro','epico',420],['hat_laurel','Corona de laurel','gorro','legendario',0,'Completa flores ornamentales'],['hat_mushroom','Sombrero de seta','gorro','secreto',0,'Encuentra hongos en otono'],['hat_green','Gorra verde','gorro','comun',60],['hat_compost','Gorro compostador','gorro','raro',160],
+  ['body_overall','Peto verde','ropa','comun',120],['body_vivero','Chaleco de vivero','ropa','raro',240],['body_bee','Traje de apicultor','ropa','epico',0,'Atrae 20 polinizadores'],['body_florist','Delantal de florista','ropa','raro',220],['body_compost','Mono de compost','ropa','epico',0,'Fabrica 25 compost'],['body_rain','Impermeable','ropa','raro',300],['body_explorer','Ropa de explorador botanico','ropa','epico',460],['body_prune','Uniforme de poda','ropa','raro',260],['body_dry','Chaleco seco','ropa','epico',380],['body_master','Chaqueta maestro jardinero','ropa','legendario',0,'Domina 30 especies'],
+  ['bag_basic','Mochila basica','mochila','comun',90],['bag_seed','Mochila de semillas','mochila','comun',130],['bag_tools','Mochila de herramientas','mochila','raro',250],['bag_vivero','Mochila de vivero','mochila','raro',280],['bag_explorer','Mochila de explorador','mochila','epico',430],['bag_compost','Mochila de compost','mochila','epico',0,'Consigue Senor del compost'],['bag_pollinator','Mochila polinizadora','mochila','legendario',0,'Atrae biodiversidad alta'],
+  ['boots_water','Botas de agua','botas','comun',140],['boots_work','Botas de trabajo','botas','comun',110],['boots_mud','Botas de barro legendarias','botas','legendario',0,'Sobrevive a varias lluvias'],['gloves_strong','Guantes reforzados','guantes','raro',190],['gloves_soft','Guantes delicados','guantes','comun',100],['glasses_sun','Gafas de sol horticolas','accesorio','raro',210],['glasses_phyto','Gafas de fitosanitario','accesorio','epico',0,'Controla 10 plagas'],['acc_basket','Cesta de flores','accesorio','raro',240]
+].map((o, i)=>({id:o[0], name:o[1], category:o[2], rarity:o[3] || rarities[i%rarities.length], price:o[4] ?? 100, unlock:o[5] || null}));
+
+export const SETS = [
+  {id:'set_viverista', name:'Set Viverista', pieces:['hat_green','body_vivero','bag_seed','boots_work']},
+  {id:'set_compost', name:'Set Maestro Compostador', pieces:['hat_compost','body_compost','gloves_strong','bag_compost']},
+  {id:'set_explorer', name:'Set Explorador Botanico', pieces:['hat_light','body_explorer','bag_explorer','boots_mud']},
+  {id:'set_florist', name:'Set Florista Pro', pieces:['hat_flower','body_florist','gloves_soft','acc_basket']},
+  {id:'set_dry', name:'Set Supervivencia Verde', pieces:['hat_cactus','body_dry','bag_explorer','boots_work']}
+];
