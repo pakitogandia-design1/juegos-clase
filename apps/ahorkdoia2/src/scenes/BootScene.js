@@ -1,2 +1,0 @@
-import { bg, title } from '../ui/Ui.js';
-export class BootScene extends Phaser.Scene{constructor(){super('BootScene')} create(){bg(this); title(this,'AhorKDo IA','Última Letra'); const t=this.add.text(this.scale.width/2,this.scale.height/2,'K-IA está cargando los archivos robados...',{fontSize:'20px',color:'#7df9ff'}).setOrigin(.5); this.tweens.add({targets:t,alpha:.3,yoyo:true,repeat:3,duration:350,onComplete:()=>this.scene.start('MenuScene')});}}
