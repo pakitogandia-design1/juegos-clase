@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Gondal Evil: VR Kebab Outbreak</title>
+  <meta name="description" content="Survival horror paródico en Phaser 3: rescata a Laura y sobrevive a la invasión de Gondals VR." />
+  <style>
+    html, body { margin:0; padding:0; height:100%; background:#05060a; overflow:hidden; font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }
+    #game { width:100vw; height:100vh; display:flex; align-items:center; justify-content:center; }
+    canvas { display:block; image-rendering:auto; }
+    .loading { position:fixed; inset:0; display:grid; place-items:center; color:#f6f7fb; background:radial-gradient(circle at 50% 35%, #17203d, #05060a 68%); z-index:-1; }
+    .loading strong { color:#ffd166; }
+  </style>
+</head>
+<body>
+  <div class="loading"><div><strong>Gondal Evil</strong><br>Cargando brote VR...</div></div>
+  <div id="game"></div>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+  <script src="src/main.js"></script>
+</body>
+</html>
